@@ -4,6 +4,7 @@ Prototipo de motor híbrido e inteligente para la detección de fraude en solici
 
 > Fuentes de verdad: [`AGENTS.md`](./AGENTS.md) (reglas para agentes IA), [`docs/backlog.md`](./docs/backlog.md) (backlog de producto, 37 HU), [`COLLABORATING.md`](./COLLABORATING.md) (guía de colaboración).
 
+
 ## Estructura
 
 ```
