@@ -1,0 +1,58 @@
+# Hooks de pre-commit para CrediConfianza
+# Instalación:  pip install pre-commit && pre-commit install && pre-commit install --hook-type commit-msg
+# Docs: https://pre-commit.com
+
+repos:
+  # Hooks genéricos
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+      - id: check-added-large-files
+        args: ["--maxkb=512"]
+      - id: no-commit-to-branch
+        args: ["--branch", "main"]
+
+  # Lint + format backend (Python) — corre vía uv desde backend/ (igual que la CI)
+  - repo: local
+    hooks:
+      - id: ruff-check
+        name: ruff check (backend)
+        entry: uv run --directory backend ruff check .
+        language: system
+        files: ^backend/.*\.py$
+        pass_filenames: false
+        types: [python]
+      - id: ruff-format
+        name: ruff format (backend)
+        entry: uv run --directory backend ruff format --check .
+        language: system
+        files: ^backend/.*\.py$
+        pass_filenames: false
+        types: [python]
+
+  # Mensajes de commit Conventional Commits (en inglés)
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v3.2.0
+    hooks:
+      - id: conventional-pre-commit
+        stages: [commit-msg]
+        args: [feat, fix, docs, refactor, test, chore, style, perf, ci, build]
+
+  # Lint frontend (ESLint + Prettier) — solo cuando hay cambios en frontend/
+  - repo: local
+    hooks:
+      - id: frontend-lint
+        name: frontend eslint + prettier
+        entry: npm --prefix frontend run lint
+        language: system
+        files: ^frontend/
+        pass_filenames: false
+        types: [file]
+
+# Escaneo de secretos (gitleaks): corre en la CI (job "secret-scan") en cada PR.
+# Para ejecutarlo localmente (opcional), instala gitleaks desde
+# https://github.com/gitleaks/gitleaks/releases y corre:  gitleaks detect --source . --no-banner
