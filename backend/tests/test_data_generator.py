@@ -6,7 +6,7 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from app.data.generate_dataset import generate_and_save_datasets, main
+from app.data.generate_dataset import generate_validate_and_split_datasets, main
 from app.data.generator import SyntheticDataGenerator
 from app.data.schema import (
     RURAL_BRANCHES,
@@ -112,23 +112,29 @@ def test_rural_weak_signals_higher_in_legitimate_applicants() -> None:
     assert rural_legit["factura_manual"].mean() > urban_legit["factura_manual"].mean()
 
 
-def test_generate_and_save_datasets_cli(tmp_path: Path) -> None:
-    """Verifica la persistencia de datasets en disco tanto principal como control."""
-    main_file, control_file = generate_and_save_datasets(
+def test_generate_validate_and_split_datasets_cli(tmp_path: Path) -> None:
+    """Verifica la persistencia de datasets en disco (principal, particiones y control)."""
+    main_f, train_f, val_f, test_f, control_f = generate_validate_and_split_datasets(
         output_dir=tmp_path,
-        n_records=100,
+        n_records=300,
         fraud_rate=0.04,
         seed=99,
     )
 
-    assert main_file.exists()
-    assert control_file.exists()
+    for file_path in [main_f, train_f, val_f, test_f, control_f]:
+        assert file_path.exists()
 
-    df_main = pd.read_csv(main_file)
-    df_control = pd.read_csv(control_file)
+    df_main = pd.read_csv(main_f)
+    df_train = pd.read_csv(train_f)
+    df_val = pd.read_csv(val_f)
+    df_test = pd.read_csv(test_f)
+    df_control = pd.read_csv(control_f)
 
-    assert len(df_main) == 100
-    assert len(df_control) == 100
+    assert len(df_main) == 300
+    assert len(df_train) == 210
+    assert len(df_val) == 45
+    assert len(df_test) == 45
+    assert len(df_control) == 300
     assert "es_fraude_real" in df_main.columns
     assert "es_fraude_real" in df_control.columns
 
@@ -138,9 +144,9 @@ def test_generate_dataset_main_cli(tmp_path: Path, monkeypatch: pytest.MonkeyPat
     test_args = [
         "generate_dataset.py",
         "--n-records",
-        "100",
+        "300",
         "--fraud-rate",
-        "0.03",
+        "0.04",
         "--seed",
         "77",
         "--output-dir",
@@ -150,4 +156,7 @@ def test_generate_dataset_main_cli(tmp_path: Path, monkeypatch: pytest.MonkeyPat
     main()
 
     assert (tmp_path / "synthetic_applicants.csv").exists()
+    assert (tmp_path / "train.csv").exists()
+    assert (tmp_path / "val.csv").exists()
+    assert (tmp_path / "test.csv").exists()
     assert (tmp_path / "synthetic_applicants_control.csv").exists()
