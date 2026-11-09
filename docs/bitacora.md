@@ -67,10 +67,11 @@ Ejecutadas el 2026-11-08 en local, sobre el árbol de esta entrega:
 
 ### Pendientes de cierre (T014)
 
-- **Aceptación del contrato por Dev 1, Dev 2 y Dev 4:** solicitada como revisión del PR
-  `feat/fastapi_service_and_api_contract` → `main`. No se registran aprobaciones que no
-  hayan ocurrido; la bitácora se actualiza cuando cada revisor apruebe en GitHub.
-- **Revisión independiente y merge:** el PR activa la CI (ruff, pytest ≥ 80 %, generación
+- **Aceptación del contrato por Dev 1, Dev 2 y Dev 4:** solicitada como revisión del
+  **PR #47** (`feat/fastapi_service_and_api_contract` → `main`, abierto el 2026-11-08:
+  https://github.com/Liceth02usma/microfinance-fraud-detection/pull/47). No se registran
+  aprobaciones que no hayan ocurrido; la bitácora se actualiza cuando cada revisor apruebe en GitHub.
+- **Revisión independiente y merge:** el PR #47 activa la CI (ruff, pytest ≥ 80 %, generación
   de tipos desde el OpenAPI real con detección de deriva, lint, cobertura frontend ≥ 80 %,
   build con type-check, gitleaks). HU-17 se marca cerrada solo con CI verde + aprobaciones
   + merge a `main`.
