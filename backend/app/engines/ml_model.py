@@ -181,12 +181,13 @@ class BaselineLogisticModel:
                 json.dump(metrics, f, indent=2, ensure_ascii=False)
 
     @classmethod
-    def load(cls, model_path: Path) -> BaselineLogisticModel:
+    def load(cls, model_path: Path | str) -> BaselineLogisticModel:
         """Carga un modelo serializado desde el disco."""
-        if not model_path.exists():
-            raise FileNotFoundError(f"No se encontró el artefacto del modelo en: {model_path}")
+        path = Path(model_path)
+        if not path.exists():
+            raise FileNotFoundError(f"No se encontró el artefacto del modelo en: {path}")
         instance = cls()
-        instance.pipeline = joblib.load(model_path)
+        instance.pipeline = joblib.load(path)
         instance.is_fitted = True
         return instance
 
@@ -274,7 +275,8 @@ class GradientBoostingModel:
             "cv_f1_std": round(float(np.std(f1_scores)), 4),
         }
 
-        # 2. Ajuste del modelo con CalibratedClassifierCV (HU-15)
+        # 2. Ajuste del modelo base y con CalibratedClassifierCV (HU-15)
+        self.uncalibrated_pipeline.fit(features_df, y_arr)
         self.calibrated_pipeline = CalibratedClassifierCV(
             estimator=self.uncalibrated_pipeline,
             method=self.calibration_method,
@@ -283,6 +285,22 @@ class GradientBoostingModel:
         self.calibrated_pipeline.fit(features_df, y_arr)
         self.is_fitted = True
         return self
+
+    def explain(
+        self,
+        applicant: pd.Series | dict[str, Any] | pd.DataFrame,
+        top_k: int = 3,
+    ) -> list[dict[str, Any]]:
+        """Genera al menos top_k factores explicativos SHAP en lenguaje claro (HU-20)."""
+        if not self.is_fitted:
+            raise RuntimeError("El modelo debe ser entrenado antes de generar explicaciones.")
+        from app.engines.explainer import ShapExplainer
+
+        if isinstance(applicant, pd.DataFrame):
+            applicant = applicant.iloc[0]
+
+        explainer = ShapExplainer(self.uncalibrated_pipeline)
+        return explainer.explain_instance(applicant, top_k=top_k)
 
     def predict_proba(self, x_df: pd.DataFrame) -> np.ndarray:
         """Estima la probabilidad calibrada de fraude (clase 1) para cada solicitud."""
@@ -342,9 +360,14 @@ class GradientBoostingModel:
         }
 
     def save(self, model_path: Path, metrics: dict[str, Any] | None = None) -> None:
-        """Persiste el artefacto calibrado y opcionalmente sus métricas asociadas."""
+        """Persiste el artefacto calibrado, el modelo base para SHAP y sus métricas."""
         model_path.parent.mkdir(parents=True, exist_ok=True)
-        joblib.dump(self.calibrated_pipeline, model_path)
+        payload = {
+            "calibrated_pipeline": self.calibrated_pipeline,
+            "uncalibrated_pipeline": self.uncalibrated_pipeline,
+            "cv_metrics": self.cv_metrics,
+        }
+        joblib.dump(payload, model_path)
 
         if metrics is not None:
             metrics_path = model_path.with_name(f"{model_path.stem}_metrics.json")
@@ -352,11 +375,20 @@ class GradientBoostingModel:
                 json.dump(metrics, f, indent=2, ensure_ascii=False)
 
     @classmethod
-    def load(cls, model_path: Path) -> GradientBoostingModel:
+    def load(cls, model_path: Path | str) -> GradientBoostingModel:
         """Carga un modelo serializado desde el disco."""
-        if not model_path.exists():
-            raise FileNotFoundError(f"No se encontró el artefacto del modelo en: {model_path}")
+        path = Path(model_path)
+        if not path.exists():
+            raise FileNotFoundError(f"No se encontró el artefacto del modelo en: {path}")
         instance = cls()
-        instance.calibrated_pipeline = joblib.load(model_path)
+        loaded = joblib.load(path)
+        if isinstance(loaded, dict):
+            instance.calibrated_pipeline = loaded.get("calibrated_pipeline")
+            instance.uncalibrated_pipeline = loaded.get(
+                "uncalibrated_pipeline", instance._build_base_pipeline()
+            )
+            instance.cv_metrics = loaded.get("cv_metrics", {})
+        else:
+            instance.calibrated_pipeline = loaded
         instance.is_fitted = True
         return instance
