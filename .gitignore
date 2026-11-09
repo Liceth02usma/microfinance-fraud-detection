@@ -19,6 +19,11 @@ build/
 node_modules/
 frontend/dist/
 *.local
+*.tsbuildinfo
+
+# --- Artifacts generados (OpenAPI exportado para CI; los tipos SÍ se versionan) ---
+openapi.json
+.openapi.json
 
 # --- Env / secrets ---
 .env
