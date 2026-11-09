@@ -86,6 +86,7 @@ Todas las puertas se ejecutan en la CI de GitHub (`.github/workflows/ci.yml`) al
 |---|---|---|
 | Lint / formato | `uv run ruff check . && uv run ruff format --check .` | `npm run lint` (ESLint + Prettier) |
 | Pruebas + cobertura | `uv run pytest` (gate ≥80%) | `npm run test:coverage` (gate ≥80%) |
+| Contrato API / tipos | `uv run python scripts/export_openapi.py openapi.json` | `npm run build` (type-check + bundle) y `npm run generate:types` (falla sin OpenAPI real; CI detecta deriva con `git diff --exit-code`) |
 | Escaneo de secretos | `gitleaks` (en CI; opcional local) | igual |
 | Mensaje de commit | Conventional Commits (en inglés) | igual |
 | Rama protegida | No commit directo a `main` | igual |
@@ -108,16 +109,19 @@ uv run uvicorn app.main:app --reload       # servidor de desarrollo (http://loca
 uv run pytest                              # pruebas + cobertura
 uv run ruff check .                        # lint
 uv run ruff format .                       # formatear
+uv run python scripts/export_openapi.py openapi.json   # exportar contrato OpenAPI (para CI/frontend)
 ```
 
 ### Frontend (desde `frontend/`)
 ```bash
-npm install            # instalar dependencias
-npm run dev            # servidor de desarrollo (http://localhost:5173)
-npm run test           # pruebas
-npm run test:coverage  # pruebas + cobertura
-npm run lint           # ESLint + Prettier
-npm run format         # formatear con Prettier
+npm install               # instalar dependencias
+npm run dev               # servidor de desarrollo (http://localhost:5173)
+npm run test              # pruebas
+npm run test:coverage     # pruebas + cobertura
+npm run lint              # ESLint + Prettier
+npm run format            # formatear con Prettier
+npm run build             # type-check (tsc) + bundle de producción
+npm run generate:types    # regenerar tipos desde el OpenAPI real (requiere backend o OPENAPI_PATH)
 ```
 
 ### Raíz
