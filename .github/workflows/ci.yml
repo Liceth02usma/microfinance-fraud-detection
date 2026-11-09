@@ -37,9 +37,22 @@ jobs:
       - name: Tests + coverage (gate 80%)
         run: uv run pytest
 
+      - name: Export OpenAPI schema (contrato real)
+        run: uv run python scripts/export_openapi.py openapi.json
+
+      - name: Upload OpenAPI schema
+        uses: actions/upload-artifact@v4
+        with:
+          name: openapi-schema
+          path: backend/openapi.json
+          retention-days: 1
+
   frontend:
     name: Frontend (React / Vite)
     runs-on: ubuntu-latest
+    # Necesita el esquema OpenAPI real exportado por el backend: los tipos se
+    # generan desde el contrato, nunca desde un esquema inventado (HU-17, T008/T010).
+    needs: backend
     defaults:
       run:
         working-directory: frontend
@@ -56,11 +69,30 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Download OpenAPI schema
+        uses: actions/download-artifact@v4
+        with:
+          name: openapi-schema
+          path: backend
+
+      - name: Generate types from the real OpenAPI
+        run: npm run generate:types
+        env:
+          OPENAPI_PATH: ../backend/openapi.json
+
+      - name: Fail if generated types are missing or out of date
+        run: |
+          git ls-files --error-unmatch src/api/types/evaluation.types.ts
+          git diff --exit-code -- src/api/types/evaluation.types.ts
+
       - name: Lint (ESLint + Prettier)
         run: npm run lint
 
       - name: Tests + coverage (gate 80%)
         run: npm run test:coverage
+
+      - name: Build (type-check + bundle)
+        run: npm run build
 
   secret-scan:
     name: Secret scanning (gitleaks)
