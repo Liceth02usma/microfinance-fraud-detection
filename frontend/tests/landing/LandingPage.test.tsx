@@ -79,6 +79,9 @@ describe("LandingPage (ruta /)", () => {
   it("incluye la barra flotante de CTA solo en la landing", () => {
     renderRoute();
 
-    expect(screen.getByRole("link", { name: /Probar Simulador Ahora/i })).toBeInTheDocument();
+    // La barra queda `aria-hidden` hasta que se hace scroll (patrón del diseño).
+    expect(
+      screen.getByRole("link", { name: /Probar Simulador Ahora/i, hidden: true }),
+    ).toBeInTheDocument();
   });
 });

@@ -1,4 +1,4 @@
-import { fireEvent, screen, within } from "@testing-library/react";
+import { fireEvent, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { renderRoute } from "../helpers/renderRoute";
 
@@ -46,7 +46,8 @@ describe("ArchitectureMapView (ruta /arquitectura)", () => {
 
     // El fragmento YAML solo existe tras seleccionar el nodo.
     expect(fragmentText()).toContain("R-WEAK-SIN-HISTORIAL");
-    expect(fragmentText()).toContain("Hot-Reload");
+    // «Hot-Reload» vive en la lista de características clave del inspector.
+    expect(screen.getByText(/Hot-Reload/)).toBeInTheDocument();
     expect(screen.getByText("ID: nodo-reglas")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Seleccionar Motor de Reglas" })).toHaveAttribute(
       "aria-pressed",
@@ -111,7 +112,7 @@ describe("ArchitectureMapView (ruta /arquitectura)", () => {
     expect(screen.getByText("Motor: ok")).toBeInTheDocument();
   });
 
-  it("permite copiar el fragmento del nodo seleccionado", () => {
+  it("permite copiar el fragmento del nodo seleccionado", async () => {
     const writeText = vi.fn().mockResolvedValue(undefined);
     Object.defineProperty(window.navigator, "clipboard", {
       value: { writeText },
@@ -125,7 +126,7 @@ describe("ArchitectureMapView (ruta /arquitectura)", () => {
 
     expect(writeText).toHaveBeenCalledTimes(1);
     expect(writeText.mock.calls[0][0]).toContain("SolicitudSintetica");
-    expect(screen.getByText("Copiado")).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByText("Copiado")).toBeInTheDocument());
   });
 
   it("las pestañas de gobierno enlazan las vistas hermanas", () => {

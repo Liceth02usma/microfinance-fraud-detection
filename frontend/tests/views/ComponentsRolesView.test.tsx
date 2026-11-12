@@ -92,15 +92,21 @@ describe("ComponentsRolesView (ruta /roles)", () => {
 
     const trigger = screen.getByRole("button", { name: /Ver leyenda de clasificación/i });
     expect(trigger).toHaveAttribute("aria-expanded", "false");
-    expect(screen.queryByRole("dialog", { name: /Taxonomía de Variables/i })).toBeNull();
+    expect(
+      screen.queryByRole("dialog", { name: /Leyenda de clasificación de variables/i }),
+    ).toBeNull();
 
     fireEvent.click(trigger);
     expect(trigger).toHaveAttribute("aria-expanded", "true");
-    expect(screen.getByRole("dialog", { name: /Taxonomía de Variables/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("dialog", { name: /Leyenda de clasificación de variables/i }),
+    ).toBeInTheDocument();
     expect(screen.getByText(/variable protegida directa/i)).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "Cerrar leyenda" }));
-    expect(screen.queryByRole("dialog", { name: /Taxonomía de Variables/i })).toBeNull();
+    expect(
+      screen.queryByRole("dialog", { name: /Leyenda de clasificación de variables/i }),
+    ).toBeNull();
   });
 
   it("despliega el checklist de conformidad HU-26 y lo descarta", () => {

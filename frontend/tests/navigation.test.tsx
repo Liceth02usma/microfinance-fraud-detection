@@ -17,7 +17,9 @@ describe("Navegación entre rutas", () => {
     );
     // El pie compartido sigue presente y la barra flotante no aparece fuera de /.
     expect(screen.getByText(/Backend status: ok/i)).toBeInTheDocument();
-    expect(screen.queryByRole("link", { name: /Probar Simulador Ahora/i })).toBeNull();
+    expect(
+      screen.queryByRole("link", { name: /Probar Simulador Ahora/i, hidden: true }),
+    ).toBeNull();
   });
 
   it("llega a /roles desde el menú", () => {
@@ -32,7 +34,9 @@ describe("Navegación entre rutas", () => {
       "aria-current",
       "page",
     );
-    expect(screen.queryByRole("link", { name: /Probar Simulador Ahora/i })).toBeNull();
+    expect(
+      screen.queryByRole("link", { name: /Probar Simulador Ahora/i, hidden: true }),
+    ).toBeNull();
   });
 
   it("redirige las rutas desconocidas a la landing", () => {
@@ -46,13 +50,13 @@ describe("Navegación entre rutas", () => {
     ).toBeInTheDocument();
   });
 
-  it("el enlace de simulador aterriza en la landing mientras no exista la vista", () => {
+  it("el enlace de simulador abre la vista de simulador (contrato 02)", () => {
     renderRoute(["/simulador"]);
 
     expect(
       screen.getByRole("heading", {
         level: 1,
-        name: /Detección de Fraude en Microcrédito Rural/i,
+        name: /Simulador de Inferencia Híbrida/i,
       }),
     ).toBeInTheDocument();
   });
