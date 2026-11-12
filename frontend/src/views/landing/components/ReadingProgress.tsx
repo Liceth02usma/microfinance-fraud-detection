@@ -1,4 +1,4 @@
-import { MaterialIcon } from "./MaterialIcon";
+import { MaterialIcon } from "../../../components/MaterialIcon";
 
 export interface ReadingProgressProps {
   /** Porcentaje de lectura (0–100). */

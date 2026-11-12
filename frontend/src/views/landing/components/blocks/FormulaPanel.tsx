@@ -1,5 +1,5 @@
 import type { FormulaBlock } from "../../data/types";
-import { MaterialIcon } from "../MaterialIcon";
+import { MaterialIcon } from "../../../../components/MaterialIcon";
 import { DataTable } from "./DataTable";
 
 /**

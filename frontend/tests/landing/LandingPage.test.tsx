@@ -1,12 +1,12 @@
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { articleHeader, articleSections } from "../../src/views/landing/data/content";
 import { primaryNavLinks } from "../../src/views/landing/data/site";
-import { LandingPage } from "../../src/views/landing/LandingPage";
+import { renderRoute } from "../helpers/renderRoute";
 
-describe("LandingPage", () => {
+describe("LandingPage (ruta /)", () => {
   it("renderiza el hero y las 12 secciones del artículo", () => {
-    render(<LandingPage backendStatus="ok" />);
+    renderRoute();
 
     // Hero.
     expect(
@@ -30,7 +30,7 @@ describe("LandingPage", () => {
   });
 
   it("no renderiza bloques de secciones reservadas", () => {
-    render(<LandingPage backendStatus="ok" />);
+    renderRoute();
 
     expect(screen.queryByText(/Sección en preparación/i)).toBeNull();
     expect(document.getElementById("simulador")).toBeNull();
@@ -39,7 +39,7 @@ describe("LandingPage", () => {
   });
 
   it("no tiene enlaces internos apuntando a destinos inexistentes", () => {
-    render(<LandingPage backendStatus="ok" />);
+    renderRoute();
 
     const hrefs = Array.from(document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]'))
       .map((anchor) => anchor.getAttribute("href") ?? "")
@@ -54,7 +54,7 @@ describe("LandingPage", () => {
   });
 
   it("enlaza las vistas propias de arquitectura, simulador y roles", () => {
-    render(<LandingPage backendStatus="ok" />);
+    renderRoute();
 
     const links = screen.getAllByRole("link");
     const hrefs = links.map((link) => link.getAttribute("href"));
@@ -67,12 +67,18 @@ describe("LandingPage", () => {
   });
 
   it("muestra el estado del backend y el enlace de salto accesible en el pie", () => {
-    render(<LandingPage backendStatus="ok" />);
+    renderRoute();
 
     expect(screen.getByText(/Backend status: ok/i)).toBeInTheDocument();
 
     const skipLink = screen.getByRole("link", { name: /Saltar al contenido principal/i });
     expect(skipLink).toHaveAttribute("href", "#contenido-principal");
     expect(document.getElementById("contenido-principal")).not.toBeNull();
+  });
+
+  it("incluye la barra flotante de CTA solo en la landing", () => {
+    renderRoute();
+
+    expect(screen.getByRole("link", { name: /Probar Simulador Ahora/i })).toBeInTheDocument();
   });
 });

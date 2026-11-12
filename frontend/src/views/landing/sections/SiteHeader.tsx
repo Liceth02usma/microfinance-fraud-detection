@@ -1,8 +1,9 @@
-import { MaterialIcon } from "../components/MaterialIcon";
+import { Link, useLocation } from "react-router-dom";
+import { MaterialIcon } from "../../../components/MaterialIcon";
+import { useDisclosure } from "../../../hooks/useDisclosure";
 import { articleSections } from "../data/content";
 import { primaryNavLinks } from "../data/site";
 import { useActiveSection } from "../hooks/useActiveSection";
-import { useDisclosure } from "../hooks/useDisclosure";
 import logoUrl from "../../../assets/crediconfianza-logo.svg";
 
 /**
@@ -11,8 +12,15 @@ import logoUrl from "../../../assets/crediconfianza-logo.svg";
  */
 const SECTION_IDS: string[] = articleSections.map((section) => section.anchor);
 
-const PRIMARY_NAV_LINK_CLASS =
-  "rounded-lg px-3 py-2 font-label-lg text-label-lg text-on-surface-variant transition-colors duration-150 hover:bg-surface-container-low hover:text-on-surface";
+const NAV_LINK_BASE =
+  "rounded-lg px-3 py-2 font-label-lg text-label-lg transition-colors duration-150";
+
+/** Estado del enlace de navegación según la ruta actual (`aria-current`). */
+function navLinkClasses(isActive: boolean): string {
+  return isActive
+    ? `${NAV_LINK_BASE} bg-primary-container font-semibold text-on-primary`
+    : `${NAV_LINK_BASE} text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface`;
+}
 
 /**
  * Encabezado fijo de la página: marca, navegación principal, desplegable de
@@ -26,6 +34,7 @@ export function SiteHeader(): JSX.Element {
   const desktopMenu = useDisclosure();
   const mobileMenu = useDisclosure();
   const activeId = useActiveSection(SECTION_IDS);
+  const { pathname } = useLocation();
 
   return (
     <>
@@ -51,11 +60,20 @@ export function SiteHeader(): JSX.Element {
           </div>
 
           <nav aria-label="Navegación principal" className="hidden items-center gap-2 xl:flex">
-            {primaryNavLinks.map((link) => (
-              <a key={link.href} href={link.href} className={PRIMARY_NAV_LINK_CLASS}>
-                {link.label}
-              </a>
-            ))}
+            {primaryNavLinks.map((link) => {
+              const isActive = pathname === link.href;
+
+              return (
+                <Link
+                  key={link.href}
+                  to={link.href}
+                  aria-current={isActive ? "page" : undefined}
+                  className={navLinkClasses(isActive)}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
 
             <div className="relative" ref={desktopMenu.containerRef}>
               <button
@@ -103,12 +121,12 @@ export function SiteHeader(): JSX.Element {
           </nav>
 
           <div className="flex shrink-0 items-center gap-2">
-            <a
-              href="/simulador"
+            <Link
+              to="/simulador"
               className="hidden min-h-[44px] items-center justify-center rounded bg-primary-container px-5 font-label-lg text-label-lg text-on-primary shadow-elevation-sm transition-colors duration-150 hover:bg-brand-light sm:inline-flex"
             >
               Probar Simulador
-            </a>
+            </Link>
             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary">
               <MaterialIcon name="person" className="text-[18px]! text-on-primary" />
             </span>
@@ -137,23 +155,28 @@ export function SiteHeader(): JSX.Element {
               aria-label="Navegación principal (móvil)"
               className="mx-auto flex max-h-[70vh] max-w-7xl flex-col gap-1 overflow-y-auto px-6 py-4"
             >
-              {primaryNavLinks.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  onClick={mobileMenu.close}
-                  className={PRIMARY_NAV_LINK_CLASS}
-                >
-                  {link.label}
-                </a>
-              ))}
-              <a
-                href="/simulador"
+              {primaryNavLinks.map((link) => {
+                const isActive = pathname === link.href;
+
+                return (
+                  <Link
+                    key={link.href}
+                    to={link.href}
+                    onClick={mobileMenu.close}
+                    aria-current={isActive ? "page" : undefined}
+                    className={navLinkClasses(isActive)}
+                  >
+                    {link.label}
+                  </Link>
+                );
+              })}
+              <Link
+                to="/simulador"
                 onClick={mobileMenu.close}
                 className="mt-1 inline-flex min-h-[44px] items-center justify-center rounded bg-primary-container px-5 font-label-lg text-label-lg text-on-primary hover:bg-brand-light"
               >
                 Probar Simulador
-              </a>
+              </Link>
 
               <span className="mt-3 border-t border-outline-variant/30 pt-3 font-label-md font-semibold uppercase tracking-wider text-slate-500">
                 Secciones del artículo

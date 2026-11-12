@@ -1,4 +1,5 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it } from "vitest";
 import { articleSections } from "../../src/views/landing/data/content";
 import { primaryNavLinks } from "../../src/views/landing/data/site";
@@ -6,7 +7,11 @@ import { SiteHeader } from "../../src/views/landing/sections/SiteHeader";
 
 describe("SiteHeader", () => {
   beforeEach(() => {
-    render(<SiteHeader />);
+    render(
+      <MemoryRouter>
+        <SiteHeader />
+      </MemoryRouter>,
+    );
   });
 
   it("expone el desplegable del artículo de forma accesible", () => {

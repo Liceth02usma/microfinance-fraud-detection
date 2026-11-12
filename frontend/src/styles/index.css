@@ -181,6 +181,17 @@
   --shadow-elevation-focus: 0 0 0 3px rgb(33 136 97 / 0.35);
 
   --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* ------------------------------------------------------------------ */
+  /* Aliases coop-* (compatibilidad con clases del simulador/stitch)    */
+  /* ------------------------------------------------------------------ */
+  --color-coop-forest: var(--color-primary); /* #003F2B */
+  --color-coop-deep: var(--color-brand-dark); /* #0F2C23 */
+  --color-coop-accent: var(--color-primary-container); /* #15573F */
+  --color-coop-pine: var(--color-brand-light); /* #218861 */
+  --color-coop-amber: #b45309;
+  --color-coop-crimson: var(--color-risk-high); /* #DC2626 */
+  --color-surface-page: var(--color-surface); /* #F8F9FF */
 }
 
 /* -------------------------------------------------------------------- */

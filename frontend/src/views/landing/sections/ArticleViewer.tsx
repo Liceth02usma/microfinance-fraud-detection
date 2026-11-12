@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { ArticleSectionView } from "../components/ArticleSectionView";
-import { MaterialIcon } from "../components/MaterialIcon";
+import { MaterialIcon } from "../../../components/MaterialIcon";
 import { ReadingProgress } from "../components/ReadingProgress";
 import { SectionIndex } from "../components/SectionIndex";
 import { articleHeader, articleSections } from "../data/content";
