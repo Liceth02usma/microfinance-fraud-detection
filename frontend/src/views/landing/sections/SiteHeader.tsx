@@ -6,22 +6,13 @@ import { useDisclosure } from "../hooks/useDisclosure";
 import logoUrl from "../../../assets/crediconfianza-logo.svg";
 
 /**
- * Identificadores observados para resaltar el enlace activo: las tres
- * secciones principales y las 12 anclas del artículo.
+ * Anclas observadas para resaltar la sección visible: las 12 secciones del
+ * artículo (los enlaces principales apuntan a rutas propias, no a anclas).
  */
-const SECTION_IDS: string[] = [
-  ...primaryNavLinks.map((link) => link.path),
-  ...articleSections.map((section) => section.anchor),
-];
+const SECTION_IDS: string[] = articleSections.map((section) => section.anchor);
 
-const NAV_LINK_CLASS =
-  "rounded-lg px-3 py-2 font-label-lg text-label-lg transition-colors duration-150";
-
-function navLinkClasses(isActive: boolean): string {
-  return isActive
-    ? `${NAV_LINK_CLASS} bg-primary-container font-semibold text-on-primary`
-    : `${NAV_LINK_CLASS} text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface`;
-}
+const PRIMARY_NAV_LINK_CLASS =
+  "rounded-lg px-3 py-2 font-label-lg text-label-lg text-on-surface-variant transition-colors duration-150 hover:bg-surface-container-low hover:text-on-surface";
 
 /**
  * Encabezado fijo de la página: marca, navegación principal, desplegable de
@@ -61,12 +52,7 @@ export function SiteHeader(): JSX.Element {
 
           <nav aria-label="Navegación principal" className="hidden items-center gap-2 xl:flex">
             {primaryNavLinks.map((link) => (
-              <a
-                key={link.path}
-                href={link.href}
-                aria-current={activeId === link.path ? "true" : undefined}
-                className={navLinkClasses(activeId === link.path)}
-              >
+              <a key={link.href} href={link.href} className={PRIMARY_NAV_LINK_CLASS}>
                 {link.label}
               </a>
             ))}
@@ -118,7 +104,7 @@ export function SiteHeader(): JSX.Element {
 
           <div className="flex shrink-0 items-center gap-2">
             <a
-              href="#simulador"
+              href="/simulador"
               className="hidden min-h-[44px] items-center justify-center rounded bg-primary-container px-5 font-label-lg text-label-lg text-on-primary shadow-elevation-sm transition-colors duration-150 hover:bg-brand-light sm:inline-flex"
             >
               Probar Simulador
@@ -153,17 +139,16 @@ export function SiteHeader(): JSX.Element {
             >
               {primaryNavLinks.map((link) => (
                 <a
-                  key={link.path}
+                  key={link.href}
                   href={link.href}
                   onClick={mobileMenu.close}
-                  aria-current={activeId === link.path ? "true" : undefined}
-                  className={navLinkClasses(activeId === link.path)}
+                  className={PRIMARY_NAV_LINK_CLASS}
                 >
                   {link.label}
                 </a>
               ))}
               <a
-                href="#simulador"
+                href="/simulador"
                 onClick={mobileMenu.close}
                 className="mt-1 inline-flex min-h-[44px] items-center justify-center rounded bg-primary-container px-5 font-label-lg text-label-lg text-on-primary hover:bg-brand-light"
               >

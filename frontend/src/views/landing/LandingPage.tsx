@@ -1,7 +1,5 @@
-import { placeholderSections } from "./data/site";
 import { ArticleViewer } from "./sections/ArticleViewer";
 import { HeroSection } from "./sections/HeroSection";
-import { PlaceholderSection } from "./sections/PlaceholderSection";
 import { SiteFooter } from "./sections/SiteFooter";
 import { SiteHeader } from "./sections/SiteHeader";
 import { StickyCtaBar } from "./sections/StickyCtaBar";
@@ -15,8 +13,8 @@ export interface LandingPageProps {
  * Landing page de CrediConfianza.
  *
  * Orden heredado del diseño original: encabezado fijo → hero → visor del
- * artículo → secciones reservadas (arquitectura, simulador, roles) → pie →
- * barra flotante inferior.
+ * artículo → pie → barra flotante inferior. Las vistas de arquitectura,
+ * simulador y roles se sirven como rutas propias (contratos 01–03).
  */
 export function LandingPage({ backendStatus }: LandingPageProps): JSX.Element {
   return (
@@ -25,9 +23,6 @@ export function LandingPage({ backendStatus }: LandingPageProps): JSX.Element {
       <main id="contenido-principal" className="pt-20">
         <HeroSection />
         <ArticleViewer />
-        {placeholderSections.map((section) => (
-          <PlaceholderSection key={section.id} section={section} />
-        ))}
       </main>
       <SiteFooter backendStatus={backendStatus} />
       <StickyCtaBar />

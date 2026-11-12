@@ -1,23 +1,26 @@
 /**
- * Contenido estático de la landing: navegación, hero, barra flotante,
- * secciones reservadas y pie de página.
+ * Contenido estático de la landing: navegación, hero, barra flotante y pie
+ * de página.
  *
  * Todo el copy está en español (documentación/contenido) y los identificadores
  * en inglés (código), según las convenciones del repositorio.
  */
 
-/** Enlaces principales del encabezado. */
+/**
+ * Enlaces principales del encabezado.
+ *
+ * Apuntan a vistas propias (contratos `docs/contracts/frontend/01–03`) que se
+ * servirán como rutas una vez exista el enrutador; hoy no son anclas internas.
+ */
 export interface NavLink {
   label: string;
   href: string;
-  /** Ruta (`data-path`) que se resalta cuando la sección está visible. */
-  path: string;
 }
 
 export const primaryNavLinks: NavLink[] = [
-  { label: "Arquitectura", href: "#arquitectura", path: "arquitectura" },
-  { label: "Simulador", href: "#simulador", path: "simulador" },
-  { label: "Componentes y roles", href: "#roles", path: "roles" },
+  { label: "Arquitectura", href: "/arquitectura" },
+  { label: "Simulador", href: "/simulador" },
+  { label: "Componentes y roles", href: "/roles" },
 ];
 
 /** Insignias superiores del hero (cifras verificables, sin emojis). */
@@ -41,7 +44,7 @@ export const hero = {
   title: "Detección de Fraude en Microcrédito Rural con Inteligencia Híbrida y Auditoría Ética",
   subtitle:
     "Arquitectura tripartita de Ontologías RDFS/OWL, Redes Bayesianas Condicionales y XGBoost con explicabilidad SHAP para San Juan de la Vega y Valles Templados. Equidad algorítmica probada frente a la informalidad rural y las cosechas estacionales.",
-  cta: { label: "Iniciar Simulador de Riesgo", icon: "analytics", href: "#simulador" },
+  cta: { label: "Iniciar Simulador de Riesgo", icon: "analytics", href: "/simulador" },
 } as const;
 
 /** Cinta cuantitativa inferior del hero. */
@@ -84,42 +87,10 @@ export const stickyBar = {
   title: "Sistema Híbrido de Evaluación de Riesgo de Fraude — CrediConfianza",
   subtitle: "| Valles Templados & San Juan de la Vega",
   ctaLabel: "Probar Simulador Ahora",
-  ctaHref: "#simulador",
+  ctaHref: "/simulador",
   /** Píxels de desplazamiento tras los que se muestra (diseño original). */
   scrollThreshold: 450,
 } as const;
-
-/** Secciones reservadas del diseño original (anclas sin contenido en Stitch). */
-export interface PlaceholderSection {
-  id: string;
-  icon: string;
-  title: string;
-  description: string;
-}
-
-export const placeholderSections: PlaceholderSection[] = [
-  {
-    id: "arquitectura",
-    icon: "architecture",
-    title: "Arquitectura Híbrida Explicable",
-    description:
-      "Diagrama de la arquitectura tripartita: reglas ontológicas OWL (25%), red bayesiana causal (35%) y XGBoost con atribuciones SHAP (40%).",
-  },
-  {
-    id: "simulador",
-    icon: "tune",
-    title: "Simulador Interactivo de Riesgo",
-    description:
-      "Evaluación de señales débiles y fuertes con fusión ponderada de los tres motores y clasificación de riesgo por umbrales.",
-  },
-  {
-    id: "roles",
-    icon: "groups",
-    title: "Componentes y Roles Institucionales",
-    description:
-      "Oficial de crédito, comité de crédito, agrónomo de zona y comité de ética: responsabilidades en el protocolo de decisión humana.",
-  },
-];
 
 /** Columnas informativas del pie de página. */
 export const footerColumns: { title: string; items: string[]; isLink: boolean }[] = [

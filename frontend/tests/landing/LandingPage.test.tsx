@@ -1,11 +1,11 @@
-import { render, screen, within } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { articleHeader, articleSections } from "../../src/views/landing/data/content";
-import { placeholderSections } from "../../src/views/landing/data/site";
+import { primaryNavLinks } from "../../src/views/landing/data/site";
 import { LandingPage } from "../../src/views/landing/LandingPage";
 
 describe("LandingPage", () => {
-  it("renderiza las secciones del artículo, el hero y las secciones reservadas", () => {
+  it("renderiza el hero y las 12 secciones del artículo", () => {
     render(<LandingPage backendStatus="ok" />);
 
     // Hero.
@@ -27,13 +27,15 @@ describe("LandingPage", () => {
     expect(
       screen.getByRole("heading", { level: 2, name: articleHeader.title }),
     ).toBeInTheDocument();
+  });
 
-    // Secciones reservadas del diseño original (ningún ancla rota).
-    for (const placeholder of placeholderSections) {
-      const section = document.getElementById(placeholder.id);
-      expect(section).not.toBeNull();
-      expect(within(section as HTMLElement).getByText(placeholder.title)).toBeInTheDocument();
-    }
+  it("no renderiza bloques de secciones reservadas", () => {
+    render(<LandingPage backendStatus="ok" />);
+
+    expect(screen.queryByText(/Sección en preparación/i)).toBeNull();
+    expect(document.getElementById("simulador")).toBeNull();
+    expect(document.getElementById("arquitectura")).toBeNull();
+    expect(document.getElementById("roles")).toBeNull();
   });
 
   it("no tiene enlaces internos apuntando a destinos inexistentes", () => {
@@ -45,8 +47,23 @@ describe("LandingPage", () => {
 
     const broken = hrefs.filter((href) => document.querySelector(href) === null);
 
-    expect(hrefs.length).toBeGreaterThan(15);
+    // Enlace de salto + 12 anclas del índice lateral del artículo (los CTA
+    // principales apuntan ahora a rutas propias, no a anclas).
+    expect(hrefs.length).toBeGreaterThanOrEqual(13);
     expect(broken).toEqual([]);
+  });
+
+  it("enlaza las vistas propias de arquitectura, simulador y roles", () => {
+    render(<LandingPage backendStatus="ok" />);
+
+    const links = screen.getAllByRole("link");
+    const hrefs = links.map((link) => link.getAttribute("href"));
+
+    for (const navLink of primaryNavLinks) {
+      expect(hrefs).toContain(navLink.href);
+    }
+    // Los cuatro CTA de simulador (hero, encabezado, progreso, barra flotante).
+    expect(hrefs.filter((href) => href === "/simulador").length).toBeGreaterThanOrEqual(4);
   });
 
   it("muestra el estado del backend y el enlace de salto accesible en el pie", () => {

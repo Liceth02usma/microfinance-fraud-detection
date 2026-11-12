@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it } from "vitest";
 import { articleSections } from "../../src/views/landing/data/content";
+import { primaryNavLinks } from "../../src/views/landing/data/site";
 import { SiteHeader } from "../../src/views/landing/sections/SiteHeader";
 
 describe("SiteHeader", () => {
@@ -57,7 +58,7 @@ describe("SiteHeader", () => {
     const mobileNav = screen.getByRole("navigation", { name: /Navegación principal \(móvil\)/i });
     expect(within(mobileNav).getByRole("link", { name: "Simulador" })).toHaveAttribute(
       "href",
-      "#simulador",
+      "/simulador",
     );
     expect(within(mobileNav).getAllByRole("link", { name: /^\d{2}\./ })).toHaveLength(
       articleSections.length,
@@ -69,9 +70,16 @@ describe("SiteHeader", () => {
     ).toBeNull();
   });
 
-  it("enlaza las tres secciones principales del diseño", () => {
-    for (const label of ["Arquitectura", "Simulador", "Componentes y roles"]) {
-      expect(screen.getAllByRole("link", { name: label }).length).toBeGreaterThan(0);
+  it("enlaza las tres vistas propias del diseño (contratos 01-03)", () => {
+    const hrefs = screen.getAllByRole("link").map((link) => link.getAttribute("href"));
+
+    for (const navLink of primaryNavLinks) {
+      expect(hrefs).toContain(navLink.href);
     }
+    expect(primaryNavLinks.map((link) => link.href)).toEqual([
+      "/arquitectura",
+      "/simulador",
+      "/roles",
+    ]);
   });
 });
