@@ -1,3 +1,5 @@
 # Salidas generadas: no tienen estilo que formatear
 dist/
 coverage/
+# Worker de MSW generado por `npx msw init`
+public/
