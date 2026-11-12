@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import { startMockWorker } from "./mocks/browser";
+import "./styles/index.css";
 
 /**
  * Punto de entrada.

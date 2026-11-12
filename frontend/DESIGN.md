@@ -197,3 +197,19 @@ Para asegurar que la interfaz de usuario de CrediConfianza no luzca como una pla
 
 - Evitar el azul "SaaS genérico" (`#3B82F6`) como color primario del sistema.
 - Utilizar la combinación de **Verde Selva Profundo (`#0F2C23`)** y **Café Tierra (`#8C5A3C`)**, que refleja la herencia de CrediConfianza nacida como fondo parroquial de caficultores, equilibrada con el **Púrpura Ético (`#7C3AED`)** para denotar analítica avanzada e imparcialidad algoritmitizada.
+
+## 5. Implementación en Tailwind CSS v4
+
+Los tokens anteriores están implementados en `src/styles/index.css` dentro del bloque `@theme` (Tailwind CSS v4 con plugin `@tailwindcss/vite` en `vite.config.ts`):
+
+- **Colores:** `--color-*` (p. ej. `bg-surface-container-lowest`, `text-primary`, `text-risk-high`, `bg-earth-soft`, `text-bias-warning`).
+- **Tipografía:** `--font-*` (Inter / JetBrains Mono) y `--text-*` con línea y peso embebidos (`text-display`, `text-headline-lg`, `text-body-md`, `text-label-md`, `text-metric-data`…).
+- **Espaciado y radios:** `--spacing-*` (escala `space-*`, `gutter`, `margin`) y `--radius-*` (el diseño define `radius-full: 0.75rem`, no un píldora perfecta).
+- **Sombras:** `--shadow-elevation-*`, `--shadow-header`, `--shadow-sticky`.
+
+Notas de implementación:
+
+- **Iconos Material Symbols:** la hoja de Google Fonts se carga **sin capa** (`<link>` en `index.html`), por lo que gana en cascada sobre las utilidades de Tailwind (que viven en `@layer utilities`). Para forzar un tamaño distinto al `24px` por defecto se usa el modificador `!` de Tailwind v4: `className="text-[16px]!"`.
+- **Anclas y header fijo:** `html { scroll-padding-top: 7rem }` compensa el encabezado fijo de 80px (equivalente al `scroll-mt-28` del diseño original).
+- **Logo:** el recurso original del diseño de Stitch estaba inaccesible (HTTP 400), por lo que se reemplaza por `src/assets/crediconfianza-logo.svg` (marca local, sin dependencias externas).
+- **Accesibilidad:** anillo de foco de 3px `#218861`, enlace de salto, `prefers-reduced-motion`, objetivos táctiles ≥44px y `aria-current` en la navegación activa.
