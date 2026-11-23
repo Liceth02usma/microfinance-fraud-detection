@@ -60,4 +60,60 @@ describe("Navegación entre rutas", () => {
       }),
     ).toBeInTheDocument();
   });
+
+  it("permite regresar a la landing al hacer clic en el logo de CrediConfianza desde /simulador", () => {
+    renderRoute(["/simulador"]);
+
+    const logo = screen.getByRole("link", { name: /CrediConfianza Finanzas Responsables/i });
+    fireEvent.click(logo);
+
+    expect(
+      screen.getByRole("heading", {
+        level: 1,
+        name: /Detección de Fraude en Microcrédito Rural/i,
+      }),
+    ).toBeInTheDocument();
+  });
+
+  it("redirige al visor del artículo al presionar el botón de Artículo Científico desde /simulador", () => {
+    renderRoute(["/simulador"]);
+
+    const articleButton = screen.getByRole("button", { name: /Artículo Científico/i });
+    fireEvent.click(articleButton);
+
+    expect(
+      screen.getByRole("heading", {
+        level: 1,
+        name: /Detección de Fraude en Microcrédito Rural/i,
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", {
+        level: 2,
+        name: /Arquitectura Híbrida Explicable para la Detección de Fraude/i,
+      }),
+    ).toBeInTheDocument();
+  });
+
+  it("redirige a una sección del artículo al seleccionarla en el desplegable desde /simulador", () => {
+    renderRoute(["/simulador"]);
+
+    // Abrir menú por hover/mouseEnter
+    const menuContainer = screen.getByRole("button", {
+      name: /Artículo Científico/i,
+    }).parentElement;
+    if (menuContainer) {
+      fireEvent.mouseEnter(menuContainer);
+    }
+
+    const sectionLink = screen.getByRole("link", { name: /01\. Resumen/i });
+    fireEvent.click(sectionLink);
+
+    expect(
+      screen.getByRole("heading", {
+        level: 1,
+        name: /Detección de Fraude en Microcrédito Rural/i,
+      }),
+    ).toBeInTheDocument();
+  });
 });

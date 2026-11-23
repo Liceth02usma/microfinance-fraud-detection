@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { MaterialIcon } from "../../../components/MaterialIcon";
 import { useDisclosure } from "../../../hooks/useDisclosure";
 import { articleSections } from "../data/content";
@@ -35,6 +35,36 @@ export function SiteHeader(): JSX.Element {
   const mobileMenu = useDisclosure();
   const activeId = useActiveSection(SECTION_IDS);
   const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const isLanding = pathname === "/";
+
+  const handleButtonClick = (): void => {
+    if (!isLanding) {
+      desktopMenu.close();
+      navigate("/#visor-articulo");
+    } else {
+      desktopMenu.toggle();
+    }
+  };
+
+  const handleSectionClick = (event: React.MouseEvent<HTMLAnchorElement>, anchor: string): void => {
+    desktopMenu.close();
+    mobileMenu.close();
+
+    if (!isLanding) {
+      event.preventDefault();
+      navigate(`/#${anchor}`);
+    } else {
+      const target = document.getElementById(anchor);
+      if (target) {
+        event.preventDefault();
+        if (typeof target.scrollIntoView === "function") {
+          target.scrollIntoView({ behavior: "smooth" });
+        }
+        window.history.pushState(null, "", `#${anchor}`);
+      }
+    }
+  };
 
   return (
     <>
@@ -47,7 +77,10 @@ export function SiteHeader(): JSX.Element {
 
       <header className="fixed top-0 z-50 w-full bg-surface-container-lowest/90 shadow-elevation-sm backdrop-blur-xl">
         <div className="mx-auto flex h-[60px] max-w-7xl items-center justify-between gap-4 px-6 lg:px-12">
-          <div className="flex shrink-0 items-center gap-4">
+          <Link
+            to="/"
+            className="flex shrink-0 items-center gap-4 transition-opacity hover:opacity-90"
+          >
             <img src={logoUrl} alt="" className="h-8 w-auto object-contain" />
             <div className="flex flex-col">
               <span className="font-headline-sm text-headline-sm leading-tight tracking-tight text-primary">
@@ -57,7 +90,7 @@ export function SiteHeader(): JSX.Element {
                 Finanzas Responsables
               </span>
             </div>
-          </div>
+          </Link>
 
           <nav aria-label="Navegación principal" className="hidden items-center gap-2 xl:flex">
             {primaryNavLinks.map((link) => {
@@ -75,10 +108,15 @@ export function SiteHeader(): JSX.Element {
               );
             })}
 
-            <div className="relative" ref={desktopMenu.containerRef}>
+            <div
+              className="relative"
+              ref={desktopMenu.containerRef}
+              onMouseEnter={desktopMenu.open}
+              onMouseLeave={desktopMenu.close}
+            >
               <button
                 type="button"
-                onClick={desktopMenu.toggle}
+                onClick={handleButtonClick}
                 aria-expanded={desktopMenu.isOpen}
                 aria-controls="article-dropdown"
                 className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 font-label-lg text-label-lg text-on-surface-variant transition-colors duration-150 hover:bg-surface-container-low hover:text-on-surface"
@@ -100,8 +138,8 @@ export function SiteHeader(): JSX.Element {
                       {articleSections.map((section) => (
                         <li key={section.anchor}>
                           <a
-                            href={`#${section.anchor}`}
-                            onClick={desktopMenu.close}
+                            href={isLanding ? `#${section.anchor}` : `/#${section.anchor}`}
+                            onClick={(event) => handleSectionClick(event, section.anchor)}
                             aria-current={activeId === section.anchor ? "true" : undefined}
                             className={`block truncate rounded-lg px-3 py-2 font-body-sm text-body-sm transition-colors ${
                               activeId === section.anchor
@@ -127,9 +165,6 @@ export function SiteHeader(): JSX.Element {
             >
               Probar Simulador
             </Link>
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary">
-              <MaterialIcon name="person" className="text-[18px]! text-on-primary" />
-            </span>
             <button
               type="button"
               onClick={mobileMenu.toggle}
@@ -184,8 +219,8 @@ export function SiteHeader(): JSX.Element {
               {articleSections.map((section) => (
                 <a
                   key={section.anchor}
-                  href={`#${section.anchor}`}
-                  onClick={mobileMenu.close}
+                  href={isLanding ? `#${section.anchor}` : `/#${section.anchor}`}
+                  onClick={(event) => handleSectionClick(event, section.anchor)}
                   className="rounded-lg px-3 py-2 font-body-sm text-body-sm text-on-surface-variant transition-colors hover:bg-surface-container-low hover:text-on-surface"
                 >
                   {section.dropdownLabel}
