@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { SiteFooter } from "../../views/landing/sections/SiteFooter";
 import { SiteHeader } from "../../views/landing/sections/SiteHeader";
@@ -16,7 +17,23 @@ export interface AppLayoutProps {
  * «Probar Simulador» solo se muestra en la landing (`/`).
  */
 export function AppLayout({ backendStatus }: AppLayoutProps): JSX.Element {
-  const { pathname } = useLocation();
+  const { pathname, hash } = useLocation();
+
+  useEffect(() => {
+    if (hash) {
+      const id = hash.replace("#", "");
+      const scrollToTarget = () => {
+        const el = document.getElementById(id);
+        if (el && typeof el.scrollIntoView === "function") {
+          el.scrollIntoView({ behavior: "smooth" });
+        }
+      };
+
+      scrollToTarget();
+      const timer = setTimeout(scrollToTarget, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [pathname, hash]);
 
   return (
     <div className="min-h-screen bg-surface">

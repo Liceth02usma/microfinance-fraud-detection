@@ -1,8 +1,11 @@
 import "@testing-library/jest-dom/vitest";
-import { afterAll, afterEach, beforeAll } from "vitest";
+import { afterAll, afterEach, beforeAll, vi } from "vitest";
 
 import { server } from "../src/mocks/server";
 import { resetScenario } from "../src/mocks/scenarios";
+
+// JSDOM no implementa scrollIntoView
+window.HTMLElement.prototype.scrollIntoView = vi.fn();
 
 // Intercepta TODA petición de red con los escenarios de `src/mocks/`
 // (T23): las pruebas usan los mismos casos de referencia HU-27 que el
