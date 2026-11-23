@@ -306,7 +306,7 @@ export default function Col1Parametros({
             <input
               type="range"
               min={1000000}
-              max={50000000}
+              max={35000000}
               step={500000}
               value={form.monto}
               onChange={(e) => onField({ monto: Number(e.target.value) })}
@@ -314,8 +314,8 @@ export default function Col1Parametros({
             />
             <div className="flex justify-between text-[10px] font-mono text-slate-500 mt-0.5">
               <span>$1M</span>
-              <span>$25M</span>
-              <span>$50M COP</span>
+              <span>$18M</span>
+              <span>$35M COP</span>
             </div>
           </div>
           {/* Ingresos */}
@@ -352,13 +352,18 @@ export default function Col1Parametros({
               </div>
               <input
                 type="range"
-                min={12}
-                max={120}
+                min={6}
+                max={36}
                 step={6}
                 value={form.plazo}
                 onChange={(e) => onField({ plazo: Number(e.target.value) })}
                 className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-coop-forest"
               />
+              <div className="flex justify-between text-[10px] font-mono text-slate-500 mt-0.5">
+                <span>6m</span>
+                <span>18m</span>
+                <span>36m</span>
+              </div>
             </div>
             <div>
               <div className="flex justify-between items-center text-xs mb-1">
@@ -370,12 +375,17 @@ export default function Col1Parametros({
               <input
                 type="range"
                 min={18}
-                max={80}
+                max={72}
                 step={1}
                 value={form.edad}
                 onChange={(e) => onField({ edad: Number(e.target.value) })}
                 className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-coop-forest"
               />
+              <div className="flex justify-between text-[10px] font-mono text-slate-500 mt-0.5">
+                <span>18</span>
+                <span>45</span>
+                <span>72</span>
+              </div>
             </div>
           </div>
         </div>

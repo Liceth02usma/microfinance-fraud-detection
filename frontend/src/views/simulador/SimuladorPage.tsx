@@ -45,7 +45,7 @@ const CASOS: Record<"rural_legitimo" | "urbano_fraude" | "ambiguo", FormState> =
     esEstacional: false,
     monto: 35000000,
     ingresos: 14000000,
-    plazo: 60,
+    plazo: 36,
     edad: 29,
     // sw-4, sw-10 → índices 3, 9
     weak: [false, false, false, true, false, false, false, false, false, true, false, false, false],
@@ -59,7 +59,7 @@ const CASOS: Record<"rural_legitimo" | "urbano_fraude" | "ambiguo", FormState> =
     esEstacional: true,
     monto: 22000000,
     ingresos: 3200000,
-    plazo: 48,
+    plazo: 24,
     edad: 55,
     // sw-1,3,5,8,12 → índices 0,2,4,7,11
     weak: [true, false, true, false, true, false, false, true, false, false, false, true, false],
