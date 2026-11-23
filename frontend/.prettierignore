@@ -1,0 +1,7 @@
+# Salidas generadas: no tienen estilo que formatear
+dist/
+coverage/
+# Worker de MSW generado por `npx msw init`
+public/
+# Prototipos Stitch (HTML generado, no código de producción)
+stitch/

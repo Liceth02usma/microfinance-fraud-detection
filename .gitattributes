@@ -1,0 +1,3 @@
+# Mantener LF en el árbol de trabajo en todas las plataformas:
+# Prettier usa endOfLine "lf" por defecto y los hooks/CI comparan con LF.
+* text=auto eol=lf

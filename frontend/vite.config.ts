@@ -1,10 +1,10 @@
-/// <reference types="vitest" />
+import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
-import { defineConfig } from "vite";
+import { defineConfig } from "vitest/config";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), tailwindcss()],
   server: {
     port: 5173,
   },
@@ -16,7 +16,9 @@ export default defineConfig({
       provider: "v8",
       reporter: ["text", "lcov"],
       include: ["src/**/*.{ts,tsx}"],
-      exclude: ["src/main.tsx"],
+      // Excluye el punto de entrada y los artefactos sin código ejecutable:
+      // tipos generados desde el OpenAPI y declaraciones `.d.ts`.
+      exclude: ["src/main.tsx", "src/**/*.d.ts", "src/api/types/**"],
       thresholds: {
         lines: 80,
         functions: 80,
