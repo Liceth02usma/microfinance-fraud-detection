@@ -1,5 +1,5 @@
 import { fireEvent, screen, within } from "@testing-library/react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { renderRoute } from "../helpers/renderRoute";
 
 /** Cuentas de fila exigidas por el contrato 03 §5 (sin la fila de cabecera). */
@@ -9,9 +9,6 @@ function rowCount(tableIndex: number): number {
 }
 
 describe("ComponentsRolesView (ruta /roles)", () => {
-  afterEach(() => {
-    vi.restoreAllMocks();
-  });
   it("renderiza las 4 secciones con los conteos del contrato (9/13/6/10/6)", () => {
     renderRoute(["/roles"]);
 
@@ -109,37 +106,16 @@ describe("ComponentsRolesView (ruta /roles)", () => {
     ).toBeNull();
   });
 
-  it("despliega el checklist de conformidad HU-26 y lo descarta", () => {
-    renderRoute(["/roles"]);
-
-    const toggle = screen.getByRole("button", { name: /Verificar Conformidad HU-26/i });
-    expect(toggle).toHaveAttribute("aria-expanded", "false");
-    expect(screen.queryByText(/9\/9 Componentes del sistema auditados/)).toBeNull();
-
-    fireEvent.click(toggle);
-    expect(toggle).toHaveAttribute("aria-expanded", "true");
-    expect(screen.getByText(/9\/9 Componentes del sistema auditados/)).toBeInTheDocument();
-    expect(screen.getByText(/Salvaguarda ética HU-18: Activa/)).toBeInTheDocument();
-    expect(screen.getByText(/Firma digital del auditor/)).toBeInTheDocument();
-
-    fireEvent.click(screen.getByRole("button", { name: "Entendido" }));
-    expect(screen.queryByText(/9\/9 Componentes del sistema auditados/)).toBeNull();
-  });
-
-  it("permite generar la ficha técnica por impresión", () => {
-    const print = vi.fn();
-    Object.defineProperty(window, "print", { value: print, configurable: true });
-
-    renderRoute(["/roles"]);
-
-    fireEvent.click(screen.getByRole("button", { name: /Ficha Técnica PDF/i }));
-    expect(print).toHaveBeenCalledTimes(1);
-  });
-
   it("las tablas admiten desplazamiento horizontal en pantallas angostas", () => {
     renderRoute(["/roles"]);
 
     const scrollable = document.querySelectorAll(".overflow-x-auto");
     expect(scrollable.length).toBeGreaterThanOrEqual(5);
+  });
+
+  it("no muestra las pestañas de gobierno (fila eliminada de las vistas)", () => {
+    renderRoute(["/roles"]);
+
+    expect(screen.queryByRole("navigation", { name: /Gobierno del Sistema/i })).toBeNull();
   });
 });

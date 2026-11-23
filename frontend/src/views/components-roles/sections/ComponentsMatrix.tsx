@@ -6,8 +6,8 @@ import { SectionCard } from "./SectionCard";
 
 /** Pastillas de color por capa (paleta del diseño). */
 const LAYER_BADGES: Record<SystemLayer, string> = {
-  Usuario: "border-sky-200 bg-sky-100 text-sky-700",
-  "Núcleo Híbrido": "border-violet-200 bg-violet-100 text-violet-700",
+  Usuario: "border-trust-blue/30 bg-trust-blue/10 text-trust-blue",
+  "Núcleo Híbrido": "border-bias-warning/30 bg-bias-warning/10 text-bias-warning",
   "Conocimiento & Ética": "border-primary-container/20 bg-brand-soft text-primary-container",
 };
 
@@ -82,10 +82,10 @@ export function ComponentsMatrix(): JSX.Element {
       subtitle="Inventario detallado de los módulos desacoplados y sus interacciones"
       right={
         <div className="flex flex-wrap items-center gap-2 text-[11px] font-semibold">
-          <span className="whitespace-nowrap rounded border border-sky-200 bg-sky-50 px-2.5 py-1 text-sky-700">
+          <span className="whitespace-nowrap rounded border border-trust-blue/30 bg-trust-blue/10 px-2.5 py-1 text-trust-blue">
             Usuario
           </span>
-          <span className="whitespace-nowrap rounded border border-violet-200 bg-violet-50 px-2.5 py-1 text-violet-700">
+          <span className="whitespace-nowrap rounded border border-bias-warning/30 bg-bias-warning/10 px-2.5 py-1 text-bias-warning">
             Núcleo Híbrido
           </span>
           <span className="whitespace-nowrap rounded border border-primary-container/20 bg-brand-soft px-2.5 py-1 text-primary-container">

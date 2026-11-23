@@ -2,214 +2,384 @@
 design_tokens:
   colors:
     primary:
-      brand_dark: "#0F2C23" # Verde Selva Profundo (Identidad institucional y solidez institucional)
-      brand_main: "#15573F" # Verde Cooperativo (Acciones principales y branding rural)
-      brand_light: "#218861" # Verde Brote (Estados hover y destaques)
-      brand_soft: "#E8F5E9" # Verde Claro (Superficies activas y fondos de acento)
+      brand_dark: "#0F2C23" # Verde Selva Profundo — identidad institucional, superficies de máxima autoridad
+      brand_main: "#15573F" # Verde Cooperativo — acciones primarias, branding rural
+      brand_light: "#218861" # Verde Brote — hover, estados activos
+      brand_soft: "#E8F5E9" # Verde Claro — fondos de acento leve, chips de zona rural
     secondary:
-      earth_dark: "#4A3222" # Café Tierra Oscuro (Contexto agrícola/rural)
-      earth_main: "#8C5A3C" # Café Arcilla (Subtítulos de contexto productivo)
-      earth_soft: "#F5EFEA" # Arena Suave (Fondos de tarjetas de contexto rural)
-    accent_and_states:
-      trust_blue: "#0284C7" # Azul Auditoría / Transparencia (Redes Bayesianas y Reglas)
-      bias_warning: "#7C3AED" # Púrpura Paridad / Alerta de Sesgo Ético (Discriminación detectada)
-      risk_low: "#059669" # Verde Aprobación (Riesgo Bajo de Fraude < 20%)
-      risk_medium: "#D97706" # Ámbar Alerta / Revisión Manual (Riesgo 20% - 60%)
-      risk_high: "#DC2626" # Rojo Fraude / Bloqueo (Riesgo > 60%)
+      earth_dark: "#4A3222" # Café Tierra Oscuro — contexto agrícola, encabezados de sección productiva
+      earth_main: "#8C5A3C" # Café Arcilla — textos de apoyo, ilustraciones de territorio
+      earth_soft: "#F5EFEA" # Arena Suave — fondos de tarjetas de contexto rural
+    accent_states:
+      trust_blue: "#0284C7" # Azul Auditoría — redes bayesianas, transparencia, documentación
+      bias_warning: "#6D28D9" # Púrpura Paridad — discriminación detectada, alerta ética (nunca junto a trust_blue en la misma tarjeta)
+      risk_low: "#059669" # Verde Aprobación — riesgo < 20 %
+      risk_medium: "#D97706" # Ámbar Revisión — riesgo 20–60 %
+      risk_high: "#DC2626" # Rojo Fraude — riesgo > 60 %
     neutrals:
-      slate_900: "#0F172A" # Texto principal (Máximo contraste)
-      slate_700: "#334155" # Texto secundario / Encabezados de tablas
-      slate_500: "#64748B" # Texto auxiliar / Labels y metadatos
-      slate_300: "#CBD5E1" # Bordes dividores y campos desactivados
-      slate_100: "#F1F5F9" # Fondos de contenedores y paneles laterales
-      surface_white: "#FFFFFF" # Fondos de tarjetas y modales
-    dark_mode_surfaces:
-      bg_dark: "#0B0F17" # Fondo global en modo nocturno
-      card_dark: "#1E293B" # Tarjetas en modo nocturno
-      border_dark: "#334155" # Bordes nocturnos
+      slate_900: "#0F172A" # Texto principal
+      slate_700: "#334155" # Texto secundario, encabezados de tabla
+      slate_500: "#64748B" # Metadatos, placeholders
+      slate_300: "#CBD5E1" # Bordes, campos inactivos
+      slate_100: "#F1F5F9" # Fondos de paneles y barras laterales
+      white: "#FFFFFF" # Superficies de tarjetas y modales
+    dark_mode:
+      bg: "#0B0F17" # Fondo global nocturno
+      card: "#1E293B" # Tarjetas en modo nocturno
+      border: "#334155" # Bordes nocturnos
 
   typography:
+    # Una sola familia para toda la interfaz: Space Grotesk.
+    # Humanista, con personalidad propia, sin el peso corporativo de Inter.
+    # Solo se añade IBM Plex Mono para fórmulas, coeficientes y bloques de reglas —
+    # nunca para etiquetas de datos genéricas (ese uso es un indicador de diseño de IA).
     font_families:
-      display: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
-      body: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
-      mono: "'JetBrains Mono', 'Fira Code', 'Courier New', monospace" # Para métricas, coeficientes y reglas expertas
-    font_sizes:
-      xs: "0.75rem" # 12px - Labels, metadatos, tags de paridad
-      sm: "0.875rem" # 14px - Texto de tablas, descripciones de reglas
-      base: "1.0rem" # 16px - Cuerpo de texto estándar, inputs
-      lg: "1.125rem" # 18px - Encabezados de tarjetas, subtítulos
-      xl: "1.25rem" # 20px - Títulos de sección
-      2xl: "1.5rem" # 24px - Puntajes de riesgo / Indicadores clave
-      3xl: "1.875rem" # 30px - Encabezados principales de dashboard
-      4xl: "2.25rem" # 36px - Métricas destacadas de auditoría global
-    font_weights:
-      regular: 400
-      medium: 500
-      semibold: 600
-      bold: 700
-    line_heights:
-      tight: 1.2
-      snug: 1.375
-      normal: 1.5
-      relaxed: 1.625
-
-  spacing_and_dimensions:
-    base_unit: "4px"
+      ui: "'Space Grotesk', 'Segoe UI', system-ui, sans-serif"
+      code: "'IBM Plex Mono', 'Courier New', monospace" # Solo fórmulas y código de reglas
     scale:
-      space_1: "0.25rem" # 4px
-      space_2: "0.5rem" # 8px
-      space_3: "0.75rem" # 12px
-      space_4: "1.0rem" # 16px
-      space_6: "1.5rem" # 24px
-      space_8: "2.0rem" # 32px
-      space_12: "3.0rem" # 48px
-      space_16: "4.0rem" # 64px
+      # Nombre semántico — no usar tallas numéricas directamente en el JSX
+      display: { size: "2.25rem", weight: 700, lh: 1.15, tracking: "-0.02em" } # Hero de cada vista
+      headline: { size: "1.75rem", weight: 600, lh: 1.25, tracking: "-0.01em" } # Títulos de sección
+      title: { size: "1.25rem", weight: 600, lh: 1.35 } # Encabezados de tarjeta
+      body_lg: { size: "1.0625rem", weight: 400, lh: 1.6 } # Texto de formulario y descripción
+      body: { size: "0.9375rem", weight: 400, lh: 1.55 } # Párrafos, tooltips
+      label: { size: "0.8125rem", weight: 500, lh: 1.4 } # Etiquetas de campo
+      caption: { size: "0.75rem", weight: 400, lh: 1.45 } # Metadatos, versión del modelo
+      metric: { size: "2.5rem", weight: 700, lh: 1.0, font: "ui" } # Puntaje de riesgo principal
+      formula: { size: "0.875rem", weight: 400, lh: 1.6, font: "code" } # Ecuaciones bayesianas
+
+    rules:
+      - Longitud de línea máxima en columnas de contenido: 72ch. Las columnas de datos numéricos no tienen este límite.
+      - No usar todo en mayúsculas en ninguna etiqueta — ni en botones, ni en chips, ni en encabezados de tabla.
+      - No acentuar una sola palabra dentro de un título cambiando su color; si se destaca algo, es un bloque completo (un número, una frase).
+      - Sentence case en todos los elementos: botones, labels, tablas, mensajes de error.
+
+  spacing:
+    base: "4px"
+    scale:
+      1: "0.25rem" #  4px
+      2: "0.5rem" #  8px
+      3: "0.75rem" # 12px
+      4: "1rem" # 16px
+      6: "1.5rem" # 24px
+      8: "2rem" # 32px
+      12: "3rem" # 48px
+      16: "4rem" # 64px
+      24: "6rem" # 96px
     layout:
-      sidebar_width: "280px"
-      header_height: "64px"
-      content_max_width: "1600px"
+      sidebar_width: "272px"
+      header_height: "60px"
+      content_max_width: "1440px"
       grid_columns: 12
       grid_gutter: "24px"
+      content_col_max: "72ch" # Columnas narrativas, no datos
 
-  borders_and_shapes:
+  borders_shapes:
     radii:
-      none: "0px"
-      sm: "4px" # Badges y tags pequeños
-      md: "8px" # Inputs, botones, alertas
-      lg: "12px" # Tarjetas de evaluación y paneles
-      xl: "16px" # Modales y contenedores principales
-      full: "9999px" # Avatares y píldoras de estado
+      none: "0"
+      xs: "3px" # Chips y badges de señal
+      sm: "6px" # Inputs, selects
+      md: "10px" # Tarjetas de evaluación, alertas
+      lg: "14px" # Paneles principales y modales
+      pill: "100px" # Indicadores de semáforo, puntaje
+      # Nota: "pill" no es 9999px — el radio grande es intencional para que
+      # no parezca un elemento flotante genérico.
     borders:
       thin: "1px solid"
-      medium: "2px solid"
-      thick: "4px solid"
+      accent: "2px solid" # Foco activo, estado de alerta ética
     shadows:
-      elevation_sm: "0 1px 2px 0 rgba(15, 23, 42, 0.05)"
-      elevation_md: "0 4px 6px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -1px rgba(15, 23, 42, 0.04)"
-      elevation_lg: "0 10px 15px -3px rgba(15, 23, 42, 0.1), 0 4px 6px -2px rgba(15, 23, 42, 0.05)"
-      elevation_focus: "0 0 0 3px rgba(33, 136, 97, 0.35)"
-      elevation_bias_alert: "0 0 0 3px rgba(124, 58, 237, 0.30)"
+      # Sombras derivadas del verde institucional, no de rgba(0,0,0,0.1)
+      sm: "0 1px 3px 0 rgba(15, 44, 35, 0.07)"
+      md: "0 4px 10px -2px rgba(15, 44, 35, 0.11), 0 1px 4px -1px rgba(15, 44, 35, 0.06)"
+      lg: "0 12px 24px -4px rgba(15, 44, 35, 0.14), 0 4px 8px -2px rgba(15, 44, 35, 0.07)"
+      focus: "0 0 0 3px rgba(33, 136, 97, 0.40)"
+      bias_focus: "0 0 0 3px rgba(109, 40, 217, 0.35)"
 ---
 
-# Guía de Arquitectura de Diseño UI/UX: CrediConfianza Fraude & Auditoría Ética
+# Guía de Diseño UI/UX — CrediConfianza: Detección de Fraude y Auditoría Ética
 
-## 1. Visión Holística y Filosofía de Diseño
+## 1. Identidad visual y filosofía
 
-El sistema de evaluación de riesgo de fraude para **CrediConfianza** no es un dashboard bancario tradicional ni una consola analítica opaca. Es un **entorno colaborativo de toma de decisiones responsable**, diseñado específicamente para resolver la tensión entre la automatización inteligente (ML + Redes Bayesianas + Reglas Expertas) y la equidad socioeconómica territorial en San Juan de la Vega y los Valles Templados.
+CrediConfianza nació como fondo parroquial de caficultores y se convirtió en cooperativa de microcrédito para productores urbanos y rurales. Su interfaz no es un dashboard bancario corporativo ni una consola analítica de fintech. Es un **entorno de decisión responsable**, donde la automatización inteligente y la equidad territorial coexisten en la misma pantalla.
 
-### Principios Directores de UX:
+La identidad visual parte de esa dualidad: el verde de la selva andina y el café de la tierra cultivada dan el tono institucional; el púrpura ético marca los momentos de mayor responsabilidad algorítmica. No hay azul SaaS, no hay gradientes decorativos, no hay tarjetas simétricas repetidas.
 
-1. **Transparencia Radical e Inmediata (XAI):** Jamás mostrar un puntaje de riesgo aislado sin su desglose explicativo (reglas activadas, nodos bayesianos desajustados y valores SHAP del modelo ML).
-2. **Mitigación Activa del Sesgo Rural:** El diseño debe resaltar visualmente las características estructurales del crédito rural (estacionalidad de cosechas, efectivo en ferias, direcciones sin nomenclatura, telefonía prepago) para evitar que la interfaz induzca penalizaciones automáticas o apresuradas por parte del analista.
-3. **Auditoría Ética como Primera Ciudadana:** La métrica de paridad demográfica y la tasa de falsos positivos en zonas rurales son visibles en la barra superior y en el flujo de decisión individual.
-4. **Resiliencia Operativa:** La interfaz debe comportarse impecablemente en pantallas corporativas de la oficina urbana y en tabletas con conectividad intermitente en visitas de campo rurales.
+### Principios de diseño
 
----
+**Transparencia sin opacidad:** Ningún puntaje de riesgo aparece solo. El desglose tripartito (reglas, bayesiano, ML) es siempre visible junto al número.
 
-## 2. Pautas de Comportamiento de Componentes
+**El territorio es contexto, no sesgo:** La interfaz no penaliza visualmente las señales rurales. Cuando el sistema detecta señales de baja correlación con fraude en contexto agrícola, lo dice explícitamente con un banner ético, no con un triángulo de advertencia rojo.
 
-### 2.1. Tarjeta del Motor Tripartito de Riesgo (Score Dashboard Card)
+**La decisión final es humana:** Los botones de aprobación y rechazo son el elemento más prominente de cada expediente. El sistema recomienda; el analista decide y firma.
 
-El corazón de la revisión de cada caso es el contenedor que fusiona los tres motores de razonamiento:
-
-- **Visualización:** Tres columnas o un panel segmentado que muestra la contribución ponderada:
-  - **Reglas Expertas (Determinista):** Lista de chequeo con severidad (Crítica, Moderada, Informativa).
-  - **Red Bayesiana (Probabilístico):** Grafo condicional o barra de probabilidad acumulada que evalúa la coherencia del negocio (p. ej., $P(\text{Fraude} \mid \text{Ingreso Estacional, Sin Local Fijo})$).
-  - **Machine Learning (Estadístico):** Puntaje del modelo supervisado con barra de confianza.
-- **Microinteracción:** Al hacer _hover_ o _focus_ en el indicador de riesgo global (p. ej., 68% Riesgo Moderado), se destacan simultáneamente en pantalla las tres razones principales que construyeron ese número.
-
-### 2.2. Panel de Alerta de Sesgo Ético y Paridad (Ethical Bias Monitor)
-
-Componente de notificación fija en la ficha de crédito rural/urbano.
-
-- **Comportamiento:** Si un solicitante es marcado de alto riesgo debido a señales históricamente sesgadas (e.g., "Factura manual", "Dirección no georreferenciada", "Teléfono prepago"), el sistema despliega un banner de estilo `bias_warning` (Púrpura `#7C3AED`).
-- **Contenido del Banner:**
-  > ⚠️ **Alerta de Contexto Rural:** Este caso incluye 3 señales sensibles de baja correlación con fraude en microcrédito agrícola. La paridad de aprobación rural en esta oficina está un 4.2% por debajo del umbral ético instituido.
-- **Acción Obligatoria:** Enlace rápido para solicitar comprobación de campo o condonar el indicador situacional mediante justificación auditada.
-
-### 2.3. Sistema de Botones y Sobrescritura Humana (Human-in-the-Loop Actions)
-
-El analista posee la decisión final. La interfaz debe hacer que la sobrescritura del modelo sea clara, intencional y formalmente documentada.
-
-- **Botonera Principal:**
-  - `Aprobar Solicitud`: Estilo primario `brand_main` (`#15573F`). Fondo sólido con texto blanco.
-  - `Solicitar Verificación de Campo`: Estilo secundario con borde `trust_blue` (`#0284C7`) para resolver ambigüedades documentales en la parcela/local.
-  - `Rechazar por Fraude Confirmado`: Estilo de peligro en tono plano con confirmación modal obligatoria (`#DC2626`).
-- **Comportamiento Modal de Sobrescritura:** Si el modelo sugiere rechazar por riesgo alto y el analista decide aprobar (o viceversa), se abre un modal de auditoría ética donde debe seleccionar el factor contextual relevante (e.g., _Ciclo cosechero verificado en visita_) y firmar digitalmente la excepción.
-
-### 2.4. Matriz de Explicabilidad (XAI Factors Table)
-
-- **Visualización:** Barras horizontales divergentes.
-  - Barras hacia la derecha en **Rojo/Naranja**: Factores que _aumentan_ la probabilidad de fraude (ej. Inconsistencia entre cédula y base de datos).
-  - Barras hacia la izquierda en **Verde**: Factores que _disminuyen_ la probabilidad de fraude (ej. Referencia favorable de la asociación de caficultores local).
-- **Tipografía:** Números y pesos representados en tipografía monoespaciada (`JetBrains Mono`) para alineación rápida.
+**Una cosa memorable por pantalla:** Cada vista tiene un elemento central de alto contraste que concentra la atención. El resto del layout apoya ese elemento, no compite con él.
 
 ---
 
-## 3. Criterios de Accesibilidad (WCAG 2.1 AA/AAA)
+## 2. Layout de las cuatro vistas
 
-Para garantizar la usabilidad tanto para analistas en oficina como para asesores de crédito en dispositivos móviles en zonas rurales expuestas a luz solar directa:
+El diseño se aleja del grid de tarjetas simétricas (el tell más común del dashboard genérico). Cada vista tiene su propia estructura, derivada de lo que el analista necesita hacer en ese momento.
 
-1. **Relación de Contraste de Color:**
-   - Todo texto sobre superficie blanca o `slate_100` cumple con una relación de contraste mínima de **4.5:1** para texto normal y **7:1** para texto de métricas de riesgo crítico.
-   - El texto del indicador de paridad ética sobre fondo púrpura suave (`#F3E8FF`) utiliza un tono de texto ultra oscuro (`#5B21B6`) alcanzando una relación de **9.2:1**.
-2. **Simbología Doble (No solo color):**
-   - Los indicadores de riesgo no dependen exclusivamente del color (Rojo, Ámbar, Verde). Cada valor incluye un icono descriptivo unívoco y texto explícito:
-     - 🛑 **Alto Riesgo (Bloqueo)**
-     - ⚠️ **Riesgo Medio (Revisión)**
-     - ✅ **Riesgo Bajo (Conforme)**
-     - ⚖️ **Alerta de Paridad Ética**
-3. **Áreas de Interacción Táctil (Touch Targets):**
-   - Todos los elementos interactivos (botones de aprobación, selectores de filtro, casillas de verificación de listas de chequeo) poseen un tamaño mínimo de **44 × 44 px** para facilitar su uso en tabletas de trabajo de campo.
-4. **Navegación por Teclado y Visualización de Foco:**
-   - Navegación secuencial lógica (`Tabindex`) a través de la lista de verificación de fraude.
-   - Todos los elementos enfocables muestran un anillo exterior claro de `3px` usando la sombra `elevation_focus` (`#218861`) o `elevation_bias_alert` (`#7C3AED`).
+### Vista 1 — Originación (evaluación de crédito)
+
+Diseño asimétrico. El panel izquierdo es el expediente vivo; el derecho es la conciencia ética de la decisión.
+
+```
+┌────────────────────────────────────────────────────────────────────┐
+│  Header: nombre del solicitante · zona · monto solicitado          │
+│  [Aprobar]  [Verificar campo]  [Rechazar]  ← siempre visibles     │
+├────────────────────────────────────────────┬───────────────────────┤
+│                                            │                       │
+│  Expediente (65%)                          │  Gobernanza (35%)     │
+│  ─────────────────────────────             │  ─────────────────    │
+│  Motor tripartito de riesgo                │  Semáforo global      │
+│    Reglas activadas                        │  FPR zona rural hoy   │
+│    Red bayesiana (nodos)                   │  Impacto de esta      │
+│    Probabilidad ML + SHAP                  │  decisión en paridad  │
+│                                            │                       │
+│  Señales presentes (13 débiles / 6 fuertes)│  Alerta ética         │
+│  Factores explicativos (barras divergentes)│  (si aplica)          │
+│                                            │                       │
+└────────────────────────────────────────────┴───────────────────────┘
+```
+
+**Apertura característica de esta vista:** El nombre del solicitante y la zona (rural/urbana) se muestran en tipografía `display` al entrar al expediente. No es un número de ticket; es una persona con una actividad productiva. El puntaje global aparece debajo, en `metric`, con su clasificación de semáforo.
+
+### Vista 2 — Explicabilidad
+
+Diseño de columna única centrada con máximo 72ch de texto. El protagonista es el gráfico de barras divergentes.
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  ← Volver al expediente      Factores que determinaron el fallo │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  [Nombre del solicitante]  |  Puntaje: 68 — Revisión manual    │
+│                                                                 │
+│  ┌───────────────── Factores explicativos ─────────────────┐   │
+│  │  Cédula de otra región        ████████████▶ +0.31       │   │
+│  │  Sin historial crediticio     ███████▶ +0.19             │   │
+│  │  Ref. asociación caficultores ◀████████ -0.24            │   │
+│  │  Garantía titulada            ◀██████ -0.17              │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│                                                                 │
+│  Interpretación en contexto rural ↓                            │
+│  (texto, 72ch máx, sin jerga técnica)                          │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Apertura característica:** La frase explicativa en `headline` que resume el caso en una línea ("Este caso fue clasificado para revisión porque combina señales de identidad con ausencia de historial, en un contexto donde ambas son comunes en productores cafeteros"). No un número; una oración.
+
+### Vista 3 — Auditoría Ética y Métricas
+
+Diseño de panel principal con barra lateral de filtros. El protagonista es la diferencia de FPR entre zonas.
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│  Periodo: [Mes ▼]  Zona: [Todas ▼]  Modelo: [v2.1.0 ▼]          │
+├────────────────────────────────────────┬─────────────────────────┤
+│                                        │                         │
+│  Paridad demográfica (mapa de calor)   │  Métricas globales      │
+│  Zona rural vs. urbana                 │  AUC: 0.912             │
+│  Género                                │  F1:  0.847             │
+│  Grupo étnico / campesino              │  FPR rural: 8.3%        │
+│                                        │  FPR urbano: 5.1%       │
+│  Distribución de falsos positivos      │                         │
+│  (barras apiladas por grupo)           │  ⚖️ Umbral equitativo   │
+│                                        │  sugerido: 0.58         │
+└────────────────────────────────────────┴─────────────────────────┘
+│  Tabla de casos con excepción humana auditada                    │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+**Apertura característica:** Un único número grande en la parte superior: la brecha de FPR entre zonas. Si está dentro del umbral ético, el número es verde; si lo supera, es el elemento de mayor peso visual en la pantalla.
+
+### Vista 4 — Gobernanza del Sistema
+
+Diseño de documento navegable. Dos columnas: índice fijo a la izquierda, contenido a la derecha.
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│  Gobernanza del sistema                                          │
+├─────────────────────┬────────────────────────────────────────────┤
+│                     │                                            │
+│  Índice fijo        │  Contenido (72ch máx)                      │
+│  ─────────────      │  ────────────────────                      │
+│  Reglas activas     │  Grafo de red bayesiana (SVG interactivo)  │
+│  Red bayesiana      │  — nodos: variables socioeconómicas        │
+│  Política ética     │  — aristas: relaciones condicionales       │
+│  Versiones          │  — sin pastel ni dona                      │
+│                     │                                            │
+│                     │  Reglas en YAML (bloque code)              │
+│                     │  Manual de política (texto fluido)         │
+└─────────────────────┴────────────────────────────────────────────┘
+```
+
+**Apertura característica:** El grafo bayesiano con sus nodos nombrados. Ningún componente captura mejor la esencia del sistema — incertidumbre razonada, no puntuación opaca.
 
 ---
 
-## 4. Instrucciones Anti-Convergencia Distribucional (Evitar Diseños Genéricos de IA)
+## 3. Componentes clave
 
-Para asegurar que la interfaz de usuario de CrediConfianza no luzca como una plantilla genérica de dashboard comercial o un clon estándar de Tailwind UI, la implementación frontend debe seguir estrictamente estas directrices estructurales:
+### 3.1 Motor tripartito de riesgo
 
-### 4.1. Arquitectura de Pantalla Orientada a la Paridad Territorio-Riesgo
+Tres franjas horizontales o una tabla de tres filas dentro del expediente. Cada motor muestra su sub-puntaje y su contribución ponderada al puntaje global. No son tarjetas separadas — son partes de un mismo razonamiento.
 
-- **Prohibido:** Diseñar páginas con un grid simétrico repetitivo de 4 tarjetas idénticas en la parte superior (e.g., "Total Casos", "Aprobados", "Rechazados", "Monto").
-- **Requerido:** Implementar un **Panel Asimétrico Dual de Decisión**:
-  - _Lado Izquierdo (65% ancho):_ Expediente del solicitante con desglose de datos productivos y trazabilidad de los tres motores de razonamiento.
-  - _Lado Derecho (35% ancho):_ Widget dinámico de **Gobernanza y Auditoría Ética**, que mantiene visible el impacto que la decisión actual tendrá en la tasa regional de falsos positivos rurales.
+| Motor           | Visualización                                                                  | Cuando falta                               |
+| --------------- | ------------------------------------------------------------------------------ | ------------------------------------------ |
+| Reglas expertas | Lista de verificación con severidad (crítica / moderada / contextual)          | Muestra "Sin reglas activadas" en verde    |
+| Red bayesiana   | Nodos activos + probabilidad $P(\text{Fraude} \mid \text{evidencia})$ en texto | "Motor bayesiano no disponible" con alerta |
+| ML supervisado  | Barra de probabilidad 0–1 con intervalo de confianza                           | "Modelo sin datos suficientes" con alerta  |
 
-### 4.2. Micro-copia Contextual de Microfinanzas
+Al hacer foco en el puntaje global, se resaltan simultáneamente los tres factores con mayor peso. Esto es una microinteracción de foco, no de hover — funciona en tablet táctil.
 
-- **Prohibido:** Usar labels genéricos como `User Name`, `Score`, `Status`, `Transaction ID`, `Alert level`.
-- **Requerido:** Emplear terminología financiera y territorial precisa:
-  - `Asociado / Solicitante Agropecuario`
-  - `Índice de Coherencia de Negocio Rural (Bayesiano)`
-  - `Puntaje de Riesgo Combinado (ML + Reglas)`
-  - `Evaluación de Sesgo por Falta de Historial Tradicional`
-  - `Condonación por Evidencia de Campo`
+### 3.2 Alerta de sesgo ético
 
-### 4.3. Visualización Única para el Grafo Probabilístico Bayesiano
+Banner de borde izquierdo grueso (`bias_warning #6D28D9`) que aparece cuando el caso rural activa señales de baja correlación con fraude agrícola. Nunca aparece junto a otro banner de `trust_blue` en la misma tarjeta — esos dos acentos no conviven.
 
-- **Prohibido:** Usar gráficas de pastel o donas genéricas para mostrar el riesgo.
-- **Requerido:** Representar el motor probabilístico como una **Red de Creencia Condicional Interactiva** en SVG o Canvas ligero, donde los nodos representan variables socioeconómicas (e.g., _Ubicación dispersa_, _Ventas en efectivo_, _Ausencia de local_) y sus conexiones muestran cómo se propaga la incertidumbre sin penalizar injustamente la condición rural.
+Contenido del banner: hecho → impacto en paridad → acción disponible. Sin signos de admiración múltiples, sin lenguaje de alarma exagerado.
 
-### 4.4. Paleta Temática "Tierra y Confianza"
+Ejemplo:
 
-- Evitar el azul "SaaS genérico" (`#3B82F6`) como color primario del sistema.
-- Utilizar la combinación de **Verde Selva Profundo (`#0F2C23`)** y **Café Tierra (`#8C5A3C`)**, que refleja la herencia de CrediConfianza nacida como fondo parroquial de caficultores, equilibrada con el **Púrpura Ético (`#7C3AED`)** para denotar analítica avanzada e imparcialidad algoritmitizada.
+> Este caso incluye tres señales que, en contexto de microcrédito agrícola, no predicen fraude. La tasa de falsos positivos rural en esta oficina está 3.2 puntos por encima del umbral acordado. Puede solicitar verificación de campo antes de decidir.
 
-## 5. Implementación en Tailwind CSS v4
+### 3.3 Botonera de decisión humana
 
-Los tokens anteriores están implementados en `src/styles/index.css` dentro del bloque `@theme` (Tailwind CSS v4 con plugin `@tailwindcss/vite` en `vite.config.ts`):
+Tres acciones, siempre visibles en la cabecera del expediente. No flotantes, no al final del scroll.
 
-- **Colores:** `--color-*` (p. ej. `bg-surface-container-lowest`, `text-primary`, `text-risk-high`, `bg-earth-soft`, `text-bias-warning`).
-- **Tipografía:** `--font-*` (Inter / JetBrains Mono) y `--text-*` con línea y peso embebidos (`text-display`, `text-headline-lg`, `text-body-md`, `text-label-md`, `text-metric-data`…).
-- **Espaciado y radios:** `--spacing-*` (escala `space-*`, `gutter`, `margin`) y `--radius-*` (el diseño define `radius-full: 0.75rem`, no un píldora perfecta).
-- **Sombras:** `--shadow-elevation-*`, `--shadow-header`, `--shadow-sticky`.
+- **Aprobar** — fondo sólido `brand_main`, texto blanco. Es el botón más ancho.
+- **Solicitar verificación de campo** — borde `trust_blue`, fondo transparente. Mismo alto que Aprobar.
+- **Rechazar** — texto `risk_high`, fondo `slate_100`. La acción más discreta visualmente porque requiere confirmación modal.
 
-Notas de implementación:
+El modal de sobrescritura no es una advertencia de peligro — es un formulario de auditoría breve: motivo (selección), contexto verificado (texto libre, obligatorio), firma con `user_id` y `model_version`.
 
-- **Iconos Material Symbols:** la hoja de Google Fonts se carga **sin capa** (`<link>` en `index.html`), por lo que gana en cascada sobre las utilidades de Tailwind (que viven en `@layer utilities`). Para forzar un tamaño distinto al `24px` por defecto se usa el modificador `!` de Tailwind v4: `className="text-[16px]!"`.
-- **Anclas y header fijo:** `html { scroll-padding-top: 7rem }` compensa el encabezado fijo de 80px (equivalente al `scroll-mt-28` del diseño original).
-- **Logo:** el recurso original del diseño de Stitch estaba inaccesible (HTTP 400), por lo que se reemplaza por `src/assets/crediconfianza-logo.svg` (marca local, sin dependencias externas).
-- **Accesibilidad:** anillo de foco de 3px `#218861`, enlace de salto, `prefers-reduced-motion`, objetivos táctiles ≥44px y `aria-current` en la navegación activa.
+### 3.4 Barras divergentes de explicabilidad
+
+Barras horizontales centradas en un eje neutro. Las barras hacia la derecha (factores que elevan el riesgo) usan el tono del nivel de riesgo actual. Las barras hacia la izquierda (factores que lo reducen) usan `brand_light`.
+
+Los valores numéricos (pesos SHAP) se muestran en `formula` (IBM Plex Mono) solo aquí — no en el resto de la interfaz. Cada barra tiene un label en sentence case con el nombre del factor en lenguaje del solicitante, no del modelo.
+
+---
+
+## 4. Motion
+
+Una sola secuencia orquestada por vista, al cargar. Sin animaciones en scroll, sin fade-and-slide en cada sección, sin transiciones de hover en cada tarjeta.
+
+- **Originación:** El puntaje global entra con un conteo de 0 al valor real (500 ms, `ease-out`). Los motores aparecen en cascada 100 ms después.
+- **Explicabilidad:** Las barras divergentes se "pintan" desde el centro hacia afuera (400 ms).
+- **Auditoría:** El número principal de brecha FPR aparece primero; el mapa de calor se rellena 200 ms después.
+- **Gobernanza:** El grafo bayesiano aparece con un fade de nodos (300 ms) y luego las aristas (200 ms adicionales).
+
+Las transiciones de estado (hover de botón, apertura de modal, cambio de tab) usan 150 ms, `ease-in-out`. Respetar `prefers-reduced-motion`: si está activo, todas las animaciones usan `transition: none`.
+
+---
+
+## 5. Escritura en la interfaz
+
+**Desde la perspectiva del analista, no del sistema.** El analista gestiona expedientes, no procesa transacciones. Evalúa solicitantes, no clasifica registros.
+
+**Voz activa en todos los controles.**
+
+- Botones: "Aprobar solicitud", "Solicitar verificación", "Registrar excepción" — no "Enviar", "Continuar", "Aceptar".
+- Mensajes de confirmación: "Solicitud aprobada. Expediente guardado con la decisión de [nombre del analista]." No "Operación completada con éxito."
+
+**Los errores explican qué pasó y qué hacer.**
+
+- "El motor bayesiano no recibió datos de zona. Verifica que el campo Tipo de zona esté completo antes de evaluar." No "Error en componente bayesiano (500)."
+
+**Vacíos son invitaciones.**
+
+- Lista de expedientes vacía: "No hay solicitudes pendientes para esta oficina hoy. Las nuevas solicitudes aparecen aquí en tiempo real."
+
+**Terminología del dominio, no del modelo.**
+
+- "Coherencia del negocio declarado" (no "feature importance score")
+- "Señales de contexto rural" (no "weak signals")
+- "Revisión manual recomendada" (no "medium risk threshold exceeded")
+- "Excepción auditada por analista" (no "human override logged")
+
+---
+
+## 6. Accesibilidad
+
+**Contraste:**
+
+- Todo texto sobre fondo blanco o `slate_100` cumple 4.5:1 mínimo.
+- Texto de puntaje (`metric`) sobre cualquier fondo: 7:1 mínimo.
+- Texto sobre `bias_warning #6D28D9`: usar `#EDE9FE` (claro) o `#FFFFFF`, no texto oscuro sobre fondo púrpura oscuro.
+
+**Sin codificación por color exclusiva.**
+Cada indicador de riesgo combina: icono descriptivo + texto explícito + color. Los íconos son de Material Symbols (`block`, `warning`, `check_circle`, `balance`) cargados sin capa CSS adicional.
+
+**Objetivos táctiles:** Mínimo 44 × 44 px en todos los controles interactivos — especialmente en la botonera de decisión, pensada para tablet en campo.
+
+**Foco de teclado:** Anillo de 3 px usando `shadow-focus` (verde) para elementos normales y `shadow-bias-focus` (púrpura) para elementos dentro del banner ético. `tabindex` lógico: cabecera → motor tripartito → acciones → panel de gobernanza.
+
+**Navegación:** `aria-current` en la vista activa del nav principal. Enlace de salto al contenido principal visible en foco. `scroll-padding-top` compensando el header fijo (60 px + 20 px de holgura).
+
+---
+
+## 7. Implementación en Tailwind CSS v4
+
+Tokens activos en `src/styles/index.css` dentro del bloque `@theme`:
+
+**Colores:** `--color-brand-dark`, `--color-brand-main`, `--color-brand-light`, `--color-brand-soft`, `--color-earth-dark`, `--color-earth-main`, `--color-earth-soft`, `--color-trust-blue`, `--color-bias-warning`, `--color-risk-low`, `--color-risk-medium`, `--color-risk-high`, `--color-slate-{100,300,500,700,900}`, `--color-white`.
+
+**Tipografía:** `--font-ui` (Space Grotesk), `--font-code` (IBM Plex Mono). Escala: `--text-display`, `--text-headline`, `--text-title`, `--text-body-lg`, `--text-body`, `--text-label`, `--text-caption`, `--text-metric`, `--text-formula`. Cada variable embebe size + line-height + weight.
+
+**Radios:** `--radius-xs` (3px), `--radius-sm` (6px), `--radius-md` (10px), `--radius-lg` (14px), `--radius-pill` (100px). No usar `radius-full` como alias de 9999px — el valor `pill` es intencional y distinto.
+
+**Sombras:** `--shadow-sm`, `--shadow-md`, `--shadow-lg`, `--shadow-focus`, `--shadow-bias-focus`.
+
+**Notas de implementación:**
+
+- Iconos Material Symbols: hoja de Google Fonts cargada sin capa. Para tamaños distintos a 24px usar el modificador `!` de Tailwind v4: `className="text-[16px]!"`.
+- Header fijo: `html { scroll-padding-top: 5rem }` (60px + 20px de holgura).
+- Space Grotesk se carga desde Google Fonts con `display=swap`. Pesos necesarios: 400, 500, 600, 700.
+- IBM Plex Mono se carga solo en las vistas de Explicabilidad y Gobernanza mediante import condicional en el bundle — no en el CSS global.
+- Logo: `src/assets/crediconfianza-logo.svg` (recurso local, sin dependencias externas).
+
+---
+
+## 8. Vistas de ruta: Mapa de Arquitectura (`/arquitectura`) y Componentes & Roles (`/roles`)
+
+Ambas vistas reproducen pantallas de Stitch (`1349464880252284101`) y se gobiernan por los
+contratos `docs/contracts/frontend/01-mapa-interactivo.md` y `03-componentes-roles.md`.
+
+**Chrome compartido.** El layout `AppLayout` envuelve todas las rutas con el `SiteHeader` y
+`SiteFooter` de la landing (decisión explícita: ignorar el header/pie propios de cada pantalla
+de Stitch). `StickyCtaBar` solo se monta en `/`. Ambas vistas comparten la barra de pestañas
+`GovernanceTabs` (Mapa Interactivo · Simulador de Inferencia · Componentes & Roles) con
+`aria-current="page"` en la pestaña activa.
+
+**Paleta por zona (mapa).**
+
+| Zona                     | Escala Tailwind                    | Nota                                        |
+| ------------------------ | ---------------------------------- | ------------------------------------------- |
+| A · Entorno de Usuario   | `sky`                              | `sky-600` ≡ `trust-blue` #0284C7 del diseño |
+| B · Núcleo Híbrido       | `violet`                           | #7C3AED (icono destacado `bg-violet-600`)   |
+| C · Conocimiento y Ética | `primary-container` / `brand-soft` | verde institucional                         |
+
+Los conectores entre zonas son píldoras horizontales con etiqueta de flujo
+(`Solicitud ↓`, `Evaluación / Score + Factores ↑`, `Reglas ←`, `Actualización / Auditoría ↑`).
+
+**Tablas.** `src/components/table/SortableTable.tsx` es la tabla genérica de ambas vistas:
+cabeceras ordenables con `<th aria-sort>` + botón (`ascending → descending → orden original`),
+`<caption class="sr-only">` y contenedor `overflow-x-auto` con `min-w-[720px]` para pantallas
+angostas. El tinte de hover se parametriza (`hoverClassName`) para las filas ámbar (señales
+débiles) y rojas (indicadores fuertes).
+
+**Desviaciones documentadas frente al diseño de Stitch:**
+
+- **Estados de motor:** el inspector del mapa muestra siempre la píldora estática `Motor: ok`
+  (el contrato §5 indica oculto/`—` cuando no hay contexto; la app no consume backend aún).
+- **Botones sin `alert()`:** «Ficha Técnica PDF» invoca `window.print()` con guarda
+  `typeof window.print === "function"`; «Verificar Conformidad HU-26» despliega el checklist
+  en línea (5 ítems + firma del auditor) en lugar de un diálogo nativo.
+- **«Restablecer Vista»:** movido del encabezado de pantalla al hero de la vista del mapa
+  (misma función: deshabilitado sin selección).
+- **Leyenda `[?]` de variables protegidas:** popover `role="dialog"` controlado con el hook
+  compartido `useDisclosure` (cierra fuera/Escape), no un tooltip nativo.
+- **Iconos:** Material Symbols en toda la UI (el diseño de Stitch usa Font Awesome en la
+  landing); respetar `text-[Npx]!` con el modificador de Tailwind v4.

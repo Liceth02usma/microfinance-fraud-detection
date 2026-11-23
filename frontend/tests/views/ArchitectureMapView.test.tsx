@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor, within } from "@testing-library/react";
+import { fireEvent, screen, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { renderRoute } from "../helpers/renderRoute";
 
@@ -87,18 +87,10 @@ describe("ArchitectureMapView (ruta /arquitectura)", () => {
     expect(fragmentText()).toContain("tipo_zona");
   });
 
-  it("«Restablecer Vista» está deshabilitado sin selección y limpia al haberla", () => {
+  it("«Restablecer Vista» no aparece en esta vista (fila eliminada)", () => {
     renderRoute(["/arquitectura"]);
 
-    const reset = screen.getByRole("button", { name: /Restablecer Vista/i });
-    expect(reset).toBeDisabled();
-
-    fireEvent.click(screen.getByRole("button", { name: "Seleccionar Red Bayesiana (pgmpy)" }));
-    expect(reset).toBeEnabled();
-
-    fireEvent.click(reset);
-    expect(screen.getByText("Ningún módulo seleccionado")).toBeInTheDocument();
-    expect(reset).toBeDisabled();
+    expect(screen.queryByRole("button", { name: /Restablecer Vista/i })).toBeNull();
   });
 
   it("el nodo destacado (Motor Híbrido) muestra el orquestador y su fórmula", () => {
@@ -129,17 +121,9 @@ describe("ArchitectureMapView (ruta /arquitectura)", () => {
     await waitFor(() => expect(screen.getByText("Copiado")).toBeInTheDocument());
   });
 
-  it("las pestañas de gobierno enlazan las vistas hermanas", () => {
+  it("no muestra las pestañas de gobierno (fila eliminada)", () => {
     renderRoute(["/arquitectura"]);
 
-    const tabs = screen.getByRole("navigation", { name: /Gobierno del Sistema/i });
-    expect(within(tabs).getByRole("link", { name: /Mapa Interactivo/ })).toHaveAttribute(
-      "aria-current",
-      "page",
-    );
-    expect(within(tabs).getByRole("link", { name: /Componentes & Roles/ })).toHaveAttribute(
-      "href",
-      "/roles",
-    );
+    expect(screen.queryByRole("navigation", { name: /Gobierno del Sistema/i })).toBeNull();
   });
 });

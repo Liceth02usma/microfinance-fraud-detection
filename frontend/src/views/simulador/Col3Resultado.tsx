@@ -153,10 +153,10 @@ export default function Col3Resultado({ status, result, errorMsg }: Props) {
                 />
               </svg>
               <div className="absolute flex flex-col items-center">
-                <span className="font-mono text-2xl font-bold text-slate-900 leading-none">
+                <span className="font-code-md text-2xl font-bold text-slate-900 leading-none">
                   {result.risk_score}
                 </span>
-                <span className="text-[9px] font-mono text-slate-500 uppercase">Riesgo / 100</span>
+                <span className="text-[9px] font-code-md text-slate-500">Riesgo / 100</span>
               </div>
             </div>
             <div className="flex flex-col gap-0.5">
@@ -195,7 +195,7 @@ export default function Col3Resultado({ status, result, errorMsg }: Props) {
           <div className="flex flex-col gap-1 text-xs">
             <div className="flex justify-between items-center text-slate-700">
               <span className="flex items-center gap-1.5">
-                <span className="material-symbols-outlined text-[15px] text-sky-600">hub</span>
+                <span className="material-symbols-outlined text-[15px] text-trust-blue">hub</span>
                 Red Bayesiana (pgmpy)
               </span>
               <div className="flex items-center gap-1.5">
@@ -209,7 +209,7 @@ export default function Col3Resultado({ status, result, errorMsg }: Props) {
             </div>
             <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
               <div
-                className="bg-sky-600 h-1.5 rounded-full transition-all duration-500"
+                className="bg-trust-blue h-1.5 rounded-full transition-all duration-500"
                 style={{ width: `${result.bayesian_probability * 100}%` }}
               />
             </div>
@@ -235,7 +235,7 @@ export default function Col3Resultado({ status, result, errorMsg }: Props) {
             </div>
             <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
               <div
-                className="bg-indigo-600 h-1.5 rounded-full transition-all duration-500"
+                className="bg-primary-container h-1.5 rounded-full transition-all duration-500"
                 style={{ width: `${result.ml_probability * 100}%` }}
               />
             </div>
@@ -268,8 +268,8 @@ export default function Col3Resultado({ status, result, errorMsg }: Props) {
           </div>
 
           {/* Fórmula de fusión */}
-          <div className="p-2.5 bg-slate-50 border border-slate-200 rounded font-mono text-[11px] text-slate-700 flex flex-col gap-1">
-            <div className="flex justify-between items-center text-[10px] text-slate-500 uppercase tracking-wider">
+          <div className="p-2.5 bg-slate-50 border border-slate-200 rounded font-code-md text-[11px] text-slate-700 flex flex-col gap-1">
+            <div className="flex justify-between items-center text-[10px] text-slate-500">
               <span>Fórmula de fusión calibrada</span>
               <span>Pesos auditados</span>
             </div>

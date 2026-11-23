@@ -9,6 +9,19 @@ import type { FormState } from "./types";
 
 // ── Estado inicial (caso rural legítimo por defecto, como en el stitch) ──────
 
+const BLANK_FORM: FormState = {
+  zona: "rural",
+  genero: "femenino",
+  pertenenciaEtnica: "campesino",
+  esEstacional: false,
+  monto: 1000000,
+  ingresos: 500000,
+  plazo: 12,
+  edad: 18,
+  weak: Array(13).fill(false) as boolean[],
+  strong: Array(6).fill(false) as boolean[],
+};
+
 const DEFAULT_FORM: FormState = {
   zona: "rural",
   genero: "femenino",
@@ -135,6 +148,13 @@ export default function SimuladorPage() {
     void submitForm(newForm);
   }
 
+  function handleReset() {
+    setForm(BLANK_FORM);
+    setResult(null);
+    setStatus("idle");
+    setErrorMsg(null);
+  }
+
   function handleZona(zona: "rural" | "urbana") {
     const updated: FormState = {
       ...form,
@@ -180,24 +200,16 @@ export default function SimuladorPage() {
         <div className="max-w-[1440px] mx-auto px-6 py-3 flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div>
             <div className="flex items-center gap-2 mb-0.5">
-              <h1 className="text-lg font-bold text-slate-900 tracking-tight">
+              <h1 className="font-headline-sm text-headline-sm font-bold text-slate-900 tracking-tight">
                 Simulador de Inferencia Híbrida y Auditoría Ética
               </h1>
-              <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 font-medium">
-                HU-18 Salvaguarda Rural
-              </span>
             </div>
             <p className="text-xs text-slate-600 max-w-2xl leading-relaxed">
               Laboratorio de calibración y análisis causal de créditos para asociadas y asociados
               rurales frente al riesgo de discriminación algorítmica.
             </p>
           </div>
-          <div className="flex items-center gap-2 self-start md:self-auto">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-slate-50 border border-slate-200 text-xs text-slate-700 font-mono">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-emerald-200 animate-pulse" />
-              W3C PROV-O · Calibrado CONPES 4144
-            </div>
-          </div>
+          <div className="flex items-center gap-2 self-start md:self-auto"></div>
         </div>
       </div>
 
@@ -212,6 +224,7 @@ export default function SimuladorPage() {
             onStrong={handleStrong}
             onCargarCaso={handleCargarCaso}
             onSubmit={handleSubmit}
+            onReset={handleReset}
             loading={status === "loading"}
           />
           <Col2Reglas form={form} />

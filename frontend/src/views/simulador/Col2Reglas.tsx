@@ -67,16 +67,16 @@ export default function Col2Reglas({ form }: Props) {
               : "text-slate-400";
             const cardClass = activa
               ? regla.tipo === "fuerte"
-                ? "p-2.5 rounded-lg bg-rose-50/70 border-l-[3px] border-rose-600 border-r border-t border-b border-rose-200 text-slate-900"
+                ? "p-2.5 rounded-lg bg-risk-high/8 border-l-[3px] border-risk-high border-r border-t border-b border-risk-high/20 text-slate-900"
                 : regla.tipo === "debil"
-                  ? "p-2.5 rounded-lg bg-amber-50/60 border-l-[3px] border-amber-500 border-r border-t border-b border-amber-200 text-slate-900"
+                  ? "p-2.5 rounded-lg bg-risk-medium/8 border-l-[3px] border-risk-medium border-r border-t border-b border-risk-medium/20 text-slate-900"
                   : "p-2.5 rounded-lg bg-emerald-50/70 border-l-[3px] border-coop-forest border-r border-t border-b border-emerald-200 text-slate-900"
               : "p-2 rounded-lg bg-slate-50 border border-slate-200/70 text-slate-400 opacity-60";
 
             return (
               <div key={regla.id} className={cardClass}>
-                <div className="flex items-center justify-between font-mono text-[11px] mb-1">
-                  <span className={badgeColor}>{regla.id}</span>
+                <div className="flex items-center justify-between text-[11px] mb-1">
+                  <span className={`font-code-md ${badgeColor}`}>{regla.id}</span>
                   <span
                     className={`text-[10px] ${activa ? "text-slate-700 font-semibold" : "text-slate-400"}`}
                   >
@@ -86,7 +86,7 @@ export default function Col2Reglas({ form }: Props) {
                   </span>
                 </div>
                 <p
-                  className={`font-mono text-[11px] font-medium leading-snug ${activa ? "text-slate-900" : "text-slate-500"}`}
+                  className={`text-[11px] font-medium leading-snug ${activa ? "text-slate-900" : "text-slate-500"}`}
                 >
                   {regla.cond} → {regla.acc}
                 </p>

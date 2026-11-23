@@ -46,7 +46,7 @@ export function SiteHeader(): JSX.Element {
       </a>
 
       <header className="fixed top-0 z-50 w-full bg-surface-container-lowest/90 shadow-elevation-sm backdrop-blur-xl">
-        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-4 px-6 lg:px-12">
+        <div className="mx-auto flex h-[60px] max-w-7xl items-center justify-between gap-4 px-6 lg:px-12">
           <div className="flex shrink-0 items-center gap-4">
             <img src={logoUrl} alt="" className="h-8 w-auto object-contain" />
             <div className="flex flex-col">
@@ -93,8 +93,8 @@ export function SiteHeader(): JSX.Element {
               {desktopMenu.isOpen ? (
                 <div id="article-dropdown" className="absolute left-0 top-full w-96 pt-2">
                   <div className="max-h-[768px] overflow-y-auto rounded-xl bg-surface-container-lowest p-2 shadow-[0_10px_25px_-5px_rgba(15,23,42,0.06),0_8px_10px_-6px_rgba(15,23,42,0.04)]">
-                    <div className="px-3 py-2 font-label-md font-semibold uppercase tracking-wider text-slate-500">
-                      Secciones Metodológicas
+                    <div className="px-3 py-2 font-label-md font-medium text-slate-500">
+                      Secciones metodológicas
                     </div>
                     <ul className="flex flex-col gap-0.5">
                       {articleSections.map((section) => (
@@ -178,7 +178,7 @@ export function SiteHeader(): JSX.Element {
                 Probar Simulador
               </Link>
 
-              <span className="mt-3 border-t border-outline-variant/30 pt-3 font-label-md font-semibold uppercase tracking-wider text-slate-500">
+              <span className="mt-3 border-t border-outline-variant/30 pt-3 font-label-md font-medium text-slate-500">
                 Secciones del artículo
               </span>
               {articleSections.map((section) => (

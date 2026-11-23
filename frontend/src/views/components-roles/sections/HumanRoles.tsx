@@ -67,7 +67,7 @@ export function HumanRoles(): JSX.Element {
         <div className="flex items-start gap-3 rounded-lg border border-sky-200 bg-sky-50 px-4 py-3 text-sky-900">
           <MaterialIcon name="warning_amber" className="mt-0.5 shrink-0 text-[18px]!" />
           <div>
-            <p className="text-xs font-bold">⚠️ Trazabilidad Obligatoria (W3C PROV-O)</p>
+            <p className="text-xs font-bold">Trazabilidad Obligatoria (W3C PROV-O)</p>
             <p className="mt-1 text-xs leading-relaxed text-sky-800">
               Toda decisión humana es un Evento «wasGeneratedBy» vinculado a la solicitud y el
               analista. Cualquier decisión debe justificarse en bitácora inmutable (HU-26).

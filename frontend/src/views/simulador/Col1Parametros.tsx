@@ -72,6 +72,7 @@ interface Props {
   onStrong: (i: number, v: boolean) => void;
   onCargarCaso: (tipo: "rural_legitimo" | "urbano_fraude" | "ambiguo") => void;
   onSubmit: () => void;
+  onReset: () => void;
   loading: boolean;
 }
 
@@ -87,6 +88,7 @@ export default function Col1Parametros({
   onStrong,
   onCargarCaso,
   onSubmit,
+  onReset,
   loading,
 }: Props) {
   const weakCount = form.weak.filter(Boolean).length;
@@ -96,17 +98,17 @@ export default function Col1Parametros({
   let salvaguardaMsg: string;
   let salvaguardaClass: string;
   if (strongCount > 0) {
-    salvaguardaTag = "⚠ Alerta objetiva";
+    salvaguardaTag = "Alerta objetiva";
     salvaguardaMsg =
       "Se activaron indicadores fuertes de incoherencia o suplantación. Requiere investigación SARO.";
     salvaguardaClass = "text-xs font-semibold text-rose-800 flex items-center gap-1";
   } else if (form.zona === "rural" && weakCount > 0) {
-    salvaguardaTag = "🛡 Salvaguarda activa";
+    salvaguardaTag = "Salvaguarda activa";
     salvaguardaMsg =
       "Solo señales débiles de informalidad. El sistema aplica el tope de salvaguarda rural (HU-18).";
     salvaguardaClass = "text-xs font-semibold text-emerald-800 flex items-center gap-1";
   } else {
-    salvaguardaTag = "✓ Evaluación estándar";
+    salvaguardaTag = "Evaluación estándar";
     salvaguardaMsg = "Parámetros nominales dentro de la política de crédito urbano formal.";
     salvaguardaClass = "text-xs font-semibold text-slate-700 flex items-center gap-1";
   }
@@ -380,7 +382,7 @@ export default function Col1Parametros({
 
         {/* 13 señales débiles */}
         <div className="border border-slate-200 rounded-lg overflow-hidden">
-          <div className="bg-amber-50/50 p-2.5 flex items-center justify-between border-b border-amber-200/60">
+          <div className="bg-risk-medium/8 p-2.5 flex items-center justify-between border-b border-risk-medium/30">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-amber-500" />
               <span className="text-xs font-semibold text-amber-950">
@@ -417,7 +419,7 @@ export default function Col1Parametros({
 
         {/* 6 indicadores fuertes */}
         <div className="border border-rose-200 rounded-lg overflow-hidden">
-          <div className="bg-rose-50/60 p-2.5 flex items-center justify-between border-b border-rose-200">
+          <div className="bg-risk-high/8 p-2.5 flex items-center justify-between border-b border-risk-high/30">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-rose-600" />
               <span className="text-xs font-semibold text-rose-950">
@@ -462,29 +464,41 @@ export default function Col1Parametros({
           <p className="text-[11px] text-slate-600 leading-snug">{salvaguardaMsg}</p>
         </div>
 
-        {/* Botón evaluar */}
-        <button
-          type="button"
-          onClick={onSubmit}
-          disabled={loading}
-          className="w-full py-3 px-4 bg-coop-forest hover:bg-coop-accent disabled:opacity-60 text-white font-semibold text-sm rounded-lg shadow-sm hover:shadow transition-all flex items-center justify-center gap-2 group cursor-pointer"
-        >
-          {loading ? (
-            <>
-              <span className="material-symbols-outlined text-[18px] animate-spin">refresh</span>
-              <span className="text-emerald-100">Procesando tensores y reglas...</span>
-            </>
-          ) : (
-            <>
-              <span className="material-symbols-outlined text-[18px] text-emerald-300">
-                psychology_alt
-              </span>
-              <span className="text-emerald-100 group-hover:text-white">
-                Evaluar solicitud con motor híbrido
-              </span>
-            </>
-          )}
-        </button>
+        {/* Botones evaluar / limpiar */}
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={onSubmit}
+            disabled={loading}
+            className="flex-1 py-3 px-4 bg-coop-forest hover:bg-coop-accent disabled:opacity-60 text-white font-semibold text-sm rounded-lg shadow-sm hover:shadow transition-all flex items-center justify-center gap-2 group cursor-pointer"
+          >
+            {loading ? (
+              <>
+                <span className="material-symbols-outlined text-[18px] animate-spin">refresh</span>
+                <span className="text-emerald-100">Procesando...</span>
+              </>
+            ) : (
+              <>
+                <span className="material-symbols-outlined text-[18px] text-emerald-300">
+                  psychology_alt
+                </span>
+                <span className="text-emerald-100 group-hover:text-white">
+                  Evaluar solicitud con motor híbrido
+                </span>
+              </>
+            )}
+          </button>
+          <button
+            type="button"
+            onClick={onReset}
+            disabled={loading}
+            title="Limpiar todos los campos y señales"
+            className="py-3 px-3 border border-slate-300 bg-white hover:bg-slate-50 disabled:opacity-50 text-slate-600 hover:text-slate-900 text-sm rounded-lg shadow-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+          >
+            <span className="material-symbols-outlined text-[18px]">restart_alt</span>
+            <span className="text-xs font-medium hidden sm:inline">Limpiar</span>
+          </button>
+        </div>
       </div>
     </section>
   );

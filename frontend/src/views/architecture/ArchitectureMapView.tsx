@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { GovernanceTabs } from "../../components/navigation/GovernanceTabs";
 import { MaterialIcon } from "../../components/MaterialIcon";
 import { InspectorPanel } from "./components/InspectorPanel";
 import { ZoneConnector, ZoneSection } from "./components/ZoneSection";
@@ -13,9 +12,8 @@ import { ZONE_STYLES } from "./zoneStyles";
  * (Tema Claro)» siguiendo el contrato 01: lienzo con tres zonas y nueve nodos
  * a la izquierda (8/12) e inspector sticky a la derecha (4/12).
  *
- * Interacciones: clic en un nodo lo selecciona; clic en el mismo nodo (o en
- * «Restablecer Vista») vuelve al estado vacío. El chrome (header/pie) es el
- * compartido de la landing.
+ * Interacciones: clic en un nodo lo selecciona; clic en el mismo nodo vuelve
+ * al estado vacío. El chrome (header/pie) es el compartido de la landing.
  */
 export function ArchitectureMapView(): JSX.Element {
   const [activeNodeId, setActiveNodeId] = useState<string | null>(null);
@@ -62,20 +60,6 @@ export function ArchitectureMapView(): JSX.Element {
             );
           })}
         </div>
-      </div>
-
-      {/* Pestañas de gobierno + restablecer selección */}
-      <div className="flex flex-wrap items-end justify-between gap-3">
-        <GovernanceTabs />
-        <button
-          type="button"
-          onClick={() => setActiveNodeId(null)}
-          disabled={activeNode === null}
-          className="inline-flex min-h-[36px] items-center gap-1.5 rounded-lg bg-primary-container px-3 py-1.5 text-xs font-semibold text-white shadow-elevation-sm transition-colors hover:bg-brand-light disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          <MaterialIcon name="restart_alt" className="text-[16px]!" />
-          <span className="hidden sm:inline">Restablecer Vista</span>
-        </button>
       </div>
 
       {/* Mapa (8/12) + inspector (4/12) */}

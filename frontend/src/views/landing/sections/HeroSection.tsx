@@ -7,7 +7,7 @@ import { hero, heroBadges, heroRibbon } from "../data/site";
  */
 export function HeroSection(): JSX.Element {
   return (
-    <section className="relative w-full overflow-hidden bg-gradient-to-b from-brand-dark via-primary to-[#05291D] text-on-primary">
+    <section className="relative w-full overflow-hidden bg-gradient-to-b from-brand-dark to-[#082518] text-on-primary">
       {/* Malla algorítmica ambiental (decorativa) */}
       <div className="pointer-events-none absolute inset-0 opacity-20" aria-hidden="true">
         <svg
@@ -39,7 +39,7 @@ export function HeroSection(): JSX.Element {
           {heroBadges.map((badge) => (
             <span
               key={badge.text}
-              className="inline-flex items-center gap-1.5 rounded bg-surface-container-lowest/10 px-3 py-1 font-label-md text-label-md tracking-wide text-primary-fixed backdrop-blur-md"
+              className="inline-flex items-center gap-1.5 rounded bg-surface-container-lowest/10 px-3 py-1 font-label-md text-label-md text-primary-fixed backdrop-blur-md"
             >
               <span className={`h-1.5 w-1.5 rounded-full ${badge.dotClass}`} />
               {badge.text}
@@ -48,17 +48,17 @@ export function HeroSection(): JSX.Element {
         </div>
 
         <div className="flex max-w-5xl flex-col gap-6">
-          <div className="inline-flex w-auto shrink-0 flex-wrap items-center gap-2.5 self-start rounded-full bg-surface-container-lowest/10 px-3 py-1 font-label-md font-medium uppercase tracking-wider text-primary-fixed backdrop-blur-md">
+          <div className="inline-flex w-auto shrink-0 flex-wrap items-center gap-2.5 self-start rounded-full bg-surface-container-lowest/10 px-3 py-1 font-label-md font-medium text-primary-fixed backdrop-blur-md">
             <span className="font-semibold text-primary-fixed">{hero.kicker.left}</span>
             <span className="h-1 w-1 rounded-full bg-brand-light" aria-hidden="true" />
             <span className="text-primary-fixed-dim/90">{hero.kicker.right}</span>
           </div>
 
-          <h1 className="font-display text-display-mobile font-bold tracking-tight text-on-primary lg:text-[54px] lg:leading-[62px]">
+          <h1 className="animate-[fadeSlideUp_0.5s_ease-out_both] font-display text-display-mobile font-bold tracking-tight text-on-primary lg:text-[54px] lg:leading-[62px]">
             {hero.title}
           </h1>
 
-          <p className="max-w-4xl font-body-lg text-body-lg leading-relaxed text-primary-fixed-dim/90">
+          <p className="animate-[fadeSlideUp_0.5s_ease-out_0.15s_both] max-w-4xl font-body-lg text-body-lg leading-relaxed text-primary-fixed-dim/90">
             {hero.subtitle}
           </p>
         </div>
@@ -77,7 +77,7 @@ export function HeroSection(): JSX.Element {
         <div className="grid grid-cols-2 gap-4 border-t border-surface-container-lowest/15 pt-6 md:grid-cols-4">
           {heroRibbon.map((item) => (
             <div key={item.label} className="flex flex-col">
-              <span className="font-label-md uppercase tracking-wider font-medium text-primary-fixed opacity-90">
+              <span className="font-label-md font-medium text-primary-fixed opacity-90">
                 {item.label}
               </span>
               <div className="mt-1 flex flex-wrap items-baseline gap-2">

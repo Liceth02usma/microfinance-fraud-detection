@@ -28,24 +28,26 @@ export function NodeCard({ node, isActive, onSelect }: NodeCardProps): JSX.Eleme
         aria-label={`Seleccionar ${node.title}`}
         aria-pressed={isActive}
         className={`node-interactive w-full cursor-pointer rounded-lg border p-4 text-left transition-all duration-200 hover:-translate-y-[3px] hover:shadow-elevation-md ${
-          isActive ? styles.active : `border-violet-600/40 bg-violet-50/40 ${styles.hoverBorder}`
+          isActive
+            ? styles.active
+            : `border-bias-warning/40 bg-bias-warning/5 ${styles.hoverBorder}`
         }`}
       >
         <div className="mb-2 flex items-start justify-between gap-3">
           <div className="flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-violet-600 text-base text-white shadow-elevation-sm">
+            <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-bias-warning text-base text-white shadow-elevation-sm">
               <MaterialIcon name={node.icon} />
             </span>
             <div>
               <div className="flex flex-wrap items-center gap-2">
                 <h3 className="text-sm font-bold text-slate-900">{node.title}</h3>
                 {node.badge ? (
-                  <span className="rounded bg-violet-600 px-2 py-0.5 font-metric-data text-[10px] font-semibold text-white">
+                  <span className="rounded bg-bias-warning px-2 py-0.5 font-metric-data text-[10px] font-semibold text-white">
                     {node.badge}
                   </span>
                 ) : null}
               </div>
-              <span className="font-metric-data text-xs text-violet-600">
+              <span className="font-metric-data text-xs text-bias-warning">
                 Score 0–100 · verde / amarillo / rojo
               </span>
             </div>
@@ -53,7 +55,7 @@ export function NodeCard({ node, isActive, onSelect }: NodeCardProps): JSX.Eleme
           {node.engineStatus ? <EngineStatusBadge status={node.engineStatus} /> : null}
         </div>
         <p className="text-xs leading-normal text-slate-600">{node.cardDescription}</p>
-        <div className="mt-2 flex items-center justify-between border-t border-violet-600/20 pt-2 text-[11px]">
+        <div className="mt-2 flex items-center justify-between border-t border-bias-warning/20 pt-2 text-[11px]">
           <span className={`font-semibold ${styles.footer}`}>{node.footerLeft}</span>
           <span className="font-metric-data text-[10px] text-slate-500">{node.footerRight}</span>
         </div>
