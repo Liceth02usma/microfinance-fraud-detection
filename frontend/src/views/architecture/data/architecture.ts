@@ -122,11 +122,11 @@ export const architectureNodes: ArchitectureNode[] = [
     cardDescription:
       "Formulario urbano/rural que captura los 19 campos del EvaluationRequest; lanza POST /api/v1/evaluate (< 3 s).",
     description:
-      "Formulario web urbano y rural que captura de manera unificada los 19 campos estandarizados del EvaluationRequest. Lanza la solicitud POST /api/v1/evaluate y garantiza una latencia de respuesta inferior a 3 segundos (HU-17) con soporte para conectividad intermitente de campo.",
+      "Formulario web urbano y rural que captura de manera unificada los 19 campos estandarizados del EvaluationRequest. Lanza la solicitud POST /api/v1/evaluate y garantiza una latencia de respuesta inferior a 3 segundos con soporte para conectividad intermitente de campo.",
     features: [
       "Captura integral de los 19 campos del contrato API (documentales, territoriales y financieros).",
       "Soporte adaptativo para ingreso de formularios urbanos y en veredas sin georreferenciación formal.",
-      "Garantía de tiempo de respuesta de servicio menor a 3.0 segundos (criterio de aceptación HU-17).",
+      "Garantía de tiempo de respuesta de servicio menor a 3.0 segundos.",
       "Validación previa de consistencia sintáctica y formato de documento antes del envío al backend.",
     ],
     fragmentLabel: "Contrato API · EvaluationRequest (JSON Schema)",
@@ -144,7 +144,7 @@ export const architectureNodes: ArchitectureNode[] = [
   "coincidencia_ani": true
 }`,
     icon: "request_quote",
-    badge: "HU-17",
+    badge: "< 3 s",
     footerLeft: "Inspeccionar",
     footerRight: "REST API",
     reference: "Contrato 01",
@@ -156,9 +156,9 @@ export const architectureNodes: ArchitectureNode[] = [
     cardDescription:
       "Muestra explanatory_factors (≥ 3), desglose de atribución SHAP, pesos bayesianos y reglas activadas.",
     description:
-      "Módulo de interpretabilidad y transparencia centrado en el ser humano. Expone un mínimo de tres factores explicativos (HU-20) por cada solicitud evaluada, desglosando los valores SHAP del modelo ML, las razones de verosimilitud de la red bayesiana y la lista trazable de reglas activadas.",
+      "Módulo de interpretabilidad y transparencia centrado en el ser humano. Expone un mínimo de tres factores explicativos por cada solicitud evaluada, desglosando los valores SHAP del modelo ML, las razones de verosimilitud de la red bayesiana y la lista trazable de reglas activadas.",
     features: [
-      "Exposición obligatoria de al menos 3 factores explicativos comprensibles (criterio HU-20).",
+      "Exposición obligatoria de al menos 3 factores explicativos comprensibles.",
       "Visualización divergente de valores SHAP (factores mitigantes vs. factores de alerta).",
       "Trazabilidad explícita de reglas disparadas con referencia a su justificación y código fuente.",
       "Generación de la ficha de explicabilidad para entrega formal al asociado bajo la Ley de Hábeas Data.",
@@ -187,7 +187,7 @@ export const architectureNodes: ArchitectureNode[] = [
   ]
 }`,
     icon: "search_insights",
-    badge: "HU-20",
+    badge: "≥ 3 factores",
     footerLeft: "Inspeccionar",
     footerRight: "XAI Visual",
     reference: "Contrato 01",
@@ -235,12 +235,12 @@ Clasificación:
     zone: "B",
     title: "Motor de Reglas",
     cardDescription:
-      "20–30 reglas YAML con categoría fuerte/débil. Señales débiles tienen condición de contexto rural (HU-11).",
+      "20–30 reglas YAML con categoría fuerte/débil. Señales débiles tienen condición de contexto rural.",
     description:
-      "Motor determinista que ejecuta entre 20 y 30 reglas formalizadas en YAML/JSON con identificador, condición lógica, peso, justificación y categorización estricta (fuerte o débil). Incorpora salvaguardas explícitas para neutralizar el sesgo rural en señales débiles (HU-11) y admite recarga en caliente.",
+      "Motor determinista que ejecuta entre 20 y 30 reglas formalizadas en YAML/JSON con identificador, condición lógica, peso, justificación y categorización estricta (fuerte o débil). Incorpora salvaguardas explícitas para neutralizar el sesgo rural en señales débiles y admite recarga en caliente.",
     features: [
       "Clasificación binaria de reglas: señales fuertes de fraude vs. señales débiles de informalidad.",
-      "Condición estricta de contexto rural en señales débiles para evitar penalizar la exclusión bancaria (HU-11).",
+      "Condición estricta de contexto rural en señales débiles para evitar penalizar la exclusión bancaria.",
       "Mecanismo de Hot-Reload para actualizar reglas en /knowledge sin detener la API.",
       "Techo acumulativo de 0.10 para la suma combinada de todas las señales débiles.",
     ],
@@ -252,10 +252,10 @@ Clasificación:
   categoria: "debil"
   fuente: "analistas_crediconfianza_2024"`,
     icon: "checklist",
-    footerLeft: "HU-10 / HU-11",
+    footerLeft: "Inspeccionar",
     footerRight: "YAML / Hot-reload",
     engineStatus: "ok",
-    reference: "HU-11",
+    reference: "Contrato 01",
   },
   {
     id: "nodo-bayesiano",
@@ -264,12 +264,12 @@ Clasificación:
     cardDescription:
       "Modela P(Fraude | evidencia) con inferencia < 1 s. Nodos: zona, historial, negocio, señales débiles agregadas.",
     description:
-      "Modelo probabilístico fundamentado en un Grafo Acíclico Dirigido (DAG) implementado con la biblioteca pgmpy. Estima la probabilidad condicional P(Fraude | evidencia) en un tiempo menor a 1 segundo, conectando nodos de zona, historial, tipo de negocio, señales agregadas y fraude latente (HU-20).",
+      "Modelo probabilístico fundamentado en un Grafo Acíclico Dirigido (DAG) implementado con la biblioteca pgmpy. Estima la probabilidad condicional P(Fraude | evidencia) en un tiempo menor a 1 segundo, conectando nodos de zona, historial, tipo de negocio, señales agregadas y fraude latente.",
     features: [
       "Inferencia exacta rápida con VariableElimination (< 1.0 s de latencia).",
       "Propagación formal de incertidumbre en presencia de datos incompletos o ruidosos.",
       "Modulación de razones de verosimilitud (LR) en función del contexto de verificabilidad.",
-      "Parámetros e hiperparámetros documentados exhaustivamente en el código fuente (HU-20).",
+      "Parámetros e hiperparámetros documentados exhaustivamente en el código fuente.",
     ],
     fragmentLabel: "Ecuación de Inferencia Bayesiana Causal",
     fragment: `P(Fraude | sin_cuenta, vive_lejos, plaza) =
@@ -280,10 +280,10 @@ Clasificación:
 Implementación: pgmpy · VariableElimination
 Prior de Fraude: 0.08 (calibrado con expertos de CrediConfianza)`,
     icon: "share",
-    footerLeft: "HU-20 Probabilístico",
+    footerLeft: "Probabilístico",
     footerRight: "pgmpy",
     engineStatus: "ok",
-    reference: "HU-20",
+    reference: "Contrato 01",
   },
   {
     id: "nodo-ml",
@@ -332,7 +332,7 @@ shap_values = explainer.shap_values(X_eval)`,
     cardDescription:
       "Reglas YAML validadas por esquema en /knowledge. 13 señales débiles + 6 indicadores fuertes de microcrédito.",
     description:
-      "Repositorio declarativo centralizado que almacena todas las reglas de negocio en formato YAML estructurado, validadas contra esquema JSON en /knowledge. Contiene un catálogo formal de 13 señales débiles de informalidad y 6 indicadores fuertes de alteración documental (HU-02).",
+      "Repositorio declarativo centralizado que almacena todas las reglas de negocio en formato YAML estructurado, validadas contra esquema JSON en /knowledge. Contiene un catálogo formal de 13 señales débiles de informalidad y 6 indicadores fuertes de alteración documental.",
     features: [
       "Validación sintáctica y semántica estricta contra JSON Schema previo a la carga.",
       "Estructura taxonómica: SeñalFuerte (R01–R07), SeñalDebil (R08–R16) y Mitigadores (M01–M04).",
@@ -352,7 +352,7 @@ ex:R08_SinHistorial a ex:SenalDebil ;
     ex:pesoMaximo 0.03 ;
     ex:contextualizadoPor ex:ZonaRural .`,
     icon: "menu_book",
-    badge: "HU-02",
+    badge: "YAML",
     footerLeft: "Inspeccionar",
     footerRight: "YAML Schema",
     reference: "Contrato 01",
@@ -364,14 +364,14 @@ ex:R08_SinHistorial a ex:SenalDebil ;
     cardDescription:
       "Calcula FPR por grupo (zona, género, etnia). Reporte de paridad demográfica y Equalized Odds con Fairlearn.",
     description:
-      "Módulo guardián de gobernanza algorítmica que calcula la tasa de falsos positivos (FPR) por grupo sociodemográfico (zona urbana vs. rural, género y pertenencia étnica). Genera reportes de paridad demográfica y Equalized Odds mediante la biblioteca Fairlearn, sugiriendo umbrales equitativos (HU-04).",
+      "Módulo guardián de gobernanza algorítmica que calcula la tasa de falsos positivos (FPR) por grupo sociodemográfico (zona urbana vs. rural, género y pertenencia étnica). Genera reportes de paridad demográfica y Equalized Odds mediante la biblioteca Fairlearn, sugiriendo umbrales equitativos.",
     features: [
       "Cálculo y auditoría del ratio de paridad: FPR_rural / FPR_urbano dentro del rango [0.80, 1.25].",
       "Monitoreo continuo de Disparate Impact Ratio (DIR) y Equalized Odds con Fairlearn.",
       "Detección automática de variables correlacionadas que actúen como proxies encubiertos.",
       "Generación de alertas éticas obligatorias para revisión en el Comité de Riesgo SARC.",
     ],
-    fragmentLabel: "Clasificación de Variables Protegidas (HU-04 / HU-18)",
+    fragmentLabel: "Clasificación de Variables Protegidas",
     fragment: `Variable            | Clasificación      | Uso modelo | Uso auditoría
 ────────────────────|────────────────────|────────────|──────────────
 tipo_zona           | proxy potencial    | No         | Sí (FPR rural vs urbana)
@@ -379,10 +379,10 @@ genero              | sensible           | No         | Sí (FPR por género)
 pertenencia_etnica  | sensible           | No         | Sí (FPR campesino/indígena)
 es_estacional       | proxy potencial    | Sí (neutro)| Sí (auditoría estacional)`,
     icon: "balance",
-    badge: "HU-04",
+    badge: "Equidad",
     footerLeft: "Inspeccionar",
     footerRight: "fairlearn",
-    reference: "HU-04",
+    reference: "Contrato 01",
   },
   {
     id: "nodo-dataset",

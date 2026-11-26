@@ -2,7 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { MaterialIcon } from "../../../components/MaterialIcon";
 import { useDisclosure } from "../../../hooks/useDisclosure";
 import { articleSections } from "../data/content";
-import { primaryNavLinks } from "../data/site";
+import { ARTICLE_PATH, primaryNavLinks } from "../data/site";
 import { useActiveSection } from "../hooks/useActiveSection";
 import logoUrl from "../../../assets/crediconfianza-logo.svg";
 
@@ -23,8 +23,11 @@ function navLinkClasses(isActive: boolean): string {
 }
 
 /**
- * Encabezado fijo de la página: marca, navegación principal, desplegable de
- * las 12 secciones del artículo y acceso al simulador.
+ * Encabezado fijo de la página: marca, navegación principal, desplegable del
+ * artículo científico (`/articulo` y sus 12 secciones) y acceso al simulador.
+ *
+ * Los enlaces a secciones son rutas `/articulo#ancla`, así funcionan desde
+ * cualquier vista; `AppLayout` desplaza la página hasta el ancla.
  *
  * El desplegable es accesible por teclado (aria-expanded/aria-controls,
  * cierre con Escape y clic fuera) y por debajo de `xl` la navegación se
@@ -47,7 +50,7 @@ export function SiteHeader(): JSX.Element {
 
       <header className="fixed top-0 z-50 w-full bg-surface-container-lowest/90 shadow-elevation-sm backdrop-blur-xl">
         <div className="mx-auto flex h-[60px] max-w-7xl items-center justify-between gap-4 px-6 lg:px-12">
-          <div className="flex shrink-0 items-center gap-4">
+          <Link to="/" className="flex shrink-0 items-center gap-4" aria-label="Inicio">
             <img src={logoUrl} alt="" className="h-8 w-auto object-contain" />
             <div className="flex flex-col">
               <span className="font-headline-sm text-headline-sm leading-tight tracking-tight text-primary">
@@ -57,7 +60,7 @@ export function SiteHeader(): JSX.Element {
                 Finanzas Responsables
               </span>
             </div>
-          </div>
+          </Link>
 
           <nav aria-label="Navegación principal" className="hidden items-center gap-2 xl:flex">
             {primaryNavLinks.map((link) => {
@@ -81,9 +84,9 @@ export function SiteHeader(): JSX.Element {
                 onClick={desktopMenu.toggle}
                 aria-expanded={desktopMenu.isOpen}
                 aria-controls="article-dropdown"
-                className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 font-label-lg text-label-lg text-on-surface-variant transition-colors duration-150 hover:bg-surface-container-low hover:text-on-surface"
+                className={`inline-flex items-center gap-1.5 ${navLinkClasses(pathname === ARTICLE_PATH)}`}
               >
-                <span>Artículo Científico</span>
+                <span>Artículo científico</span>
                 <MaterialIcon
                   name="expand_more"
                   className={`text-[18px]! transition-transform duration-200 ${desktopMenu.isOpen ? "rotate-180" : ""}`}
@@ -93,14 +96,21 @@ export function SiteHeader(): JSX.Element {
               {desktopMenu.isOpen ? (
                 <div id="article-dropdown" className="absolute left-0 top-full w-96 pt-2">
                   <div className="max-h-[768px] overflow-y-auto rounded-xl bg-surface-container-lowest p-2 shadow-[0_10px_25px_-5px_rgba(15,23,42,0.06),0_8px_10px_-6px_rgba(15,23,42,0.04)]">
+                    <Link
+                      to={ARTICLE_PATH}
+                      onClick={desktopMenu.close}
+                      className="mb-1 block rounded-lg px-3 py-2 font-label-lg font-semibold text-primary hover:bg-surface-container-low"
+                    >
+                      Leer el artículo completo
+                    </Link>
                     <div className="px-3 py-2 font-label-md font-medium text-slate-500">
-                      Secciones metodológicas
+                      Ir a una sección
                     </div>
                     <ul className="flex flex-col gap-0.5">
                       {articleSections.map((section) => (
                         <li key={section.anchor}>
-                          <a
-                            href={`#${section.anchor}`}
+                          <Link
+                            to={`${ARTICLE_PATH}#${section.anchor}`}
                             onClick={desktopMenu.close}
                             aria-current={activeId === section.anchor ? "true" : undefined}
                             className={`block truncate rounded-lg px-3 py-2 font-body-sm text-body-sm transition-colors ${
@@ -110,7 +120,7 @@ export function SiteHeader(): JSX.Element {
                             }`}
                           >
                             {section.dropdownLabel}
-                          </a>
+                          </Link>
                         </li>
                       ))}
                     </ul>
@@ -127,9 +137,6 @@ export function SiteHeader(): JSX.Element {
             >
               Probar Simulador
             </Link>
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary">
-              <MaterialIcon name="person" className="text-[18px]! text-on-primary" />
-            </span>
             <button
               type="button"
               onClick={mobileMenu.toggle}
@@ -179,17 +186,24 @@ export function SiteHeader(): JSX.Element {
               </Link>
 
               <span className="mt-3 border-t border-outline-variant/30 pt-3 font-label-md font-medium text-slate-500">
-                Secciones del artículo
+                Artículo científico
               </span>
+              <Link
+                to={ARTICLE_PATH}
+                onClick={mobileMenu.close}
+                className="rounded-lg px-3 py-2 font-label-lg font-semibold text-primary hover:bg-surface-container-low"
+              >
+                Leer el artículo completo
+              </Link>
               {articleSections.map((section) => (
-                <a
+                <Link
                   key={section.anchor}
-                  href={`#${section.anchor}`}
+                  to={`${ARTICLE_PATH}#${section.anchor}`}
                   onClick={mobileMenu.close}
                   className="rounded-lg px-3 py-2 font-body-sm text-body-sm text-on-surface-variant transition-colors hover:bg-surface-container-low hover:text-on-surface"
                 >
                   {section.dropdownLabel}
-                </a>
+                </Link>
               ))}
             </nav>
           </div>

@@ -1,0 +1,52 @@
+# Configuración de la fusión híbrida de motores (HU-18) y umbrales (HU-19).
+# La fórmula y los pesos viven aquí, no en el código (AGENTS.md).
+
+version: "1.0.0"
+
+# ── Pesos de fusión (HU-18) ──────────────────────────────────────────────────
+# Estrategia elegida: promedio ponderado lineal sobre las salidas normalizadas
+# de los tres motores. Comparada contra una regresión logística sobre las
+# salidas (ver bitácora), se eligió el promedio ponderado por:
+#   - interpretabilidad para el analista (pesos auditables y estables),
+#   - robustez con 3 motores (la regresión sobre 3 salidas con 3.5% de
+#     positivos tiende a sobreajustar el umbral en el fold de validación),
+#   - HU-18 exige que la fórmula sea legible en el reporte de gobierno.
+fusion:
+  strategy: weighted_average
+  weights:
+    rules: 0.25      # subpuntaje de reglas 0-1 (motor simbólico)
+    bayesian: 0.35   # P(fraude | evidencia) de la red bayesiana
+    ml: 0.40         # probabilidad calibrada del XGBoost (HU-15)
+
+# ── Umbrales del semáforo (HU-19) ────────────────────────────────────────────
+# Calibrados contra la distribución de puntajes de data/test.csv:
+#   - los casos con solo señales débiles (incluida la rural legítima con
+#     muchas señales, máx. ≈10 puntos) quedan por debajo de 20 → verde y
+#     jamás llegan a rojo (HU-18),
+#   - 1+ indicios fuertes activan el piso `strong_signal_floors` → amarillo,
+#   - 2+ indicios fuertes superan 65 de puntaje Y el piso → rojo.
+# Nota: el cambio de umbral queda registrado con fecha/persona/motivo en la
+# bitácora y obliga a recomputar las métricas de equidad (HU-19, HU-21).
+thresholds:
+  verde_max: 20       # score < 20 → verde (aprobar con criterio del analista)
+  amarillo_max: 65    # 20 ≤ score < 65 → amarillo; ≥ 65 → rojo
+  # Pisos independientes del puntaje: un indicio fuerte nunca queda verde y
+  # dos o más siempre escalan al comité (criterio del comité de riesgo).
+  strong_signal_floors:
+    - min_strong: 1
+      semaforo: amarillo
+    - min_strong: 2
+      semaforo: rojo
+  # Registro de cambios (HU-19): agregar una fila por cada cambio.
+  changelog:
+    - date: "2026-11-23"
+      person: "equipo-desarrollo"
+      reason: "Umbrales iniciales: verde_max=20, amarillo_max=65 y pisos por indicios fuertes (1→amarillo, 2→rojo); garantiza que la señal débil aislada jamás llegue a rojo (HU-18)."
+
+# ── Degradación gracefully (HU-18) ───────────────────────────────────────────
+# Si un motor falla o no tiene datos, la fusión renormaliza los pesos entre
+# los disponibles y reporta engine_status = "missing" para el faltante.
+degradation:
+  renormalize_weights: true
+  # Si todos los motores fallan, se responde 503 con mensaje amigable.
+  min_engines_required: 1

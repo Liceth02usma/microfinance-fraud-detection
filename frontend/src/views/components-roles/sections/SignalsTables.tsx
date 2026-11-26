@@ -131,8 +131,8 @@ export function SignalsTables(): JSX.Element {
           <MaterialIcon name="verified" className="mt-0.5 shrink-0 text-[18px]!" />
           <div>
             <p className="text-xs font-bold">
-              Salvaguarda Ética (HU-18): El Motor de Reglas impone un techo acumulativo de 0.10 para
-              la suma de señales débiles.
+              Salvaguarda Ética: El Motor de Reglas impone un techo acumulativo de 0.10 para la suma
+              de señales débiles.
             </p>
             <p className="mt-1 text-xs leading-relaxed text-emerald-800">
               Ninguna de estas señales puede derivar por sí sola en clasificación «roja». Coexistir

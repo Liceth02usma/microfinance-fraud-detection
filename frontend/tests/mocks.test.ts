@@ -25,6 +25,7 @@ function baseRequest(overrides: Partial<EvaluationRequest> = {}): EvaluationRequ
     ingresos_declarados: 4_000_000,
     edad_solicitante: 45,
     es_estacional: true,
+    antiguedad_negocio_meses: 36,
     // 8 señales débiles (caso rural legítimo de HU-27).
     sin_historial: true,
     vive_lejos: true,

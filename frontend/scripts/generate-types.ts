@@ -45,6 +45,21 @@ const EXPORTED_ALIASES = [
   "ProductoCredito",
   "TipoNegocio",
   "FuenteDatos",
+  "KnowledgeResponse",
+  "KnowledgeRule",
+  "ValuationCreate",
+  "ValuationSummary",
+  "ValuationRecord",
+  "ValuationList",
+  "AnalystDecision",
+  "EngineReasoning",
+  "RulesReasoning",
+  "BayesianReasoning",
+  "BayesianEvidence",
+  "MlReasoning",
+  "ShapContribution",
+  "FusionReasoning",
+  "FusionPart",
 ] as const;
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));

@@ -1,4 +1,9 @@
+import { checklist, hybrid, metrics, num, pct } from "../../../../data/metrics";
 import type { ArticleSection } from "../types";
+
+const rr = metrics.review_rates_legit;
+const fpChecklist = metrics.headline.false_positives_checklist.toLocaleString("es-CO");
+const fpHybrid = metrics.headline.false_positives_hybrid.toLocaleString("es-CO");
 
 /** Secciones 01 – 04 del artículo científico. */
 export const sectionsOneToFour: ArticleSection[] = [
@@ -15,15 +20,15 @@ export const sectionsOneToFour: ArticleSection[] = [
         content: {
           segments: [
             { strong: "Resumen:" },
-            " La concesión de microcrédito rural enfrenta la paradoja de operar en entornos con alta informalidad documental y transaccional, donde los sistemas tradicionales de detección de fraude basados exclusivamente en machine learning tienden a generar tasas desproporcionadas de falsos positivos en pequeños productores agrícolas. Este trabajo presenta un modelo híbrido tripartito compuesto por un motor de reglas ontológicas (RDFS/OWL), una red bayesiana causal probabilística y un clasificador de gradiente XGBoost optimizado con explicaciones locales SHAP. Evaluado en 38.000 asociados de San Juan de la Vega (Cundinamarca), el artefacto redujo los falsos positivos en 41.2%, mantuvo la paridad ética de impacto dispar en 1.04 y comprimió el tiempo de resolución decisional de 15 días a 48 horas bajo supervisión 100% humana.",
+            ` En el microcrédito rural, las listas de chequeo tratan como sospechosas señales que son normales en el campo (no tener cuenta bancaria, usar celular prepago, vender en plazas), lo que genera falsos positivos y demoras para solicitantes legítimos. Este trabajo presenta un prototipo híbrido que combina 24 reglas expertas con salvaguardas rurales, una red bayesiana y un modelo XGBoost calibrado con explicaciones SHAP, fusionados en un puntaje de riesgo de 0 a 100 con semáforo. Sobre ${metrics.test_split.n.toLocaleString("es-CO")} solicitudes sintéticas de prueba, el sistema obtuvo AUC ${num(hybrid.auc)}, precisión ${num(hybrid.precision)}, recall ${num(hybrid.recall)} y F1 ${num(hybrid.f1)}. Frente a una lista de chequeo simulada, los falsos positivos bajaron de ${fpChecklist} a ${fpHybrid} y la proporción de solicitantes rurales legítimos enviados a revisión pasó de ${pct(rr.checklist_rural)} a ${pct(rr.hybrid_rural)}. El sistema solo recomienda: cada decisión la toma y la justifica un analista.`,
           ],
           keywordsLabel: "Palabras Clave:",
           keywords: [
-            "Microcrédito Agropecuario",
-            "Inteligencia Artificial Explicable",
-            "Redes Bayesianas",
-            "Equidad Algorítmica",
-            "Ontologías OWL",
+            "Microcrédito agropecuario",
+            "Inteligencia artificial explicable",
+            "Redes bayesianas",
+            "Equidad algorítmica",
+            "Sistemas expertos",
           ],
         },
       },
@@ -40,7 +45,7 @@ export const sectionsOneToFour: ArticleSection[] = [
       {
         kind: "paragraph",
         segments: [
-          "La provincia de Tequendama y la zona de San Juan de la Vega presentan características socioeconómicas particulares donde conviven cultivos de café, plátano, caña panelera y ganadería de doble propósito. En esta región, más del 65% de las transacciones se efectúan en efectivo y la tenencia de la tierra involucra sucesiones familiares no formalizadas mediante escritura pública.",
+          "CrediConfianza es una cooperativa de ahorro y crédito de San Juan de la Vega, creada en 1989 como fondo parroquial para pequeños caficultores. Hoy atiende a 38.000 asociados en 14 oficinas, con una cartera cercana a 42.000 millones de pesos en consumo, microempresa, vivienda y crédito agropecuario. La detección de fraude se hace a mano, con listas de chequeo y la experiencia de los analistas.",
         ],
       },
       {
@@ -48,9 +53,9 @@ export const sectionsOneToFour: ArticleSection[] = [
         variant: "context",
         items: [
           {
-            label: "Contexto Territorial: San Juan de la Vega (Cundinamarca)",
-            value: "14 Oficinas (7 Rurales)",
-            body: "El 73% de los microempresarios de la zona carece de facturación electrónica Dian y comercializa directamente en centrales mayoristas o plazas locales. Las entidades bancarias comerciales rechazan o demoran indebidamente el 42% de estas solicitudes por falta de soportes contables urbanos, confundiéndolos con fraudes de solvencia ficticia.",
+            label: "Contexto del caso (enunciado del proyecto)",
+            value: "14 oficinas (7 rurales)",
+            body: "El estudio manual tarda entre 5 y 8 días hábiles en zona urbana y entre 10 y 15 en zona rural, por la distancia, la conectividad intermitente y la falta de comprobantes formales de ingresos. En temporada de cosecha la cola supera las tres semanas.",
           },
         ],
       },
@@ -67,11 +72,11 @@ export const sectionsOneToFour: ArticleSection[] = [
       {
         kind: "paragraph",
         segments: [
-          "Los algoritmos estándar de scoring crediticio presentan dos fallas críticas en entornos rurales: ",
-          { em: "falsos rechazos masivos" },
-          " y ",
-          { em: "dilación operativa" },
-          ".",
+          "Aplicadas sin contexto, las señales débiles castigan la ruralidad: ",
+          { em: "falsos positivos" },
+          " para productores legítimos y ",
+          { em: "demoras" },
+          " por exigencias documentales adicionales. Pregunta orientadora: ¿cómo combinar reglas expertas, razonamiento probabilístico y aprendizaje automático para detectar fraude manteniendo transparencia, equidad y responsabilidad?",
         ],
       },
       {
@@ -79,16 +84,16 @@ export const sectionsOneToFour: ArticleSection[] = [
         variant: "issue",
         items: [
           {
-            label: "Asimetría de Falsos Positivos",
+            label: "Falsos positivos de una lista de chequeo (simulada)",
             accent: "risk-high",
-            value: "41.2% Brecha",
-            body: "Los solicitantes de veredas sufren una tasa de falsos positivos 2.4 veces superior a la de solicitantes urbanos por carecer de línea telefónica fija y cuenta bancaria comercial.",
+            value: `${pct(checklist.fpr_rural)} rural · ${pct(checklist.fpr_urbana)} urbano`,
+            body: `Si se marca como sospechoso a quien tenga 3 o más señales débiles, en el dataset sintético quedan marcados ${pct(checklist.fpr_rural)} de los rurales legítimos y ${pct(checklist.fpr_urbana)} de los urbanos legítimos. Es una simulación del proceso actual, no una medición en la cooperativa.`,
           },
           {
-            label: "Latencia en Verificación Manual",
+            label: "Demora del estudio manual rural",
             accent: "risk-medium",
-            value: "15 Días Hábiles",
-            body: "Los comités tardaban semanas en enviar peritos a campo para corroborar si la falta de local comercial era fraude o práctica agrícola legítima.",
+            value: "10 a 15 días hábiles",
+            body: "Según el enunciado del caso, frente a 5 a 8 días en zona urbana. Verificar referencias y visitar la parcela es lo que más tiempo consume.",
           },
         ],
       },
@@ -104,8 +109,14 @@ export const sectionsOneToFour: ArticleSection[] = [
     blocks: [
       {
         kind: "quote",
-        text: "«La exclusión algorítmica involuntaria del campesino reproduce brechas de pobreza que las cooperativas solidarias están mandatadas a disolver. Un algoritmo sin contexto ontológico es ciego a la lógica productiva de la tierra.»",
-        cite: "— Comité Científico de Ética y Auditoría de Datos, CrediConfianza",
+        text: "«Manejar efectivo, vender en ferias, tener ingresos por cosecha o no tener historial bancario no es fraude. Un sistema que no distingue esa realidad excluye de hecho a quienes la cooperativa existe para atender.»",
+        cite: "— Síntesis del planteamiento del proyecto",
+      },
+      {
+        kind: "paragraph",
+        segments: [
+          "Un sistema que explique cada alerta, mida la equidad entre grupos y deje la decisión en manos de un analista reduce la exclusión sin renunciar a detectar el fraude real, y deja trazabilidad para la auditoría y el cumplimiento del marco legal.",
+        ],
       },
     ],
   },

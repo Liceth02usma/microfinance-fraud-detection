@@ -3,6 +3,11 @@ import { describe, expect, it, vi } from "vitest";
 import { setScenario } from "../../src/mocks/scenarios";
 import { renderRoute } from "../helpers/renderRoute";
 
+/** Despliega un bloque plegable del formulario por su título. */
+function expand(title: RegExp): void {
+  fireEvent.click(screen.getByRole("button", { name: title }));
+}
+
 // MSW intercepta todos los fetch; los escenarios se controlan con setScenario.
 // afterEach de setup.ts ya llama resetScenario() y server.resetHandlers().
 
@@ -34,7 +39,7 @@ describe("SimuladorPage (ruta /simulador)", () => {
     fireEvent.click(screen.getByRole("button", { name: /Evaluar solicitud/i }));
 
     await waitFor(() => {
-      expect(screen.getByText("Riesgo bajo con viabilidad técnica")).toBeInTheDocument();
+      expect(screen.getByRole("heading", { name: "Riesgo bajo" })).toBeInTheDocument();
     });
     expect(screen.getByText("Desglose de motores híbridos")).toBeInTheDocument();
     expect(screen.getByText("Factores explicativos del dictamen")).toBeInTheDocument();
@@ -45,6 +50,8 @@ describe("SimuladorPage (ruta /simulador)", () => {
   it("Limpiar: desmarca todos los checkboxes y limpia el resultado", () => {
     renderRoute(["/simulador"]);
 
+    expand(/Señales débiles/i);
+    expand(/Perfil y crédito/i);
     // DEFAULT_FORM tiene sin_historial = true
     const sinHistorial = screen.getByRole("checkbox", { name: /Sin historial crediticio/i });
     expect(sinHistorial).toBeChecked();
@@ -79,6 +86,7 @@ describe("SimuladorPage (ruta /simulador)", () => {
 
   it("handleWeak: marcar/desmarcar una señal débil cambia su estado", () => {
     renderRoute(["/simulador"]);
+    expand(/Señales débiles/i);
 
     const cb = screen.getByRole("checkbox", { name: /Sin historial crediticio/i });
     const initial = (cb as HTMLInputElement).checked;
@@ -90,6 +98,7 @@ describe("SimuladorPage (ruta /simulador)", () => {
 
   it("handleStrong: activar un indicador fuerte lo marca y actualiza la salvaguarda", () => {
     renderRoute(["/simulador"]);
+    expand(/Indicios fuertes/i);
 
     const cb = screen.getByRole("checkbox", { name: /Cédula alterada/i });
     expect(cb).not.toBeChecked();
@@ -106,7 +115,7 @@ describe("SimuladorPage (ruta /simulador)", () => {
     fireEvent.click(screen.getByRole("button", { name: /Urbano fraude/i }));
 
     await waitFor(() => {
-      expect(screen.getByText("Alerta severa de inconsistencia objetiva")).toBeInTheDocument();
+      expect(screen.getByText("Alerta alta de fraude")).toBeInTheDocument();
     });
   });
 
@@ -117,9 +126,7 @@ describe("SimuladorPage (ruta /simulador)", () => {
     fireEvent.click(screen.getByRole("button", { name: /Ambiguo HITL/i }));
 
     await waitFor(() => {
-      expect(
-        screen.getByText("Señal de alerta — inspección de campo requerida"),
-      ).toBeInTheDocument();
+      expect(screen.getByText("Requiere revisión del analista")).toBeInTheDocument();
     });
   });
 
@@ -147,9 +154,10 @@ describe("SimuladorPage (ruta /simulador)", () => {
 
     fireEvent.click(screen.getByRole("button", { name: /Evaluar solicitud/i }));
     await waitFor(() => {
-      expect(screen.getByText("Riesgo bajo con viabilidad técnica")).toBeInTheDocument();
+      expect(screen.getByRole("heading", { name: "Riesgo bajo" })).toBeInTheDocument();
     });
 
+    fireEvent.click(screen.getByRole("tab", { name: /Traza/i }));
     fireEvent.click(screen.getByRole("button", { name: /Copiar/i }));
     expect(writeText).toHaveBeenCalledOnce();
     expect(writeText.mock.calls[0][0]).toContain("[BAYES]");

@@ -17,7 +17,7 @@ const TAXONOMY: { term: string; definition: string }[] = [
   {
     term: "Sensible",
     definition:
-      "variable protegida directa — NO se usa como input predictivo. Solo para auditoría ética (HU-04).",
+      "variable protegida directa — NO se usa como input predictivo. Solo para auditoría ética.",
   },
   {
     term: "Proxy potencial",
@@ -108,7 +108,7 @@ export function ProtectedVariables(): JSX.Element {
     <SectionCard
       icon="balance"
       title="C. Variables Protegidas y Clasificación Ética"
-      badge="10 Variables · HU-04"
+      badge="10 Variables"
       subtitle="Matriz de decisión sobre uso de variables sensibles en modelo vs. auditoría"
       right={
         <div className="relative flex items-center gap-2" ref={legend.containerRef}>

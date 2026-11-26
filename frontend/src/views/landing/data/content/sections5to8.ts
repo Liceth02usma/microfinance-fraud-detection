@@ -1,4 +1,48 @@
+import { metrics, num } from "../../../../data/metrics";
 import type { ArticleSection } from "../types";
+
+const priorRural = metrics.bayes.prior_rural;
+const priorUrbana = metrics.bayes.prior_urbana;
+const odds = (p: number): string => num(p / (1 - p), 3);
+
+/** Efecto de una razón de verosimilitud sobre las odds de fraude. */
+function lrEffect(lr: number | null): string {
+  if (lr === null) return "n/d";
+  if (lr >= 10) return "Evidencia fuerte a favor del fraude";
+  if (lr >= 1.3) return "Evidencia débil a favor del fraude";
+  if (lr > 0.77) return "Casi neutral: no cambia la probabilidad";
+  return "Evidencia en contra del fraude";
+}
+
+const WEAK_SHOWN = [
+  "celular_prepago",
+  "sin_cuenta_bancaria",
+  "sin_historial",
+  "vive_lejos",
+  "factura_manual",
+  "direccion_sin_georreferenciar",
+];
+const lrRows: string[][] = [
+  ...metrics.bayes.likelihood_ratios
+    .filter((r) => r.kind === "fuerte")
+    .slice(0, 3)
+    .map((r) => [
+      r.label,
+      "Indicio fuerte",
+      num(r.lr_rural, 1),
+      num(r.lr_urbana, 1),
+      lrEffect(r.lr_rural),
+    ]),
+  ...metrics.bayes.likelihood_ratios
+    .filter((r) => WEAK_SHOWN.includes(r.signal))
+    .map((r) => [
+      r.label,
+      "Señal débil",
+      num(r.lr_rural, 2),
+      num(r.lr_urbana, 2),
+      `Rural: ${lrEffect(r.lr_rural).toLowerCase()}`,
+    ]),
+];
 
 /** Secciones 05 – 08 del artículo científico. */
 export const sectionsFiveToEight: ArticleSection[] = [
@@ -23,7 +67,7 @@ export const sectionsFiveToEight: ArticleSection[] = [
       {
         kind: "highlight-card",
         title: "Objetivo General",
-        body: "Diseñar, formalizar y validar empíricamente un prototipo híbrido explicable de detección de fraude en microfinanzas rurales, que articule ontologías de dominio (OWL), actualización bayesiana causal y algoritmos de gradiente (XGBoost), garantizando auditoría ética, paridad demográfica y supervisión colegiada humana en la cooperativa CrediConfianza (San Juan de la Vega, Cundinamarca).",
+        body: "Diseñar y validar con datos sintéticos un prototipo híbrido y explicable de detección de fraude para CrediConfianza que combine reglas expertas, una red bayesiana y un modelo de aprendizaje automático, mida la paridad entre grupos y deje la decisión final en manos de un analista.",
       },
       {
         kind: "numbered-cards",
@@ -31,17 +75,17 @@ export const sectionsFiveToEight: ArticleSection[] = [
           {
             index: "1",
             title: "1. Representación & Ontología",
-            body: "Modelar formalmente el conocimiento experto mediante una ontología de riesgo en OWL, reglas contextualizadas con topes para señales débiles y red bayesiana de verificabilidad.",
+            body: "Estructurar el conocimiento experto en una matriz de adquisición, una ontología del dominio y 24 reglas con topes y salvaguardas para las señales débiles rurales.",
           },
           {
             index: "2",
             title: "2. Aprendizaje Automático & SHAP",
-            body: "Calibrar un ensamble XGBoost con regularización y aislamiento de atributos sensibles, generando atribuciones locales SHAP por alerta integradas en el puntaje de fusión.",
+            body: "Entrenar y calibrar un XGBoost que excluye las variables protegidas, con explicaciones SHAP por alerta, y fusionarlo con las reglas y la red bayesiana en un puntaje de 0 a 100.",
           },
           {
             index: "3",
             title: "3. Evaluación de Paridad & Gobierno",
-            body: "Auditar empíricamente el desempeño (AUC, F1), la razón FPR rural/urbano (0.80 - 1.25) y formalizar el manual de gobierno bajo Hábeas Data (Ley 2157).",
+            body: "Medir AUC, F1, precisión, recall, falsos positivos por grupo y paridad (fairlearn), y registrar cada decisión humana con su motivo y la versión del modelo.",
           },
         ],
       },
@@ -59,7 +103,7 @@ export const sectionsFiveToEight: ArticleSection[] = [
         kind: "paragraph",
         muted: true,
         segments: [
-          "Formalización causal inspirada en MYCIN y redes bayesianas actualizadas mediante factores de verosimilitud (Likelihood Ratios, LR) condicionados por el entorno agropecuario.",
+          "La red bayesiana (pgmpy) actualiza la probabilidad de fraude con cada evidencia. Las probabilidades condicionales se estimaron del dataset sintético de entrenamiento y dependen de la zona, de modo que una señal habitual en el campo casi no mueve el resultado.",
         ],
       },
       {
@@ -75,66 +119,24 @@ export const sectionsFiveToEight: ArticleSection[] = [
             {
               label: "Odds Previos",
               formula: "P(F) / [1 - P(F)]",
-              note: "Frecuencia base histórica cooperativa (prior odds = 0.08 / 0.92 = 0.087).",
+              note: `Tasa base de fraude del dataset: ${num(priorRural * 100, 2)} % rural (odds ${odds(priorRural)}) y ${num(priorUrbana * 100, 2)} % urbana (odds ${odds(priorUrbana)}).`,
             },
             {
               label: "Razón de Verosimilitud",
-              formula: "LR_i = P(s|F) / P(s|¬F, contexto)",
-              note: "Condicionada dinámicamente según geografía y actividad del asociado.",
+              formula: "LR_i = P(s | F, zona) / P(s | ¬F, zona)",
+              note: "Calculada con las tablas de probabilidad de la red, por separado para zona rural y urbana.",
             },
             {
               label: "Odds Posteriores",
               formula: "P(F | E) Normalizada",
-              note: "Probabilidad corregida que mitiga correlaciones espurias del entorno informal.",
+              note: "Probabilidad de fraude que entrega la red y entra a la fusión con su peso.",
             },
           ],
           table: {
-            caption: "Tabla 3: Modulación Territorial de la Razón de Verosimilitud (LR)",
-            columns: ["Evidencia", "Contexto territorial", "LR", "Efecto sobre las odds previas"],
-            rows: [
-              [
-                "Cédula verificada en Registraduría",
-                "Rural y urbano",
-                "0.30",
-                "Reduce las odds de fraude (evidencia en contra)",
-              ],
-              [
-                "Cédula cancelada o inconsistente",
-                "Rural y urbano",
-                "4.50",
-                "Multiplica las odds de fraude por 4.5",
-              ],
-              [
-                "Inconsistencia entre ingresos y capacidad predial",
-                "Rural y urbano",
-                "6.00",
-                "Fuerte evidencia a favor del fraude",
-              ],
-              [
-                "Ingresos coherentes con la actividad declarada",
-                "Rural y urbano",
-                "0.40",
-                "Reduce las odds de fraude (coherencia productiva)",
-              ],
-              [
-                "Sin local fijo, con venta en plaza o feria",
-                "Rural agropecuario",
-                "1.05",
-                "Casi neutral: la informalidad no implica fraude",
-              ],
-              [
-                "Sin local fijo y sin venta en plaza",
-                "Urbano comerciante",
-                "2.50",
-                "Señal moderada a favor del fraude",
-              ],
-              [
-                "Con local fijo y matrícula mercantil",
-                "Rural y urbano",
-                "0.80",
-                "Evidencia de solvencia operativa",
-              ],
-            ],
+            caption:
+              "Tabla 3: Razones de verosimilitud (LR) calculadas de la red bayesiana, por zona",
+            columns: ["Evidencia", "Tipo", "LR rural", "LR urbana", "Efecto sobre las odds"],
+            rows: lrRows,
           },
         },
       },
@@ -165,7 +167,7 @@ export const sectionsFiveToEight: ArticleSection[] = [
             body: "Instrucciones de gestión de riesgo crediticio (SARC) obligando a comités humanos documentados para montos microfinancieros.",
           },
           {
-            title: "CONPES 4144 (2024)",
+            title: "CONPES 4144 (2025)",
             body: "Política Nacional de Inteligencia Artificial para Colombia. Principios vinculantes de equidad, no discriminación de género y auditabilidad.",
           },
         ],
@@ -196,33 +198,33 @@ export const sectionsFiveToEight: ArticleSection[] = [
         items: [
           {
             index: "1",
-            title: "Diagnóstico Territorial:",
-            body: "Inmersión con 14 oficiales de crédito en San Juan de la Vega para documentar tipologías de informalidad campesina.",
+            title: "Adquisición del conocimiento:",
+            body: "Análisis del enunciado, lista de chequeo de analistas y dos entrevistas simuladas, registradas en la matriz de adquisición con fuente y nivel de confianza.",
           },
           {
             index: "2",
-            title: "Ingeniería Ontológica:",
-            body: "Codificación en Protégé de conceptos RDFS/OWL que formalizan la tenencia comunal y ciclos de siembra.",
+            title: "Representación del conocimiento:",
+            body: "Ontología del dominio en JSON (Solicitante, Negocio, Señal, Regla, Decisión…) y 24 reglas en YAML validadas contra un esquema.",
           },
           {
             index: "3",
-            title: "Modelado Causal:",
-            body: "Especificación de la Red Bayesiana y calibración de verosimilitudes con expertos de la cooperativa.",
+            title: "Red bayesiana:",
+            body: "Estructura definida a partir del conocimiento experto y probabilidades estimadas del dataset sintético de entrenamiento.",
           },
           {
             index: "4",
-            title: "Entrenamiento y Calibración:",
-            body: "Ajuste de XGBoost con isotonic regression para eliminar sesgos de sobreconfianza en scores.",
+            title: "Aprendizaje automático:",
+            body: "XGBoost calibrado con el método sigmoide en validación cruzada de 5 particiones, comparado con una regresión logística base.",
           },
           {
             index: "5",
-            title: "Pruebas de Ablación:",
-            body: "Validación experimental cuantitativa deshabilitando componentes aislados del pipeline.",
+            title: "Validación y ablación:",
+            body: "Comparación de cada motor por separado, de la fusión y de una lista de chequeo simulada sobre el split de prueba, con pruebas automáticas de los casos de referencia.",
           },
           {
             index: "6",
-            title: "Gobernanza Socio-Técnica:",
-            body: "Implantación del protocolo decisional humano y auditoría continua de paridad.",
+            title: "Gobierno del sistema:",
+            body: "Registro de cada decisión del analista con motivo y versión del modelo, y auditoría de paridad por zona, género y pertenencia étnica.",
           },
         ],
       },

@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { stickyBar } from "../data/site";
 import { useScrollThreshold } from "../hooks/useScrollThreshold";
 
@@ -25,12 +26,13 @@ export function StickyCtaBar(): JSX.Element {
             {stickyBar.subtitle}
           </span>
         </div>
-        <a
-          href={stickyBar.ctaHref}
+        <Link
+          to={stickyBar.ctaHref}
+          tabIndex={isVisible ? undefined : -1}
           className="inline-flex min-h-[44px] items-center justify-center rounded bg-primary-container px-5 font-label-lg text-label-lg text-on-primary transition-colors hover:bg-brand-light"
         >
           {stickyBar.ctaLabel}
-        </a>
+        </Link>
       </div>
     </div>
   );

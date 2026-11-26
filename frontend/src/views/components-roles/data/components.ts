@@ -67,8 +67,6 @@ export interface HumanRole {
   icon: string;
   responsibility: string;
   decisions: string;
-  /** Historias de usuario cubiertas (p. ej. `["HU-09", "HU-26"]`). */
-  hus: string[];
 }
 
 export const SYSTEM_COMPONENTS: SystemComponent[] = [
@@ -87,7 +85,7 @@ export const SYSTEM_COMPONENTS: SystemComponent[] = [
     layer: "Usuario",
     technology: "React + SHAP values + reglas",
     function:
-      "Muestra ≥ 3 factores explicativos en lenguaje natural, desglose de pesos y reglas activadas (HU-20).",
+      "Muestra ≥ 3 factores explicativos en lenguaje natural, desglose de pesos y reglas activadas.",
     interaction: "Consume la EvaluationResponse",
     icon: "visibility",
   },
@@ -391,7 +389,6 @@ export const HUMAN_ROLES: HumanRole[] = [
       "Revisa la recomendación del sistema y toma la decisión final sobre la solicitud.",
     decisions:
       "Aprobar, rechazar o solicitar más información. Debe registrar la razón de su decisión.",
-    hus: ["HU-09", "HU-26"],
   },
   {
     role: "Comité de Riesgo",
@@ -400,15 +397,13 @@ export const HUMAN_ROLES: HumanRole[] = [
       "Revisa casos amarillo escalados y casos rojo con solicitud de reconsideración.",
     decisions:
       "Decisión final en casos complejos. Puede ajustar el umbral de semáforo temporalmente.",
-    hus: ["HU-09", "HU-26"],
   },
   {
     role: "Ingeniero del Conocimiento",
     icon: "build",
     responsibility:
       "Mantiene y actualiza las reglas YAML en /knowledge. Valida cambios contra el esquema.",
-    decisions: "Agregar, modificar o desactivar reglas sin tocar el motor (HU-10).",
-    hus: ["HU-10", "HU-11"],
+    decisions: "Agregar, modificar o desactivar reglas sin tocar el motor.",
   },
   {
     role: "Experto en Dominio",
@@ -417,21 +412,18 @@ export const HUMAN_ROLES: HumanRole[] = [
       "Provee el conocimiento sobre fraude y contexto rural. Revisa los factores explicativos.",
     decisions:
       "Validar que las justificaciones de las reglas reflejen la realidad del microcrédito.",
-    hus: ["HU-02", "HU-11"],
   },
   {
     role: "Auditor Ético",
     icon: "gavel",
     responsibility: "Revisa periódicamente los reportes de paridad (FPR por grupo).",
     decisions: "Proponer ajustes de umbral para garantizar equidad. Firma el reporte ético.",
-    hus: ["HU-04"],
   },
   {
     role: "Ingeniero de ML",
     icon: "precision_manufacturing",
     responsibility: "Entrena, evalúa y versiona el modelo. Monitorea AUC, F1, deriva del modelo.",
     decisions: "Decidir cuándo re-entrenar. Aprobar el paso a producción de una nueva versión.",
-    hus: ["HU-04"],
   },
 ];
 
@@ -439,7 +431,7 @@ export const HUMAN_ROLES: HumanRole[] = [
 export const CONFORMITY_CHECKLIST: string[] = [
   "9/9 Componentes del sistema auditados",
   "13 Señales débiles contextualizadas y 6 indicadores críticos validados",
-  "Salvaguarda ética HU-18: Activa",
+  "Salvaguarda ética: Activa",
   "Protocolo HITL y W3C PROV-O: Conforme",
   "Aislamiento de variables sensibles (Género / Etnia): Verificado",
 ];

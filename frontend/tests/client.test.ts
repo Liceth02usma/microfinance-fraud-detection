@@ -20,6 +20,7 @@ function validRequest(): EvaluationRequest {
     ingresos_declarados: 4_000_000,
     edad_solicitante: 45,
     es_estacional: true,
+    antiguedad_negocio_meses: 36,
     sin_historial: true,
     vive_lejos: true,
     sin_local_fijo: true,
@@ -52,6 +53,7 @@ function validResponse(): EvaluationResponse {
     activated_rules: [],
     bayesian_probability: 0.08,
     ml_probability: 0.05,
+    rules_subscore: 0.05,
     explanatory_factors: [
       "Caso rural con 8 señales débiles: no implica fraude (HU-18).",
       "Sin indicadores fuertes de fraude detectados.",

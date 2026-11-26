@@ -1,0 +1,194 @@
+{
+  "$comment": "Ontología del dominio de fraude en microfinanzas CrediConfianza (HU-03). Formato JSON-LD-like legible; diagrama en ontologia.md. Cada variable del dataset (docs/data_dictionary.md) corresponde a un concepto de esta ontología.",
+  "nombre": "OntologiaFraudeMicrofinanzas",
+  "version": "1.0.0",
+  "fecha": "2026-11-23",
+  "conceptos": {
+    "Solicitante": {
+      "descripcion": "Persona natural que solicita microcrédito a CrediConfianza.",
+      "atributos": [
+        "id_solicitud",
+        "nombre_sintetico",
+        "documento_identidad",
+        "edad_solicitante",
+        "genero",
+        "pertenencia_etnica",
+        "tipo_zona",
+        "oficina"
+      ],
+      "relaciones": [
+        { "relacion": "solicita", "destino": "SolicitudCredito" },
+        { "relacion": "reside_en", "destino": "Zona" },
+        { "relacion": "posee", "destino": "Documento" }
+      ]
+    },
+    "Negocio": {
+      "descripcion": "Actividad económica declarada por el solicitante (local, parcela, plaza o servicios).",
+      "atributos": [
+        "tipo_negocio",
+        "es_estacional",
+        "antiguedad_negocio_meses"
+      ],
+      "relaciones": [
+        { "relacion": "declara_a", "destino": "Solicitante" },
+        { "relacion": "genera_ingresos", "destino": "SolicitudCredito" },
+        { "relacion": "evidenciado_por", "destino": "Documento" }
+      ]
+    },
+    "SolicitudCredito": {
+      "descripcion": "Expediente de solicitud de microcrédito con monto, plazo y producto.",
+      "atributos": [
+        "id_solicitud",
+        "producto_credito",
+        "monto_solicitado",
+        "plazo_meses",
+        "ingresos_declarados",
+        "fuente_datos"
+      ],
+      "relaciones": [
+        { "relacion": "presentada_por", "destino": "Solicitante" },
+        { "relacion": "incluye", "destino": "Senal" },
+        { "relacion": "recibe", "destino": "Alerta" },
+        { "relacion": "evaluada_por", "destino": "Regla" },
+        { "relacion": "termina_en", "destino": "Decision" }
+      ]
+    },
+    "Documento": {
+      "descripcion": "Evidencia documental: cédula, factura, recibo de servicios, fotografías, referencias.",
+      "atributos": [
+        "cedula_alterada",
+        "factura_falsa",
+        "factura_manual",
+        "nombre_distinto_recibo",
+        "fotos_poco_convincentes",
+        "referencias_falsas"
+      ],
+      "relaciones": [
+        { "relacion": "pertenece_a", "destino": "Solicitante" },
+        { "relacion": "soporta", "destino": "SolicitudCredito" }
+      ]
+    },
+    "Referencia": {
+      "descripcion": "Contacto comercial o personal verificable por llamada.",
+      "atributos": [
+        "sin_referencias_comerciales",
+        "referencias_falsas"
+      ],
+      "relaciones": [
+        { "relacion": "cita_a", "destino": "Solicitante" },
+        { "relacion": "verifica", "destino": "SolicitudCredito" }
+      ]
+    },
+    "Zona": {
+      "descripcion": "Contexto geográfico rural o urbana de la solicitud (variable sensible HU-04).",
+      "atributos": [
+        "tipo_zona",
+        "oficina",
+        "direccion_sin_georreferenciar",
+        "vive_lejos"
+      ],
+      "relaciones": [
+        { "relacion": "condiciona", "destino": "Senal" },
+        { "relacion": "agrupa_para_auditoria", "destino": "Alerta" }
+      ]
+    },
+    "Senal": {
+      "descripcion": "Señal débil (13) o indicio fuerte (6) observado en la solicitud.",
+      "atributos": [
+        "categoria: debil | fuerte",
+        "valor: true | false",
+        "senal (nombre en dataset)"
+      ],
+      "relaciones": [
+        { "relacion": "detectada_en", "destino": "SolicitudCredito" },
+        { "relacion": "activa", "destino": "Regla" },
+        { "relacion": "evidencia", "destino": "RedBayesiana" }
+      ]
+    },
+    "Alerta": {
+      "descripcion": "Resultado de la evaluación híbrida: puntaje de riesgo y semáforo.",
+      "atributos": [
+        "risk_score (0-100)",
+        "semaforo: verde | amarillo | rojo",
+        "factores_explicativos"
+      ],
+      "relaciones": [
+        { "relacion": "generada_por", "destino": "RedBayesiana" },
+        { "relacion": "justificada_por", "destino": "Regla" },
+        { "relacion": "escala_a", "destino": "Decision" }
+      ]
+    },
+    "Regla": {
+      "descripcion": "Regla experta del motor simbólico (knowledge/reglas.yaml).",
+      "atributos": [
+        "id_regla",
+        "categoria",
+        "condicion",
+        "peso",
+        "justificacion",
+        "fuente"
+      ],
+      "relaciones": [
+        { "relacion": "evalua", "destino": "SolicitudCredito" },
+        { "relacion": "produces", "destino": "Alerta" }
+      ]
+    },
+    "RedBayesiana": {
+      "descripcion": "Red bayesiana que modela P(Fraude | evidencia, zona, actividad).",
+      "atributos": [
+        "nodos: fraude, zona, tipo_negocio, senales",
+        "cpt (tablas de probabilidad)"
+      ],
+      "relaciones": [
+        { "relacion": "modela", "destino": "Senal" },
+        { "relacion": "estima", "destino": "Alerta" }
+      ]
+    },
+    "Decision": {
+      "descripcion": "Decisión humana registrada sobre la alerta (el sistema recomienda, la persona decide — HU-09/HU-26).",
+      "atributos": [
+        "accion: aprobar | pedir_informacion | escalar_comite | rechazar",
+        "motivo",
+        "usuario",
+        "fecha",
+        "modelo_version",
+        "desacuerdo: bool"
+      ],
+      "relaciones": [
+        { "relacion": "responde_a", "destino": "Alerta" },
+        { "relacion": "tomada_por", "destino": "Rol" }
+      ]
+    },
+    "Rol": {
+      "descripcion": "Actor humano del flujo de gobierno.",
+      "valores": [
+        "analista_credito",
+        "comite_riesgo",
+        "auditor_etico",
+        "administrador_sistema"
+      ],
+      "relaciones": [
+        { "relacion": "toma", "destino": "Decision" },
+        { "relacion": "audita", "destino": "Alerta" }
+      ]
+    }
+  },
+  "correspondencia_dataset": {
+    "id_solicitud": "SolicitudCredito.id_solicitud",
+    "nombre_sintetico": "Solicitante.nombre_sintetico",
+    "documento_identidad": "Solicitante.documento_identidad",
+    "edad_solicitante": "Solicitante.edad_solicitante",
+    "genero": "Solicitante.genero",
+    "pertenencia_etnica": "Solicitante.pertenencia_etnica",
+    "tipo_zona": "Zona.tipo_zona",
+    "oficina": "Zona.oficina",
+    "tipo_negocio": "Negocio.tipo_negocio",
+    "es_estacional": "Negocio.es_estacional",
+    "antiguedad_negocio_meses": "Negocio.antiguedad_negocio_meses",
+    "producto_credito": "SolicitudCredito.producto_credito",
+    "monto_solicitado": "SolicitudCredito.monto_solicitado",
+    "plazo_meses": "SolicitudCredito.plazo_meses",
+    "ingresos_declarados": "SolicitudCredito.ingresos_declarados",
+    "es_fraude_real": "RedBayesiana.nodo_fraude (solo entrenamiento/evaluación)"
+  }
+}

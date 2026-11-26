@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { footer, footerColumns } from "../data/site";
 
 export interface SiteFooterProps {
@@ -6,8 +7,8 @@ export interface SiteFooterProps {
 }
 
 /**
- * Pie de página: descripción institucional, marco regulatorio, gobernanza,
- * canales de contacto y bloque legal con versión y estado del backend.
+ * Pie de página: descripción del proyecto, accesos al artículo y a las
+ * vistas, y bloque técnico con la versión del modelo y el estado del backend.
  */
 export function SiteFooter({ backendStatus }: SiteFooterProps): JSX.Element {
   return (
@@ -28,23 +29,20 @@ export function SiteFooter({ backendStatus }: SiteFooterProps): JSX.Element {
             <div key={column.title} className="flex flex-col gap-1">
               <h4 className="mb-1 font-label-lg font-semibold text-on-surface">{column.title}</h4>
               {column.items.map((item) =>
-                column.isLink ? (
-                  <a
-                    key={item}
-                    href="#"
+                item.to ? (
+                  <Link
+                    key={item.label}
+                    to={item.to}
                     className="font-body-sm text-body-sm text-on-surface-variant transition-colors hover:text-primary"
                   >
-                    {item}
-                  </a>
+                    {item.label}
+                  </Link>
                 ) : (
-                  <span key={item} className="font-body-sm text-body-sm text-on-surface-variant">
-                    {item}
+                  <span key={item.label} className="font-body-sm text-body-sm">
+                    {item.label}
                   </span>
                 ),
               )}
-              {column.title === "Canales Institucionales" ? (
-                <span className="mt-2 font-label-md text-slate-500">{footer.hours}</span>
-              ) : null}
             </div>
           ))}
         </div>
@@ -57,9 +55,6 @@ export function SiteFooter({ backendStatus }: SiteFooterProps): JSX.Element {
             </span>
             <span className="font-metric-data text-metric-data text-slate-500">
               Backend status: {backendStatus}
-            </span>
-            <span className="rounded bg-brand-soft px-2 py-0.5 font-metric-data text-metric-data font-bold text-risk-low">
-              {footer.auditBadge}
             </span>
           </div>
         </div>

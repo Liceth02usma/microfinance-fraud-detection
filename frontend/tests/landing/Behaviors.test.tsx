@@ -1,9 +1,16 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import type { ReactElement } from "react";
+import { MemoryRouter } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { articleSections } from "../../src/views/landing/data/content";
 import { ArticleViewer } from "../../src/views/landing/sections/ArticleViewer";
 import { ReadingProgress } from "../../src/views/landing/components/ReadingProgress";
 import { StickyCtaBar } from "../../src/views/landing/sections/StickyCtaBar";
+
+/** Monta dentro de un router: los CTA usan `Link` (navegación sin recarga). */
+function renderInRouter(ui: ReactElement) {
+  return render(<MemoryRouter>{ui}</MemoryRouter>);
+}
 
 /** Simula la posición vertical de scroll (jsdom no implementa el desplazamiento). */
 function setScrollY(value: number): void {
@@ -16,7 +23,7 @@ describe("ArticleViewer", () => {
   });
 
   it("renderiza el índice temático con las 12 secciones y arranca en 0%", () => {
-    render(<ArticleViewer />);
+    renderInRouter(<ArticleViewer />);
 
     const index = screen.getByRole("navigation", { name: /Índice temático/i });
     expect(index.querySelectorAll("a")).toHaveLength(articleSections.length);
@@ -28,7 +35,7 @@ describe("ArticleViewer", () => {
   });
 
   it("actualiza el progreso de lectura al desplazarse por el visor", async () => {
-    render(<ArticleViewer />);
+    renderInRouter(<ArticleViewer />);
 
     const section = document.getElementById("visor-articulo") as HTMLElement;
     vi.spyOn(section, "getBoundingClientRect").mockReturnValue({
@@ -55,7 +62,7 @@ describe("ArticleViewer", () => {
   });
 
   it("resalta la sección visible en el índice lateral", async () => {
-    render(<ArticleViewer />);
+    renderInRouter(<ArticleViewer />);
 
     const article = document.getElementById(articleSections[2].anchor) as HTMLElement;
     vi.spyOn(article, "getBoundingClientRect").mockReturnValue({
@@ -100,7 +107,7 @@ describe("ArticleViewer", () => {
 
 describe("ReadingProgress", () => {
   it("expone el porcentaje como valor accesible del progreso", () => {
-    render(<ReadingProgress progress={42} />);
+    renderInRouter(<ReadingProgress progress={42} />);
 
     expect(screen.getByText("42%")).toBeInTheDocument();
     expect(screen.getByRole("progressbar", { name: /Progreso de lectura/i })).toHaveAttribute(
@@ -121,7 +128,7 @@ describe("StickyCtaBar", () => {
     screen.getByRole("link", { name: "Probar Simulador Ahora", hidden: true });
 
   it("permanece oculta por debajo del umbral de scroll", () => {
-    render(<StickyCtaBar />);
+    renderInRouter(<StickyCtaBar />);
 
     const bar = hiddenCta().closest("[aria-hidden]") as HTMLElement;
 
@@ -130,7 +137,7 @@ describe("StickyCtaBar", () => {
   });
 
   it("aparece al superar los 450px de desplazamiento", () => {
-    render(<StickyCtaBar />);
+    renderInRouter(<StickyCtaBar />);
 
     const bar = hiddenCta().closest("[aria-hidden]") as HTMLElement;
 

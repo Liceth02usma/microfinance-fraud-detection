@@ -1,9 +1,17 @@
-import type { Genero, PertenenciaEtnica, TipoZona } from "../../api/types/evaluation.types";
+import type {
+  Genero,
+  PertenenciaEtnica,
+  ProductoCredito,
+  TipoNegocio,
+  TipoZona,
+} from "../../api/types/evaluation.types";
 
 export interface FormState {
   zona: TipoZona;
   genero: Genero;
   pertenenciaEtnica: PertenenciaEtnica;
+  producto: ProductoCredito;
+  tipoNegocio: TipoNegocio;
   esEstacional: boolean;
   monto: number;
   ingresos: number;

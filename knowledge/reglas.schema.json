@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Esquema de la base de reglas expertas de CrediConfianza (HU-10)",
+  "type": "object",
+  "required": ["version", "reglas"],
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Versión semántica de la base de reglas",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "descripcion": {
+      "type": "string",
+      "description": "Descripción general de la base de reglas"
+    },
+    "reglas": {
+      "type": "array",
+      "minItems": 20,
+      "maxItems": 30,
+      "items": { "$ref": "#/$defs/regla" }
+    }
+  },
+  "$defs": {
+    "regla": {
+      "type": "object",
+      "required": [
+        "id",
+        "categoria",
+        "condicion",
+        "accion",
+        "peso",
+        "justificacion",
+        "fuente"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^R-(WEAK|STRONG|SAFE|BIAS)-[0-9]{2}$",
+          "description": "Identificador único de la regla"
+        },
+        "categoria": {
+          "type": "string",
+          "enum": ["debil", "fuerte", "salvaguarda", "bias"],
+          "description": "Categoría: señal débil, indicio fuerte, salvaguarda de equidad o regla de auditoría"
+        },
+        "senal": {
+          "type": "string",
+          "description": "Nombre de la señal del dataset a la que se asocia (WEAK_SIGNALS o STRONG_INDICATORS)"
+        },
+        "condicion": {
+          "type": "string",
+          "minLength": 5,
+          "description": "Condición en lenguaje claro; las señales débiles deben incluir condición de contexto rural"
+        },
+        "contexto_rural": {
+          "type": "string",
+          "description": "Explicación de por qué la señal es legítima en contexto rural (obligatoria para categoria=debil)"
+        },
+        "accion": {
+          "type": "string",
+          "description": "Acción que ejecuta el motor al activar la regla"
+        },
+        "peso": {
+          "type": "number",
+          "minimum": -1,
+          "maximum": 1,
+          "description": "Peso en [-1,1]; negativo = descuento (salvaguardas)"
+        },
+        "tope_rural": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Tope máximo que esta regla puede aportar al subpuntaje en casos rurales (solo reglas débiles)"
+        },
+        "justificacion": {
+          "type": "string",
+          "minLength": 10,
+          "description": "Justificación en lenguaje claro para el analista"
+        },
+        "fuente": {
+          "type": "string",
+          "description": "Fuente del conocimiento (matriz de adquisición, norma, experto)"
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "categoria": { "const": "debil" } } },
+          "then": { "required": ["senal", "contexto_rural", "tope_rural"] }
+        },
+        {
+          "if": { "properties": { "categoria": { "const": "fuerte" } } },
+          "then": { "required": ["senal"] }
+        }
+      ]
+    }
+  }
+}

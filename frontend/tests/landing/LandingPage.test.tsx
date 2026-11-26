@@ -1,20 +1,28 @@
-import { screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { screen, waitFor } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
 import { articleHeader, articleSections } from "../../src/views/landing/data/content";
-import { primaryNavLinks } from "../../src/views/landing/data/site";
+import { ARTICLE_PATH, primaryNavLinks } from "../../src/views/landing/data/site";
 import { renderRoute } from "../helpers/renderRoute";
 
 describe("LandingPage (ruta /)", () => {
-  it("renderiza el hero y las 12 secciones del artículo", () => {
+  it("renderiza el hero y los accesos al artículo, el simulador y las valoraciones", () => {
     renderRoute();
 
-    // Hero.
     expect(
       screen.getByRole("heading", {
         level: 1,
         name: /Detección de Fraude en Microcrédito Rural/i,
       }),
     ).toBeInTheDocument();
+    const hrefs = screen.getAllByRole("link").map((link) => link.getAttribute("href"));
+    expect(hrefs).toContain(ARTICLE_PATH);
+    expect(hrefs).toContain("/valoraciones");
+    // El artículo ya no se monta en la portada: vive en su propia ruta.
+    expect(screen.queryAllByRole("heading", { level: 3 })).toHaveLength(0);
+  });
+
+  it("renderiza las 12 secciones del artículo en /articulo", () => {
+    renderRoute([ARTICLE_PATH]);
 
     // Las 12 secciones del artículo científico.
     const headings = screen.getAllByRole("heading", { level: 3 });
@@ -29,6 +37,14 @@ describe("LandingPage (ruta /)", () => {
     ).toBeInTheDocument();
   });
 
+  it("los enlaces a secciones llevan a /articulo y desplazan hasta el ancla", async () => {
+    const scrollIntoView = vi.fn();
+    Element.prototype.scrollIntoView = scrollIntoView;
+    renderRoute(["/articulo#articulo-resultados"]);
+    await waitFor(() => expect(scrollIntoView).toHaveBeenCalled());
+    expect(document.getElementById("articulo-resultados")).not.toBeNull();
+  });
+
   it("no renderiza bloques de secciones reservadas", () => {
     renderRoute();
 
@@ -39,7 +55,7 @@ describe("LandingPage (ruta /)", () => {
   });
 
   it("no tiene enlaces internos apuntando a destinos inexistentes", () => {
-    renderRoute();
+    renderRoute([ARTICLE_PATH]);
 
     const hrefs = Array.from(document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]'))
       .map((anchor) => anchor.getAttribute("href") ?? "")
@@ -62,7 +78,7 @@ describe("LandingPage (ruta /)", () => {
     for (const navLink of primaryNavLinks) {
       expect(hrefs).toContain(navLink.href);
     }
-    // Los cuatro CTA de simulador (hero, encabezado, progreso, barra flotante).
+    // CTA de simulador: navegación, hero, encabezado, tarjeta y barra flotante.
     expect(hrefs.filter((href) => href === "/simulador").length).toBeGreaterThanOrEqual(4);
   });
 

@@ -1,0 +1,593 @@
+{
+  "generated_at": "2026-11-26T16:49:57+00:00",
+  "source": "backend/scripts/export_metrics.py sobre data/test.csv (datos sintéticos)",
+  "model_version": "1.0.0-gradient-boosting-calibrated",
+  "fusion": {
+    "version": "1.0.0",
+    "weights": {
+      "rules": 0.25,
+      "bayesian": 0.35,
+      "ml": 0.4
+    },
+    "verde_max": 20.0,
+    "amarillo_max": 65.0
+  },
+  "test_split": {
+    "n": 2250,
+    "n_fraud": 79,
+    "n_rural": 1132,
+    "n_urbana": 1118
+  },
+  "dataset": {
+    "n_total": 15000,
+    "fraud_rate": 0.0353,
+    "fraud_rate_rural": 0.0329,
+    "fraud_rate_urbana": 0.0378,
+    "share_rural": 0.5031,
+    "weak_signal_prevalence_legit": [
+      {
+        "signal": "sin_historial",
+        "label": "Sin historial crediticio",
+        "rural": 0.5761,
+        "urbana": 0.3014
+      },
+      {
+        "signal": "vive_lejos",
+        "label": "Vive lejos",
+        "rural": 0.8009,
+        "urbana": 0.1527
+      },
+      {
+        "signal": "sin_local_fijo",
+        "label": "Sin local fijo",
+        "rural": 0.6583,
+        "urbana": 0.2068
+      },
+      {
+        "signal": "sin_fiador",
+        "label": "Sin fiador",
+        "rural": 0.5219,
+        "urbana": 0.3939
+      },
+      {
+        "signal": "cedula_otra_region",
+        "label": "Cédula de otra región",
+        "rural": 0.2752,
+        "urbana": 0.1986
+      },
+      {
+        "signal": "celular_prepago",
+        "label": "Celular prepago",
+        "rural": 0.8235,
+        "urbana": 0.3849
+      },
+      {
+        "signal": "sin_cuenta_bancaria",
+        "label": "Sin cuenta bancaria",
+        "rural": 0.7012,
+        "urbana": 0.2125
+      },
+      {
+        "signal": "factura_manual",
+        "label": "Factura manual",
+        "rural": 0.785,
+        "urbana": 0.2478
+      },
+      {
+        "signal": "fotos_poco_convincentes",
+        "label": "Fotos poco convincentes",
+        "rural": 0.454,
+        "urbana": 0.1831
+      },
+      {
+        "signal": "sin_referencias_comerciales",
+        "label": "Sin referencias comerciales",
+        "rural": 0.5558,
+        "urbana": 0.2472
+      },
+      {
+        "signal": "nombre_distinto_recibo",
+        "label": "Nombre distinto al del recibo",
+        "rural": 0.4825,
+        "urbana": 0.1919
+      },
+      {
+        "signal": "negocio_pequeno_monto",
+        "label": "Negocio pequeño para el monto",
+        "rural": 0.3531,
+        "urbana": 0.2262
+      },
+      {
+        "signal": "direccion_sin_georreferenciar",
+        "label": "Dirección sin georreferenciar",
+        "rural": 0.8408,
+        "urbana": 0.1117
+      }
+    ]
+  },
+  "bayes": {
+    "prior_rural": 0.0329,
+    "prior_urbana": 0.0378,
+    "likelihood_ratios": [
+      {
+        "signal": "cedula_alterada",
+        "label": "Cédula alterada",
+        "kind": "fuerte",
+        "lr_rural": 97.6,
+        "lr_urbana": 97.6
+      },
+      {
+        "signal": "ingresos_inconsistentes",
+        "label": "Ingresos inconsistentes",
+        "kind": "fuerte",
+        "lr_rural": 90.4,
+        "lr_urbana": 90.4
+      },
+      {
+        "signal": "factura_falsa",
+        "label": "Factura falsa",
+        "kind": "fuerte",
+        "lr_rural": 101.3,
+        "lr_urbana": 101.3
+      },
+      {
+        "signal": "referencias_falsas",
+        "label": "Referencias falsas",
+        "kind": "fuerte",
+        "lr_rural": 88.5,
+        "lr_urbana": 88.5
+      },
+      {
+        "signal": "historial_adverso",
+        "label": "Historial adverso",
+        "kind": "fuerte",
+        "lr_rural": 102.1,
+        "lr_urbana": 102.1
+      },
+      {
+        "signal": "negocio_inconsistente",
+        "label": "Negocio inconsistente",
+        "kind": "fuerte",
+        "lr_rural": 97.0,
+        "lr_urbana": 97.0
+      },
+      {
+        "signal": "sin_historial",
+        "label": "Sin historial crediticio",
+        "kind": "debil",
+        "lr_rural": 1.2,
+        "lr_urbana": 1.47
+      },
+      {
+        "signal": "vive_lejos",
+        "label": "Vive lejos",
+        "kind": "debil",
+        "lr_rural": 1.01,
+        "lr_urbana": 0.75
+      },
+      {
+        "signal": "sin_local_fijo",
+        "label": "Sin local fijo",
+        "kind": "debil",
+        "lr_rural": 1.05,
+        "lr_urbana": 0.9
+      },
+      {
+        "signal": "sin_fiador",
+        "label": "Sin fiador",
+        "kind": "debil",
+        "lr_rural": 1.01,
+        "lr_urbana": 1.1
+      },
+      {
+        "signal": "cedula_otra_region",
+        "label": "Cédula de otra región",
+        "kind": "debil",
+        "lr_rural": 1.02,
+        "lr_urbana": 0.72
+      },
+      {
+        "signal": "celular_prepago",
+        "label": "Celular prepago",
+        "kind": "debil",
+        "lr_rural": 0.94,
+        "lr_urbana": 0.97
+      },
+      {
+        "signal": "sin_cuenta_bancaria",
+        "label": "Sin cuenta bancaria",
+        "kind": "debil",
+        "lr_rural": 0.92,
+        "lr_urbana": 0.88
+      },
+      {
+        "signal": "factura_manual",
+        "label": "Factura manual",
+        "kind": "debil",
+        "lr_rural": 0.95,
+        "lr_urbana": 1.0
+      },
+      {
+        "signal": "fotos_poco_convincentes",
+        "label": "Fotos poco convincentes",
+        "kind": "debil",
+        "lr_rural": 1.18,
+        "lr_urbana": 1.46
+      },
+      {
+        "signal": "sin_referencias_comerciales",
+        "label": "Sin referencias comerciales",
+        "kind": "debil",
+        "lr_rural": 0.99,
+        "lr_urbana": 0.96
+      },
+      {
+        "signal": "nombre_distinto_recibo",
+        "label": "Nombre distinto al del recibo",
+        "kind": "debil",
+        "lr_rural": 1.05,
+        "lr_urbana": 0.96
+      },
+      {
+        "signal": "negocio_pequeno_monto",
+        "label": "Negocio pequeño para el monto",
+        "kind": "debil",
+        "lr_rural": 1.02,
+        "lr_urbana": 1.55
+      },
+      {
+        "signal": "direccion_sin_georreferenciar",
+        "label": "Dirección sin georreferenciar",
+        "kind": "debil",
+        "lr_rural": 1.0,
+        "lr_urbana": 1.65
+      }
+    ]
+  },
+  "rules": {
+    "version": "1.0.0",
+    "total": 24,
+    "by_category": {
+      "debil": 13,
+      "fuerte": 6,
+      "salvaguarda": 3,
+      "bias": 2
+    },
+    "examples": [
+      {
+        "id": "R-WEAK-06",
+        "categoria": "debil",
+        "condicion": "SI celular_prepago == true",
+        "peso": 0.03,
+        "tope_rural": 0.03,
+        "justificacion": "Celular prepago: habitual en veredas sin red comercial pospago; no es indicio de fraude."
+      },
+      {
+        "id": "R-WEAK-07",
+        "categoria": "debil",
+        "condicion": "SI sin_cuenta_bancaria == true",
+        "peso": 0.03,
+        "tope_rural": 0.03,
+        "justificacion": "Sin cuenta bancaria: misión de inclusión financiera cooperativa de primer ingreso; esperado en el sector."
+      },
+      {
+        "id": "R-WEAK-13",
+        "categoria": "debil",
+        "condicion": "SI direccion_sin_georreferenciar == true",
+        "peso": 0.03,
+        "tope_rural": 0.03,
+        "justificacion": "Dirección sin georreferenciar: toponimia veredal sin catastro; georreferenciar en visita de campo."
+      },
+      {
+        "id": "R-STRONG-01",
+        "categoria": "fuerte",
+        "condicion": "SI cedula_alterada == true",
+        "peso": 0.4,
+        "tope_rural": null,
+        "justificacion": "Cédula alterada: adulteración documental o reporte de suplantación en Registraduría; indicio fuerte de fraude."
+      },
+      {
+        "id": "R-STRONG-02",
+        "categoria": "fuerte",
+        "condicion": "SI ingresos_inconsistentes == true",
+        "peso": 0.4,
+        "tope_rural": null,
+        "justificacion": "Ingresos inconsistentes: divergencia matemática insostenible entre ventas reportadas y capacidad real."
+      },
+      {
+        "id": "R-SAFE-01",
+        "categoria": "salvaguarda",
+        "condicion": "SI tipo_zona == rural Y indicios_fuertes == 0",
+        "peso": -0.15,
+        "tope_rural": null,
+        "justificacion": "Salvaguarda algorítmica: en casos rurales sin indicios fuertes el subpuntaje de reglas se topa para evitar exclusión del campesinado."
+      }
+    ]
+  },
+  "ablation": [
+    {
+      "name": "Lista de chequeo manual (simulada)",
+      "description": "Sospechoso con >= 3 señales débiles o algún indicio fuerte.",
+      "auc": null,
+      "precision": 0.0421,
+      "recall": 1.0,
+      "f1": 0.0807,
+      "fpr": 0.8287,
+      "fpr_rural": 1.0,
+      "fpr_urbana": 0.6543,
+      "false_positives_rural": 1095,
+      "false_positives_urbana": 704,
+      "fpr_gap": 0.3457,
+      "alert_rate": 0.8347
+    },
+    {
+      "name": "Solo reglas expertas",
+      "description": "Subpuntaje de reglas >= 0,5.",
+      "auc": 0.9971,
+      "precision": 0.627,
+      "recall": 1.0,
+      "f1": 0.7707,
+      "fpr": 0.0216,
+      "fpr_rural": 0.0329,
+      "fpr_urbana": 0.0102,
+      "false_positives_rural": 36,
+      "false_positives_urbana": 11,
+      "fpr_gap": 0.0227,
+      "alert_rate": 0.056
+    },
+    {
+      "name": "Solo red bayesiana",
+      "description": "P(fraude | evidencia) >= 0,5.",
+      "auc": 0.9964,
+      "precision": 0.9706,
+      "recall": 0.8354,
+      "f1": 0.898,
+      "fpr": 0.0009,
+      "fpr_rural": 0.0018,
+      "fpr_urbana": 0.0,
+      "false_positives_rural": 2,
+      "false_positives_urbana": 0,
+      "fpr_gap": 0.0018,
+      "alert_rate": 0.0302
+    },
+    {
+      "name": "Regresión logística (línea base ML)",
+      "description": "Probabilidad >= 0,5.",
+      "auc": 0.9963,
+      "precision": 0.5245,
+      "recall": 0.9494,
+      "f1": 0.6757,
+      "fpr": 0.0313,
+      "fpr_rural": 0.0265,
+      "fpr_urbana": 0.0362,
+      "false_positives_rural": 29,
+      "false_positives_urbana": 39,
+      "fpr_gap": 0.0098,
+      "alert_rate": 0.0636
+    },
+    {
+      "name": "Solo XGBoost calibrado",
+      "description": "Probabilidad >= 0,5.",
+      "auc": 0.9967,
+      "precision": 0.8148,
+      "recall": 0.8354,
+      "f1": 0.825,
+      "fpr": 0.0069,
+      "fpr_rural": 0.0055,
+      "fpr_urbana": 0.0084,
+      "false_positives_rural": 6,
+      "false_positives_urbana": 9,
+      "fpr_gap": 0.0029,
+      "alert_rate": 0.036
+    },
+    {
+      "name": "Sistema híbrido (reglas + bayes + ML)",
+      "description": "Semáforo rojo según umbrales y pisos de fusion.yaml.",
+      "auc": 0.9968,
+      "precision": 0.9701,
+      "recall": 0.8228,
+      "f1": 0.8904,
+      "fpr": 0.0009,
+      "fpr_rural": 0.0018,
+      "fpr_urbana": 0.0,
+      "false_positives_rural": 2,
+      "false_positives_urbana": 0,
+      "fpr_gap": 0.0018,
+      "alert_rate": 0.0298
+    }
+  ],
+  "headline": {
+    "fp_reduction_vs_checklist": 0.9989,
+    "false_positives_checklist": 1799,
+    "false_positives_hybrid": 2
+  },
+  "review_rates_legit": {
+    "hybrid_rural": 0.0329,
+    "hybrid_urbana": 0.0372,
+    "checklist_rural": 1.0,
+    "checklist_urbana": 0.6543
+  },
+  "semaforo_distribution": {
+    "verde": {
+      "rural": 1059,
+      "urbana": 1036
+    },
+    "amarillo": {
+      "rural": 41,
+      "urbana": 47
+    },
+    "rojo": {
+      "rural": 32,
+      "urbana": 35
+    }
+  },
+  "audit": {
+    "global_metrics": {
+      "n_samples": 2250,
+      "fraud_rate": 0.035111111111111114,
+      "auc": 0.9968369006874274,
+      "f1": 0.8904109589041096,
+      "precision": 0.9701492537313433,
+      "recall": 0.8227848101265823,
+      "accuracy": 0.9928888888888889,
+      "alert_rate": 0.029777777777777778
+    },
+    "fpr_by_group": [
+      {
+        "attribute": "tipo_zona",
+        "group": "rural",
+        "n_samples": 1132,
+        "n_actual_negative": 1095,
+        "n_false_positives": 2,
+        "fpr": 0.0018264840182648401,
+        "fpr_ci_low": 0.0005010202916981956,
+        "fpr_ci_high": 0.006635222093009482,
+        "selection_rate": 0.028268551236749116,
+        "sample_size_warning": false
+      },
+      {
+        "attribute": "tipo_zona",
+        "group": "urbana",
+        "n_samples": 1118,
+        "n_actual_negative": 1076,
+        "n_false_positives": 0,
+        "fpr": 0.0,
+        "fpr_ci_low": 0.0,
+        "fpr_ci_high": 0.0035575588123295124,
+        "selection_rate": 0.03130590339892665,
+        "sample_size_warning": false
+      },
+      {
+        "attribute": "genero",
+        "group": "femenino",
+        "n_samples": 1082,
+        "n_actual_negative": 1041,
+        "n_false_positives": 1,
+        "fpr": 0.0009606147934678194,
+        "fpr_ci_low": 0.0001695878671187619,
+        "fpr_ci_high": 0.005421307441796963,
+        "selection_rate": 0.031423290203327174,
+        "sample_size_warning": false
+      },
+      {
+        "attribute": "genero",
+        "group": "masculino",
+        "n_samples": 1132,
+        "n_actual_negative": 1095,
+        "n_false_positives": 1,
+        "fpr": 0.0009132420091324201,
+        "fpr_ci_low": 0.00016122368586052706,
+        "fpr_ci_high": 0.005154920151431399,
+        "selection_rate": 0.028268551236749116,
+        "sample_size_warning": false
+      },
+      {
+        "attribute": "genero",
+        "group": "otro",
+        "n_samples": 36,
+        "n_actual_negative": 35,
+        "n_false_positives": 0,
+        "fpr": 0.0,
+        "fpr_ci_low": 0.0,
+        "fpr_ci_high": 0.09890426758938868,
+        "selection_rate": 0.027777777777777776,
+        "sample_size_warning": false
+      },
+      {
+        "attribute": "pertenencia_etnica",
+        "group": "afrodescendiente",
+        "n_samples": 267,
+        "n_actual_negative": 259,
+        "n_false_positives": 1,
+        "fpr": 0.003861003861003861,
+        "fpr_ci_low": 0.0006818698910721083,
+        "fpr_ci_high": 0.021542922531436352,
+        "selection_rate": 0.026217228464419477,
+        "sample_size_warning": false
+      },
+      {
+        "attribute": "pertenencia_etnica",
+        "group": "campesino",
+        "n_samples": 538,
+        "n_actual_negative": 518,
+        "n_false_positives": 0,
+        "fpr": 0.0,
+        "fpr_ci_low": 0.0,
+        "fpr_ci_high": 0.00736162084433284,
+        "selection_rate": 0.02973977695167286,
+        "sample_size_warning": false
+      },
+      {
+        "attribute": "pertenencia_etnica",
+        "group": "indigena",
+        "n_samples": 140,
+        "n_actual_negative": 138,
+        "n_false_positives": 1,
+        "fpr": 0.007246376811594203,
+        "fpr_ci_low": 0.001280277832255268,
+        "fpr_ci_high": 0.03990369076369965,
+        "selection_rate": 0.02142857142857143,
+        "sample_size_warning": false
+      },
+      {
+        "attribute": "pertenencia_etnica",
+        "group": "ninguno",
+        "n_samples": 1305,
+        "n_actual_negative": 1256,
+        "n_false_positives": 0,
+        "fpr": 0.0,
+        "fpr_ci_low": 0.0,
+        "fpr_ci_high": 0.0030492722259687246,
+        "selection_rate": 0.031417624521072794,
+        "sample_size_warning": false
+      }
+    ],
+    "parity": [
+      {
+        "attribute": "tipo_zona",
+        "demographic_parity_difference": 0.0030373521621775354,
+        "equalized_odds_difference": 0.022522522522522515,
+        "selection_rates": {
+          "rural": 0.028268551236749116,
+          "urbana": 0.03130590339892665
+        },
+        "fpr_ratio_max_min": null,
+        "within_parity_band": null
+      },
+      {
+        "attribute": "genero",
+        "demographic_parity_difference": 0.003645512425549398,
+        "equalized_odds_difference": 0.19512195121951215,
+        "selection_rates": {
+          "masculino": 0.028268551236749116,
+          "femenino": 0.031423290203327174,
+          "otro": 0.027777777777777776
+        },
+        "fpr_ratio_max_min": null,
+        "within_parity_band": null
+      },
+      {
+        "attribute": "pertenencia_etnica",
+        "demographic_parity_difference": 0.009989053092501365,
+        "equalized_odds_difference": 0.25,
+        "selection_rates": {
+          "campesino": 0.02973977695167286,
+          "ninguno": 0.031417624521072794,
+          "afrodescendiente": 0.026217228464419477,
+          "indigena": 0.02142857142857143
+        },
+        "fpr_ratio_max_min": null,
+        "within_parity_band": null
+      }
+    ],
+    "threshold_suggestion": {
+      "current_threshold": 65.0,
+      "suggested_threshold": 40.0,
+      "fpr_gap_at_current": 0.0018264840182648401,
+      "fpr_gap_at_suggested": 9.675612364414086e-5,
+      "recall_at_current": 0.8227848101265823,
+      "recall_at_suggested": 0.8607594936708861,
+      "rationale": "Se escanearon umbrales 30–90 (paso 5) minimizando la brecha |FPR_rural − FPR_urbana| sobre el split de prueba. El umbral sugerido (40) reduce la brecha de 0.0018 a 0.0001. NO se aplica automáticamente: registrar en la bitácora de cambios (fecha, persona, motivo) y recomputar esta auditoría."
+    }
+  }
+}

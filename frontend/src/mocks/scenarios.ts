@@ -23,6 +23,7 @@ import type {
   EvaluationResponse,
   components,
 } from "../api/types/evaluation.types";
+import knowledgeFixture from "./knowledge.fixture.json";
 
 /** Escenarios que devuelven una `EvaluationResponse` válida del contrato HU-17. */
 export type SuccessScenario = "rural-legitimo" | "urbano-fraudulento" | "ambiguo";
@@ -83,13 +84,70 @@ const RURAL_LEGIT: EvaluationResponse = {
   activated_rules: [],
   bayesian_probability: 0.08,
   ml_probability: 0.05,
+  rules_subscore: 0.0,
   explanatory_factors: [
-    "Caso rural con 8 señales débiles: frecuente en productores sin acceso al sistema financiero formal; no implica fraude (HU-18).",
+    "Caso rural con 8 señales débiles: frecuente en productores sin acceso al sistema financiero formal; no implica fraude.",
     "Sin indicadores fuertes de fraude detectados.",
-    "El sistema recomienda; la decisión final es del analista (HU-09).",
+    "El sistema recomienda; la decisión final es del analista.",
   ],
-  model_version: "0.1.0-baseline",
+  model_version: knowledgeFixture.model_version,
   engine_status: { rules: "ok", bayesian: "ok", ml: "ok" },
+  reasoning: {
+    rules: {
+      strong_score: 0,
+      weak_score_raw: 0.4,
+      weak_score_applied: 0.1,
+      rural_cap: 0.1,
+      rural_cap_applied: true,
+      subscore: 0,
+    },
+    bayesian: {
+      prior: 0.0329,
+      posterior: 0.08,
+      evidence: [
+        { variable: "sin_historial", observed: true, kind: "debil", likelihood_ratio: 1.2 },
+        { variable: "celular_prepago", observed: true, kind: "debil", likelihood_ratio: 0.94 },
+        { variable: "vive_lejos", observed: true, kind: "debil", likelihood_ratio: 1.01 },
+        { variable: "cedula_alterada", observed: false, kind: "fuerte", likelihood_ratio: 0.59 },
+      ],
+    },
+    ml: {
+      probability: 0.05,
+      contributions: [
+        {
+          feature: "monto_solicitado",
+          title: "Magnitud del monto solicitado",
+          shap_value: 0.21,
+          is_rural_context: false,
+        },
+        {
+          feature: "es_estacional",
+          title: "Estacionalidad por ciclos de cosecha",
+          shap_value: -0.14,
+          is_rural_context: true,
+        },
+        {
+          feature: "sin_historial",
+          title: "Sin historial crediticio previo",
+          shap_value: 0.05,
+          is_rural_context: true,
+        },
+      ],
+    },
+    fusion: {
+      parts: [
+        { engine: "rules", weight: 0.25, value: 0, points: 0 },
+        { engine: "bayesian", weight: 0.35, value: 0.08, points: 2.8 },
+        { engine: "ml", weight: 0.4, value: 0.05, points: 2 },
+      ],
+      verde_max: 20,
+      amarillo_max: 65,
+      strong_count: 0,
+      semaforo_by_score: "verde",
+      floor_applied: false,
+      fusion_version: knowledgeFixture.fusion.version,
+    },
+  },
 };
 
 /** Caso 2 (HU-27): urbano fraudulento con señales fuertes → rojo. */
@@ -110,13 +168,56 @@ const URBAN_FRAUD: EvaluationResponse = {
   ],
   bayesian_probability: 0.92,
   ml_probability: 0.89,
+  rules_subscore: 0.95,
   explanatory_factors: [
-    "Se detectaron 6 indicador(es) fuerte(s) de fraude (HU-02).",
+    "Se detectaron 6 indicador(es) fuerte(s) de fraude.",
     "Cédula alterada y factura falsa son evidencia directa de fraude.",
-    "El sistema recomienda rechazo; el comité humano confirma (HU-09).",
+    "El sistema recomienda rechazo; el comité humano confirma.",
   ],
-  model_version: "0.1.0-baseline",
+  model_version: knowledgeFixture.model_version,
   engine_status: { rules: "ok", bayesian: "ok", ml: "ok" },
+  reasoning: {
+    rules: {
+      strong_score: 1,
+      weak_score_raw: 0.1,
+      weak_score_applied: 0.1,
+      rural_cap: 0.1,
+      rural_cap_applied: false,
+      subscore: 0.95,
+    },
+    bayesian: {
+      prior: 0.0378,
+      posterior: 0.92,
+      evidence: [
+        { variable: "cedula_alterada", observed: true, kind: "fuerte", likelihood_ratio: 97.6 },
+        { variable: "factura_falsa", observed: true, kind: "fuerte", likelihood_ratio: 101.3 },
+      ],
+    },
+    ml: {
+      probability: 0.89,
+      contributions: [
+        {
+          feature: "cedula_alterada",
+          title: "Alteración o falsedad en documento de identidad",
+          shap_value: 2.4,
+          is_rural_context: false,
+        },
+      ],
+    },
+    fusion: {
+      parts: [
+        { engine: "rules", weight: 0.25, value: 0.95, points: 23.75 },
+        { engine: "bayesian", weight: 0.35, value: 0.92, points: 32.2 },
+        { engine: "ml", weight: 0.4, value: 0.89, points: 35.6 },
+      ],
+      verde_max: 20,
+      amarillo_max: 65,
+      strong_count: 2,
+      semaforo_by_score: "rojo",
+      floor_applied: false,
+      fusion_version: knowledgeFixture.fusion.version,
+    },
+  },
 };
 
 /** Caso 3 (HU-27): mezcla sin indicios claros → amarillo (revisión manual). */
@@ -132,12 +233,13 @@ const AMBIGUOUS: EvaluationResponse = {
   ],
   bayesian_probability: 0.45,
   ml_probability: 0.38,
+  rules_subscore: 0.9,
   explanatory_factors: [
     "Un indicador fuerte presente: ingresos inconsistentes.",
     "Se recomienda revisión manual por analista.",
-    "El sistema recomienda; la decisión final es del analista (HU-09).",
+    "El sistema recomienda; la decisión final es del analista.",
   ],
-  model_version: "0.1.0-baseline",
+  model_version: knowledgeFixture.model_version,
   engine_status: { rules: "ok", bayesian: "ok", ml: "ok" },
 };
 

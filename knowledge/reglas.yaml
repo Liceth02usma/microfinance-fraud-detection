@@ -1,0 +1,280 @@
+# Base de reglas expertas de CrediConfianza (HU-10)
+# Formato YAML validado contra knowledge/reglas.schema.json
+# Cada señal débil incluye contexto_rural + tope_rural para que nunca penalice
+# sola a un solicitante legítimo (HU-18: señal débil aislada jamás llega a rojo).
+# Migrado desde frontend/src/data/rules.ts (las reglas viven aquí, no en la UI).
+
+version: "1.0.0"
+descripcion: >
+  24 reglas expertas para la detección de fraude en microcrédito de CrediConfianza:
+  13 señales débiles con contexto rural, 6 indicios fuertes, 3 salvaguardas de
+  equidad y 2 reglas de auditoría/paridad. Fuente: matriz de adquisición del
+  conocimiento y escenario del enunciado.
+
+reglas:
+  # ── 13 señales débiles (HU-02) ──────────────────────────────────────────────
+  - id: R-WEAK-01
+    categoria: debil
+    senal: sin_historial
+    condicion: "SI sin_historial == true"
+    contexto_rural: >
+      Campesinos habitualmente desbancarizados que nunca accedieron al sistema
+      financiero formal; el arraigo es evaluable por asamblea comunitaria.
+    accion: sumar_peso
+    peso: 0.03
+    tope_rural: 0.03
+    justificacion: "Sin historial crediticio: frecuente en productores que nunca accedieron al sistema financiero; no implica fraude."
+    fuente: "Matriz de adquisición de conocimiento; entrevista simulada A-01"
+
+  - id: R-WEAK-02
+    categoria: debil
+    senal: vive_lejos
+    condicion: "SI vive_lejos == true"
+    contexto_rural: >
+      Dispersión geográfica propia del minifundio y la ladera andina; la
+      distancia a cabecera municipal refleja geografía, no riesgo.
+    accion: sumar_peso
+    peso: 0.03
+    tope_rural: 0.03
+    justificacion: "Vive lejos de la oficina: habitual en veredas de San Juan de la Vega; verificar visita de campo, no rechazar."
+    fuente: "Matriz de adquisición de conocimiento; escenario del enunciado"
+
+  - id: R-WEAK-03
+    categoria: debil
+    senal: sin_local_fijo
+    condicion: "SI sin_local_fijo == true"
+    contexto_rural: >
+      La unidad productiva es el predio o la venta en plaza dominical; no existe
+      local comercial fijo en la parcela cafetera.
+    accion: sumar_peso
+    peso: 0.03
+    tope_rural: 0.03
+    justificacion: "Sin local fijo: típico de parcelas y ventas en ferias campesinas; verificar mediante visita a la siembra."
+    fuente: "Matriz de adquisición de conocimiento; entrevista simulada A-02"
+
+  - id: R-WEAK-04
+    categoria: debil
+    senal: sin_fiador
+    condicion: "SI sin_fiador == true"
+    contexto_rural: >
+      Garantías solidarias comunitarias sustituyen a los fiadores bancarios
+      tradicionales en sectores populares sin salarios certificados.
+    accion: sumar_peso
+    peso: 0.03
+    tope_rural: 0.03
+    justificacion: "Sin fiador: común donde las redes de apoyo no cuentan con fiadores formales; evaluar aval comunitario."
+    fuente: "Matriz de adquisición de conocimiento"
+
+  - id: R-WEAK-05
+    categoria: debil
+    senal: cedula_otra_region
+    condicion: "SI cedula_otra_region == true"
+    contexto_rural: >
+      Movilidad histórica por trabajo agrícola (cosecha cafetera) o retorno
+      comunitario; la cédula expedida en otra región es frecuente.
+    accion: sumar_peso
+    peso: 0.03
+    tope_rural: 0.03
+    justificacion: "Cédula de otra región: frecuente por migración en temporadas de cosecha; verificar arraigo en la vereda."
+    fuente: "Matriz de adquisición de conocimiento"
+
+  - id: R-WEAK-06
+    categoria: debil
+    senal: celular_prepago
+    condicion: "SI celular_prepago == true"
+    contexto_rural: >
+      Modalidad de conectividad estándar en más del 80% de los hogares
+      campesinos de Valles Templados, sin red pospago en veredas.
+    accion: sumar_peso
+    peso: 0.03
+    tope_rural: 0.03
+    justificacion: "Celular prepago: habitual en veredas sin red comercial pospago; no es indicio de fraude."
+    fuente: "Matriz de adquisición de conocimiento; escenario del enunciado"
+
+  - id: R-WEAK-07
+    categoria: debil
+    senal: sin_cuenta_bancaria
+    condicion: "SI sin_cuenta_bancaria == true"
+    contexto_rural: >
+      Economía no bancarizada en efectivo; la cooperativa fue creada como fondo
+      de crédito parroquial precisamente para este público (inclusión financiera).
+    accion: sumar_peso
+    peso: 0.03
+    tope_rural: 0.03
+    justificacion: "Sin cuenta bancaria: misión de inclusión financiera cooperativa de primer ingreso; esperado en el sector."
+    fuente: "Matriz de adquisición de conocimiento; historia de CrediConfianza"
+
+  - id: R-WEAK-08
+    categoria: debil
+    senal: factura_manual
+    condicion: "SI factura_manual == true"
+    contexto_rural: >
+      Talonario de almacén veredal admisible según la normativa aplicable a
+      comercios pequeños sin facturación electrónica.
+    accion: sumar_peso
+    peso: 0.03
+    tope_rural: 0.03
+    justificacion: "Factura manual: soporte de almacén veredal admisible; contrastar con visita, no invalidar."
+    fuente: "Matriz de adquisición de conocimiento; marco legal de supervisión humana"
+
+  - id: R-WEAK-09
+    categoria: debil
+    senal: fotos_poco_convincentes
+    condicion: "SI fotos_poco_convincentes == true"
+    contexto_rural: >
+      Registros fotográficos tomados por el oficial de crédito con luz natural
+      en campo, sin condiciones de estudio ni conectividad para rehacerlos.
+    accion: sumar_peso
+    peso: 0.03
+    tope_rural: 0.03
+    justificacion: "Fotos poco convincentes: tomas de campo en condiciones rústicas; solicitar visita presencial."
+    fuente: "Matriz de adquisición de conocimiento"
+
+  - id: R-WEAK-10
+    categoria: debil
+    senal: sin_referencias_comerciales
+    condicion: "SI sin_referencias_comerciales == true"
+    contexto_rural: >
+      El intercambio en plazas y ferias no genera referencias comerciales
+      escritas; se complementa con aval de la Junta de Acción Comunal.
+    accion: sumar_peso
+    peso: 0.03
+    tope_rural: 0.03
+    justificacion: "Sin referencias comerciales: el comercio en ferias no deja registro escrito; usar aval comunitario."
+    fuente: "Matriz de adquisición de conocimiento; entrevista simulada A-01"
+
+  - id: R-WEAK-11
+    categoria: debil
+    senal: nombre_distinto_recibo
+    condicion: "SI nombre_distinto_recibo == true"
+    contexto_rural: >
+      Predios bajo régimen de sucesión familiar o aparcería donde los recibos de
+      servicios están a nombre de otro familiar titular.
+    accion: sumar_peso
+    peso: 0.03
+    tope_rural: 0.03
+    justificacion: "Nombre distinto al del recibo: sucesión familiar o aparcería; verificar parentesco con recibo."
+    fuente: "Matriz de adquisición de conocimiento"
+
+  - id: R-WEAK-12
+    categoria: debil
+    senal: negocio_pequeno_monto
+    condicion: "SI negocio_pequeno_monto == true"
+    contexto_rural: >
+      Inversión inicial alta esperada para renovación de cafetales o siembra;
+      la proporción monto/ingreso refleja el ciclo agropecuario, no fraude.
+    accion: sumar_peso
+    peso: 0.03
+    tope_rural: 0.03
+    justificacion: "Negocio pequeño para el monto: normal en renovación de cafetales; revisar plan de cultivo."
+    fuente: "Matriz de adquisición de conocimiento; escenario del enunciado"
+
+  - id: R-WEAK-13
+    categoria: debil
+    senal: direccion_sin_georreferenciar
+    condicion: "SI direccion_sin_georreferenciar == true"
+    contexto_rural: >
+      Toponimia veredal tradicional sin nomenclatura catastral formal; las
+      direcciones rurales se describen por referencias naturales.
+    accion: sumar_peso
+    peso: 0.03
+    tope_rural: 0.03
+    justificacion: "Dirección sin georreferenciar: toponimia veredal sin catastro; georreferenciar en visita de campo."
+    fuente: "Matriz de adquisición de conocimiento; escenario del enunciado"
+
+  # ── 6 indicios fuertes (HU-02) ─────────────────────────────────────────────
+  - id: R-STRONG-01
+    categoria: fuerte
+    senal: cedula_alterada
+    condicion: "SI cedula_alterada == true"
+    accion: alerta_fraude
+    peso: 0.40
+    justificacion: "Cédula alterada: adulteración documental o reporte de suplantación en Registraduría; indicio fuerte de fraude."
+    fuente: "Matriz de adquisición de conocimiento; lista de chequeo de analistas"
+
+  - id: R-STRONG-02
+    categoria: fuerte
+    senal: ingresos_inconsistentes
+    condicion: "SI ingresos_inconsistentes == true"
+    accion: alerta_fraude
+    peso: 0.40
+    justificacion: "Ingresos inconsistentes: divergencia matemática insostenible entre ventas reportadas y capacidad real."
+    fuente: "Matriz de adquisición de conocimiento; revisión del comité de riesgo"
+
+  - id: R-STRONG-03
+    categoria: fuerte
+    senal: factura_falsa
+    condicion: "SI factura_falsa == true"
+    accion: alerta_fraude
+    peso: 0.40
+    justificacion: "Factura falsa: NIT atribuido a tercero inexistente o empresa fantasma según verificación DIAN."
+    fuente: "Matriz de adquisición de conocimiento; verificación documental"
+
+  - id: R-STRONG-04
+    categoria: fuerte
+    senal: referencias_falsas
+    condicion: "SI referencias_falsas == true"
+    accion: alerta_fraude
+    peso: 0.40
+    justificacion: "Referencias falsas: mismo número telefónico detectado en solicitudes simultáneas (colusión)."
+    fuente: "Matriz de adquisición de conocimiento; llamadas de referencia"
+
+  - id: R-STRONG-05
+    categoria: fuerte
+    senal: historial_adverso
+    condicion: "SI historial_adverso == true"
+    accion: bloqueo_inmediato
+    peso: 0.40
+    justificacion: "Historial adverso: inclusión en listas restrictivas o reportes vinculantes de lavado/fraude financiero."
+    fuente: "Matriz de adquisición de conocimiento; centrales de riesgo"
+
+  - id: R-STRONG-06
+    categoria: fuerte
+    senal: negocio_inconsistente
+    condicion: "SI negocio_inconsistente == true"
+    accion: alerta_fraude
+    peso: 0.40
+    justificacion: "Negocio inconsistente: la inspección de campo comprueba inexistencia de la explotación declarada."
+    fuente: "Matriz de adquisición de conocimiento; visita al negocio"
+
+  # ── 3 salvaguardas de equidad (HU-18 / HU-04) ──────────────────────────────
+  - id: R-SAFE-01
+    categoria: salvaguarda
+    condicion: "SI tipo_zona == rural Y indicios_fuertes == 0"
+    accion: aplicar_tope_rural
+    peso: -0.15
+    justificacion: "Salvaguarda algorítmica: en casos rurales sin indicios fuertes el subpuntaje de reglas se topa para evitar exclusión del campesinado."
+    fuente: "Política de equidad del sistema; CONPES 4144 (referencia)"
+
+  - id: R-SAFE-02
+    categoria: salvaguarda
+    condicion: "SI es_estacional == true Y indicios_fuertes == 0"
+    accion: ajustar_ciclo_amortizacion
+    peso: -0.05
+    justificacion: "Sincronización de cuotas con temporadas de cosecha semestral; reduce riesgo percibido por estacionalidad legítima (solo sin indicios fuertes)."
+    fuente: "Escenario del enunciado (ingreso estacional rural)"
+
+  - id: R-SAFE-03
+    categoria: salvaguarda
+    condicion: "SI tipo_negocio IN (parcela_finca, plaza_mercado_feria) Y indicios_fuertes == 0"
+    accion: bonificar_confianza_comunitaria
+    peso: -0.05
+    justificacion: "Reconocimiento de arraigo productivo en parcela o plaza campesina; validación social en asamblea cooperativa (solo sin indicios fuertes)."
+    fuente: "Matriz de adquisición de conocimiento; historia de CrediConfianza"
+
+  # ── 2 reglas de auditoría/paridad (HU-04, HU-21) ───────────────────────────
+  - id: R-BIAS-01
+    categoria: bias
+    condicion: "SI genero == femenino Y tipo_zona == rural"
+    accion: auditar_paridad
+    peso: 0.0
+    justificacion: "Verificación estricta de la tasa de paridad de crédito a mujeres rurales en el reporte de auditoría ética; no altera el puntaje."
+    fuente: "Clasificación de variables protegidas; métricas de equidad"
+
+  - id: R-BIAS-02
+    categoria: bias
+    condicion: "SI probabilidad_ml > 0.50 Y factores_explicativos < 3"
+    accion: solicitar_hitl
+    peso: 0.0
+    justificacion: "Obligatoriedad de revisión humana (HITL) cuando el puntaje ML supera el umbral pero la explicabilidad es difusa."
+    fuente: "Política de explicabilidad y supervisión humana"

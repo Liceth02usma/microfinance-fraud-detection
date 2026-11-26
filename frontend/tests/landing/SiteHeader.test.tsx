@@ -27,7 +27,12 @@ describe("SiteHeader", () => {
     expect(trigger).toHaveAttribute("aria-expanded", "true");
     const links = screen.getAllByRole("link", { name: /^\d{2}\./ });
     expect(links).toHaveLength(articleSections.length);
-    expect(links[0]).toHaveAttribute("href", "#articulo-resumen");
+    // Rutas absolutas: funcionan desde cualquier vista, no solo desde `/`.
+    expect(links[0]).toHaveAttribute("href", "/articulo#articulo-resumen");
+    expect(screen.getByRole("link", { name: /Leer el artículo completo/i })).toHaveAttribute(
+      "href",
+      "/articulo",
+    );
   });
 
   it("cierra el desplegable con Escape y con un clic fuera", () => {
@@ -75,15 +80,16 @@ describe("SiteHeader", () => {
     ).toBeNull();
   });
 
-  it("enlaza las tres vistas propias del diseño (contratos 01-03)", () => {
+  it("enlaza las vistas propias y el historial de valoraciones", () => {
     const hrefs = screen.getAllByRole("link").map((link) => link.getAttribute("href"));
 
     for (const navLink of primaryNavLinks) {
       expect(hrefs).toContain(navLink.href);
     }
     expect(primaryNavLinks.map((link) => link.href)).toEqual([
-      "/arquitectura",
       "/simulador",
+      "/valoraciones",
+      "/arquitectura",
       "/roles",
     ]);
   });

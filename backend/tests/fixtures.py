@@ -21,6 +21,7 @@ EXAMPLE_RURAL_LEGIT = EvaluationResponse(
     activated_rules=[],
     bayesian_probability=0.08,
     ml_probability=0.05,
+    rules_subscore=0.0,
     explanatory_factors=[
         "Caso rural con 8 señales débiles: frecuente en productores sin acceso "
         "al sistema financiero formal; no implica fraude (HU-18).",
@@ -49,6 +50,7 @@ EXAMPLE_URBAN_FRAUD = EvaluationResponse(
     ],
     bayesian_probability=0.92,
     ml_probability=0.89,
+    rules_subscore=0.95,
     explanatory_factors=[
         "Se detectaron 6 indicador(es) fuerte(s) de fraude (HU-02).",
         "Cédula alterada y factura falsa son evidencia directa de fraude.",
@@ -71,6 +73,7 @@ EXAMPLE_AMBIGUOUS = EvaluationResponse(
     ],
     bayesian_probability=0.45,
     ml_probability=0.38,
+    rules_subscore=0.9,
     explanatory_factors=[
         "Un indicador fuerte presente: ingresos inconsistentes.",
         "Se recomienda revisión manual por analista.",

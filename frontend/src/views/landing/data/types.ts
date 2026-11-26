@@ -80,7 +80,9 @@ export interface AbstractBlock {
 /** Medidor de paridad FPR rural/urbano (sección 11). */
 export interface ParityMeterBlock {
   intro: string;
-  /** Razón FPR rural/urbano medida (p. ej. 1.04). */
+  /** Etiqueta accesible de la barra (qué razón se mide). */
+  ariaLabel?: string;
+  /** Razón medida entre grupos (p. ej. tasa de alertas rural / urbana). */
   value: number;
   /** Límites de la escala mostrada. */
   min: number;

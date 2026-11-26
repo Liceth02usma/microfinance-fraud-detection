@@ -9,6 +9,7 @@ import pytest
 from fastapi.testclient import TestClient
 from pydantic import ValidationError
 
+from app.core.versions import active_model_version
 from app.schemas.evaluation import EvaluationRequest, EvaluationResponse
 
 
@@ -66,14 +67,17 @@ def test_evaluate_endpoint_returns_200_and_contract(client: TestClient) -> None:
     assert 0.0 <= parsed.bayesian_probability <= 1.0
     assert 0.0 <= parsed.ml_probability <= 1.0
     assert len(parsed.explanatory_factors) >= 3
-    assert parsed.model_version == "0.1.0-baseline"
+    # HU-26: se reporta la versión del modelo realmente ejecutado (models/),
+    # no la que declara el cliente en el request.
+    assert parsed.model_version == active_model_version()
+    assert parsed.model_version != "0.1.0-baseline"
     assert parsed.engine_status is not None
-    # HU-17: el contrato exige declarar el estado de cada motor. Hoy ninguno está
-    # conectado (la fusión real es HU-18), así que se reportan como `missing`
-    # en lugar de fingir disponibilidad.
-    assert parsed.engine_status.rules.value == "missing"
-    assert parsed.engine_status.bayesian.value == "missing"
-    assert parsed.engine_status.ml.value == "missing"
+    # HU-17/HU-18: los tres motores reales están conectados; si alguno falta
+    # se reporta `missing` (aquí el entorno de test tiene reglas, bayesiano
+    # y el XGBoost entrenado en models/).
+    assert parsed.engine_status.rules.value == "ok"
+    assert parsed.engine_status.bayesian.value == "ok"
+    assert parsed.engine_status.ml.value == "ok"
 
 
 def test_rural_legitimate_never_rojo(client: TestClient) -> None:

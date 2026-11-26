@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { MaterialIcon } from "../../../components/MaterialIcon";
 
 export interface ReadingProgressProps {
@@ -36,13 +37,13 @@ export function ReadingProgress({ progress }: ReadingProgressProps): JSX.Element
       </div>
 
       <div className="flex items-center gap-2 border-t border-outline-variant/30 pt-2">
-        <a
-          href="/simulador"
+        <Link
+          to="/simulador"
           className="inline-flex min-h-[36px] flex-1 items-center justify-center gap-1.5 rounded bg-primary px-3 py-2 font-label-md text-label-md text-on-primary transition-colors hover:bg-brand-light"
         >
           <MaterialIcon name="tune" className="text-[16px]!" />
           Simulador
-        </a>
+        </Link>
       </div>
     </div>
   );

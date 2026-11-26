@@ -78,3 +78,20 @@ Ejecutadas el 2026-11-08 en local, sobre el árbol de esta entrega:
 - **Siguiente historia:** HU-18 conecta los motores reales (`engines/rules.py`,
   `engines/bayesian.py`, `engines/hybrid.py`) y este servicio deja de ser de ejemplo;
   `engine_status` pasará de `missing` a `ok` motor a motor.
+
+---
+
+## 2026-11-26 · HU-16, HU-21, HU-23, HU-26 — Cifras reales, valoraciones y rutas del artículo
+
+| # | Decisión | Motivación |
+| --- | --- | --- |
+| D19 | Todas las cifras del artículo y de la portada salen de `backend/scripts/export_metrics.py` (`fairness/metricas_resultados.json` → `frontend/src/data/metricsSnapshot.json`). | El artículo mostraba valores inventados (4.200 expedientes "reales", FPR rural 6,8 %, razón 1,04, DOI ficticio). Ninguna cifra se escribe a mano. |
+| D20 | La ablación compara una lista de chequeo simulada (≥ 3 señales débiles o un indicio fuerte), cada motor por separado, la regresión logística y el sistema híbrido. | HU-16 y punto de comparación honesto con el proceso manual del enunciado. Se rotula como simulación. |
+| D21 | La paridad del medidor usa la razón de tasas de alerta rural/urbana (regla del 80 %), no la razón de FPR. | Con 0 falsos positivos urbanos la razón de FPR no está definida; los FPR se reportan aparte con IC de Wilson. |
+| D22 | `GET /api/v1/knowledge` expone reglas, pesos, umbrales y versión del modelo; la interfaz dejó de usar su copia `src/data/rules.ts`. | Evita que la UI muestre pesos o reglas distintos a los que ejecuta el motor. |
+| D23 | La versión reportada es la del artefacto en `models/` (`app/core/versions.py`), no la que envía el cliente. | La respuesta decía `0.1.0-baseline` aunque corría el XGBoost `1.0.0` (HU-26). |
+| D24 | Valoraciones en SQLite (`data/valuations.sqlite3`, configurable con `VALUATIONS_DB`); al guardar, el servidor recalcula la recomendación. Se marca si el analista se aparta del semáforo. | HU-09/HU-26: decisión humana con motivo, usuario y versión; no se confía en el puntaje que envía el navegador. |
+| D25 | PDF con ReportLab: ficha por valoración y historial consolidado. | Descarga directa desde la interfaz sin dependencias del sistema. |
+| D26 | El artículo vive en `/articulo`; el desplegable y el pie enlazan `/articulo#ancla` y `AppLayout` desplaza hasta el ancla. | Los enlaces `#ancla` no funcionaban fuera de la portada. |
+
+**Evidencia:** backend `uv run pytest` 172 pruebas, cobertura 94,6 %; `ruff check` sin errores. Frontend 89 pruebas, cobertura 99 %; `npm run lint` y `npm run build` sin errores.

@@ -1,5 +1,6 @@
+import { Link } from "react-router-dom";
 import { MaterialIcon } from "../../../components/MaterialIcon";
-import { hero, heroBadges, heroRibbon } from "../data/site";
+import { ARTICLE_PATH, hero, heroBadges, heroRibbon, heroRibbonNote } from "../data/site";
 
 /**
  * Hero institucional: malla ecológica decorativa, insignias verificables,
@@ -64,13 +65,20 @@ export function HeroSection(): JSX.Element {
         </div>
 
         <div className="flex flex-wrap items-center gap-4 pt-2">
-          <a
-            href={hero.cta.href}
+          <Link
+            to={hero.cta.href}
             className="inline-flex min-h-[48px] items-center justify-center rounded bg-primary-container px-7 font-label-lg text-label-lg text-on-primary shadow-md transition-all duration-200 hover:bg-brand-light"
           >
             <MaterialIcon name={hero.cta.icon} className="mr-2 text-[20px]!" />
             {hero.cta.label}
-          </a>
+          </Link>
+          <Link
+            to={ARTICLE_PATH}
+            className="inline-flex min-h-[48px] items-center justify-center rounded border border-primary-fixed/40 px-7 font-label-lg text-label-lg text-on-primary transition-colors duration-200 hover:bg-surface-container-lowest/10"
+          >
+            <MaterialIcon name="article" className="mr-2 text-[20px]!" />
+            Leer el artículo
+          </Link>
         </div>
 
         {/* Cinta de métricas cuantitativas */}
@@ -91,6 +99,7 @@ export function HeroSection(): JSX.Element {
             </div>
           ))}
         </div>
+        <p className="-mt-6 font-label-md text-primary-fixed-dim/80">{heroRibbonNote}</p>
       </div>
     </section>
   );

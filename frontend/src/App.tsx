@@ -4,8 +4,10 @@ import { apiClient } from "./api/client";
 import { AppLayout } from "./components/layout/AppLayout";
 import { ArchitectureMapView } from "./views/architecture/ArchitectureMapView";
 import { ComponentsRolesView } from "./views/components-roles/ComponentsRolesView";
+import { ArticlePage } from "./views/landing/ArticlePage";
 import { LandingPage } from "./views/landing/LandingPage";
 import SimuladorPage from "./views/simulador/SimuladorPage";
+import ValoracionesPage from "./views/valoraciones/ValoracionesPage";
 
 export interface AppRoutesProps {
   /** Estado del backend, mostrado en el pie (píldora técnica). */
@@ -21,9 +23,11 @@ export function AppRoutes({ backendStatus }: AppRoutesProps): JSX.Element {
     <Routes>
       <Route element={<AppLayout backendStatus={backendStatus} />}>
         <Route path="/" element={<LandingPage />} />
+        <Route path="/articulo" element={<ArticlePage />} />
         <Route path="/arquitectura" element={<ArchitectureMapView />} />
         <Route path="/roles" element={<ComponentsRolesView />} />
         <Route path="/simulador" element={<SimuladorPage />} />
+        <Route path="/valoraciones" element={<ValoracionesPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>

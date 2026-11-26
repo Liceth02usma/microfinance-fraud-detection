@@ -29,22 +29,6 @@ const COLUMNS: Column<HumanRole>[] = [
     header: "Decisiones",
     cell: (row) => <p className="text-sm text-slate-800">{row.decisions}</p>,
   },
-  {
-    key: "hus",
-    header: "HU",
-    cell: (row) => (
-      <div className="flex flex-wrap items-center gap-1.5">
-        {row.hus.map((hu) => (
-          <span
-            key={hu}
-            className="whitespace-nowrap rounded border border-slate-200 bg-slate-100 px-2 py-0.5 font-metric-data text-[11px] text-slate-700"
-          >
-            {hu}
-          </span>
-        ))}
-      </div>
-    ),
-  },
 ];
 
 /** Sección D: roles humanos y la nota de trazabilidad W3C PROV-O (HU-26). */
@@ -54,7 +38,7 @@ export function HumanRoles(): JSX.Element {
       icon="groups"
       title="D. Roles Humanos y Trazabilidad (W3C PROV-O)"
       badge="6 Roles Operativos"
-      subtitle="El sistema recomienda; el humano decide. Toda decisión queda registrada con usuario, hora y modelo (HU-09, HU-26)."
+      subtitle="El sistema recomienda; el humano decide. Toda decisión queda registrada con usuario, hora y modelo."
     >
       <SortableTable
         label="Roles humanos, responsabilidades y decisiones"
@@ -70,7 +54,7 @@ export function HumanRoles(): JSX.Element {
             <p className="text-xs font-bold">Trazabilidad Obligatoria (W3C PROV-O)</p>
             <p className="mt-1 text-xs leading-relaxed text-sky-800">
               Toda decisión humana es un Evento «wasGeneratedBy» vinculado a la solicitud y el
-              analista. Cualquier decisión debe justificarse en bitácora inmutable (HU-26).
+              analista. Cualquier decisión debe justificarse en bitácora inmutable.
             </p>
           </div>
         </div>

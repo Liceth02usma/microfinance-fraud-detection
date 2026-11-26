@@ -1,3 +1,4 @@
+import { generatedOn, metrics } from "../../../../data/metrics";
 import type { ArticleHeader, ArticleSection } from "../types";
 import { sectionsFiveToEight } from "./sections5to8";
 import { sectionsNineToTwelve } from "./sections9to12";
@@ -5,12 +6,13 @@ import { sectionsOneToFour } from "./sections1to4";
 
 /** Cabecera editorial del visor del artículo. */
 export const articleHeader: ArticleHeader = {
-  kicker: "Artículo de Investigación Aplicada • ABPr & DSR",
+  kicker: "Informe del proyecto • Ingeniería del conocimiento",
   title: "Arquitectura Híbrida Explicable para la Detección de Fraude en Microfinanzas Rurales",
   meta: [
     { icon: "corporate_fare", text: "Cooperativa CrediConfianza" },
-    { icon: "calendar_today", text: "Octubre 2024" },
-    { icon: "verified", text: "DOI: 10.1016/j.agrifin.2024.10892" },
+    { icon: "calendar_today", text: `Resultados del ${generatedOn}` },
+    { icon: "dataset", text: "Datos sintéticos" },
+    { icon: "memory", text: `Modelo ${metrics.model_version}` },
   ],
 };
 

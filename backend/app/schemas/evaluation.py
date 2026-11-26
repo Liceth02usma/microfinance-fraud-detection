@@ -91,6 +91,12 @@ class EvaluationRequest(BaseModel):
     ingresos_declarados: float = Field(..., gt=0, description="Ingresos declarados en COP")
     edad_solicitante: int = Field(..., ge=18, le=72, description="Edad del titular")
     es_estacional: bool = Field(..., description="¿Negocio estacional?")
+    antiguedad_negocio_meses: int = Field(
+        default=36,
+        ge=0,
+        le=720,
+        description="Antigüedad del negocio en meses (feature del modelo ML)",
+    )
 
     # 13 señales débiles (HU-02)
     sin_historial: bool = Field(..., description="Sin historial crediticio")
@@ -115,15 +121,25 @@ class EvaluationRequest(BaseModel):
     historial_adverso: bool = Field(False, description="Historial adverso")
     negocio_inconsistente: bool = Field(False, description="Negocio inconsistente")
 
-    modelo_version: str = Field(default="0.1.0-baseline", description="Versión del modelo")
+    modelo_version: str | None = Field(
+        default=None,
+        description=(
+            "Versión del modelo que el cliente espera (informativa). La respuesta "
+            "siempre reporta la versión realmente ejecutada."
+        ),
+    )
     fuente_datos: FuenteDatos = Field(default=FuenteDatos.TEST, description="Origen de datos")
 
 
 class RuleActivation(BaseModel):
-    """Una regla activada por el motor de reglas."""
+    """Una regla activada por el motor de reglas.
+
+    `peso` puede ser negativo: las salvaguardas de equidad (R-SAFE-*) descuentan
+    del subpuntaje para no castigar la ruralidad (HU-18).
+    """
 
     id_regla: str = Field(..., description="ID de la regla")
-    peso: float = Field(..., ge=0.0, le=1.0, description="Peso 0-1")
+    peso: float = Field(..., ge=-1.0, le=1.0, description="Peso en [-1,1]; negativo = descuento")
     justificacion: str = Field(..., description="Justificación en lenguaje claro")
 
 
@@ -133,6 +149,86 @@ class EngineStatus(BaseModel):
     rules: EngineState = Field(..., description="Estado del motor de reglas")
     bayesian: EngineState = Field(..., description="Estado del motor bayesiano")
     ml: EngineState = Field(..., description="Estado del motor ML")
+
+
+class RulesReasoning(BaseModel):
+    """Cómo llegó el motor de reglas a su subpuntaje (HU-11, HU-18)."""
+
+    strong_score: float = Field(..., description="Suma de pesos de reglas fuertes y salvaguardas")
+    weak_score_raw: float = Field(..., description="Suma de pesos de señales débiles sin topar")
+    weak_score_applied: float = Field(..., description="Aporte débil tras la salvaguarda rural")
+    rural_cap: float = Field(..., description="Tope de la salvaguarda rural R-SAFE-01")
+    rural_cap_applied: bool = Field(..., description="¿Se aplicó el tope rural?")
+    subscore: float = Field(..., ge=0.0, le=1.0, description="Subpuntaje final 0–1")
+
+
+class BayesianEvidence(BaseModel):
+    """Aporte de un nodo observado a P(fraude | evidencia).
+
+    `likelihood_ratio` = P(e | fraude, padres) / P(e | no fraude, padres):
+    > 1 sube la probabilidad, < 1 la baja, ≈ 1 no la mueve.
+    """
+
+    variable: str = Field(..., description="Nodo de la red")
+    observed: bool = Field(..., description="Valor observado (sí/no)")
+    kind: str = Field(..., description="debil | fuerte")
+    likelihood_ratio: float = Field(..., gt=0.0, description="Razón de verosimilitud")
+
+
+class BayesianReasoning(BaseModel):
+    """Cadena prior → evidencia → posterior de la red bayesiana (HU-13)."""
+
+    prior: float = Field(..., ge=0.0, le=1.0, description="P(fraude | zona) antes de la evidencia")
+    posterior: float = Field(..., ge=0.0, le=1.0, description="P(fraude | toda la evidencia)")
+    evidence: list[BayesianEvidence] = Field(
+        default_factory=list, description="Evidencia ordenada por impacto |log LR|"
+    )
+
+
+class ShapContribution(BaseModel):
+    """Contribución SHAP de una variable a la predicción del modelo ML (HU-20)."""
+
+    feature: str
+    title: str
+    shap_value: float = Field(..., description="> 0 aumenta el riesgo; < 0 lo reduce")
+    is_rural_context: bool = False
+
+
+class MlReasoning(BaseModel):
+    """Variables que más empujaron la probabilidad del XGBoost (SHAP)."""
+
+    probability: float = Field(..., ge=0.0, le=1.0)
+    contributions: list[ShapContribution] = Field(default_factory=list)
+
+
+class FusionPart(BaseModel):
+    """Aporte de un motor al puntaje fusionado."""
+
+    engine: str = Field(..., description="rules | bayesian | ml")
+    weight: float = Field(..., description="Peso efectivo (renormalizado si falta un motor)")
+    value: float = Field(..., ge=0.0, le=1.0, description="Salida 0–1 del motor")
+    points: float = Field(..., description="Aporte en puntos sobre 100")
+
+
+class FusionReasoning(BaseModel):
+    """Desglose de la fusión ponderada y del semáforo (HU-18, HU-19)."""
+
+    parts: list[FusionPart]
+    verde_max: float
+    amarillo_max: float
+    strong_count: int = Field(..., ge=0)
+    semaforo_by_score: Semaforo = Field(..., description="Semáforo solo por umbrales")
+    floor_applied: bool = Field(..., description="¿Un piso por indicios fuertes elevó el semáforo?")
+    fusion_version: str
+
+
+class EngineReasoning(BaseModel):
+    """Razonamiento de cada motor; `None` si el motor no estuvo disponible."""
+
+    rules: RulesReasoning | None = None
+    bayesian: BayesianReasoning | None = None
+    ml: MlReasoning | None = None
+    fusion: FusionReasoning
 
 
 class EvaluationResponse(BaseModel):
@@ -153,8 +249,18 @@ class EvaluationResponse(BaseModel):
     explanatory_factors: list[str] = Field(
         ..., min_length=3, description="Factores explicativos (mínimo 3, HU-20)"
     )
+    rules_subscore: float = Field(
+        default=0.0,
+        ge=0.0,
+        le=1.0,
+        description="Subpuntaje 0–1 del motor de reglas (antes de la fusión ponderada)",
+    )
     model_version: str = Field(..., description="Versión del modelo utilizado")
     engine_status: EngineStatus | None = Field(
         default=None,
         description="Estado de motores: rules/bayesian/ml ok/missing",
+    )
+    reasoning: EngineReasoning | None = Field(
+        default=None,
+        description="Razonamiento detallado de cada motor y de la fusión (HU-20)",
     )

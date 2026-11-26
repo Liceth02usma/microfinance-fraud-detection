@@ -21,7 +21,7 @@ export function ComponentsRolesView(): JSX.Element {
         <div className="max-w-3xl">
           <div className="mb-3 flex flex-wrap items-center gap-2.5 text-xs font-bold text-primary-container">
             <MaterialIcon name="verified" className="text-[14px]!" />
-            Manual de Gobierno Técnico &amp; Ético (HU-26)
+            Manual de Gobierno Técnico &amp; Ético
             <span className="h-1 w-1 rounded-full bg-slate-300" aria-hidden="true" />
             <span className="text-slate-500">Arquitectura Multicapa &amp; Matriz de Decisión</span>
           </div>
@@ -30,7 +30,7 @@ export function ComponentsRolesView(): JSX.Element {
             Arquitectura multicapa y matriz de responsabilidades del sistema. Detalla la separación
             estricta entre lógica de negocio, inferencia bayesiana y modelo supervisado; clasifica
             las 19 señales de fraude y garantiza equidad y trazabilidad humana. Toda decisión es un
-            evento auditado bajo protocolos W3C PROV-O (HU-26).
+            evento auditado bajo protocolos W3C PROV-O.
           </p>
         </div>
       </div>

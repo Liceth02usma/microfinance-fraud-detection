@@ -39,7 +39,7 @@ describe("ComponentsRolesView (ruta /roles)", () => {
   it("incluye la salvaguarda HU-18 sobre las señales débiles", () => {
     renderRoute(["/roles"]);
 
-    expect(screen.getByText(/Salvaguarda Ética \(HU-18\)/)).toBeInTheDocument();
+    expect(screen.getByText(/Salvaguarda Ética:/)).toBeInTheDocument();
     expect(screen.getByText(/techo acumulativo de 0\.10/)).toBeInTheDocument();
     expect(screen.getByText(/nunca rechazo automático/i)).toBeInTheDocument();
   });
